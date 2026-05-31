@@ -1,0 +1,160 @@
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode from "rehype-pretty-code";
+import Link from "next/link";
+import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/lib/mdx";
+import { postMetadata } from "@/lib/seo";
+import { formatDate } from "@/lib/utils";
+import { AdSlot } from "@bidev/ui";
+import { TableOfContents } from "@/components/blog/TableOfContents";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { articleJsonLd } from "@bidev/shared";
+
+const SITE_URL  = "https://bidev.site";
+const SITE_NAME = "bidev.site";
+
+export async function generateStaticParams() {
+  return getAllPosts().map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  if (!post) return {};
+  return postMetadata(post);
+}
+
+const mdxOptions = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [
+      rehypeSlug,
+      [rehypeAutolinkHeadings, { behavior: "wrap" }],
+      [
+        rehypePrettyCode,
+        {
+          theme: "github-dark",
+          keepBackground: false,
+        },
+      ],
+    ] as any,
+  },
+};
+
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  if (!post) notFound();
+
+  const related = getRelatedPosts(post, 3);
+  const jsonLd  = articleJsonLd({
+    url: `${SITE_URL}/blog/${post.slug}`,
+    title: post.title,
+    description: post.summary,
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
+    authorName: post.author ?? "Bilal Fali",
+    siteName: SITE_NAME,
+    image: post.image,
+  });
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex gap-12">
+          {/* Article */}
+          <article className="flex-1 min-w-0 max-w-3xl">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-2 text-xs text-ink-faint mb-8">
+              <Link href="/" className="hover:text-ink-muted transition-colors">Home</Link>
+              <span>/</span>
+              <Link href="/blog" className="hover:text-ink-muted transition-colors">Blog</Link>
+              <span>/</span>
+              <span className="text-ink-muted truncate">{post.title}</span>
+            </nav>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mb-5">
+              {post.tags.map((t) => (
+                <Link
+                  key={t}
+                  href={`/blog?tag=${encodeURIComponent(t)}`}
+                  className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 hover:bg-accent/20 transition-colors"
+                >
+                  {t}
+                </Link>
+              ))}
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-5 leading-tight">
+              {post.title}
+            </h1>
+
+            <div className="flex items-center gap-4 text-sm text-ink-muted mb-8 pb-8 border-b border-border">
+              <span className="font-medium text-ink">{post.author}</span>
+              <span>·</span>
+              <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+              <span>·</span>
+              <span>{post.readingTime} min read</span>
+            </div>
+
+            {/* Top Ad */}
+            <AdSlot type="banner" className="mb-10" />
+
+            {/* MDX Content */}
+            <div className="prose prose-invert max-w-none">
+              <MDXRemote source={post.content} options={mdxOptions} />
+            </div>
+
+            {/* Middle Ad */}
+            <AdSlot type="in-article" className="my-10" />
+
+            {/* Tags footer */}
+            <div className="mt-10 pt-8 border-t border-border">
+              <p className="text-xs text-ink-faint uppercase tracking-wider mb-3">Tagged in</p>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((t) => (
+                  <Link
+                    key={t}
+                    href={`/blog?tag=${encodeURIComponent(t)}`}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-bg-card border border-border text-ink-muted hover:border-accent/40 hover:text-accent transition-colors"
+                  >
+                    #{t}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Related Posts */}
+            {related.length > 0 && <RelatedPosts posts={related} />}
+          </article>
+
+          {/* Sidebar */}
+          <aside className="hidden xl:flex flex-col gap-6 w-64 flex-shrink-0">
+            <div className="sticky top-24 flex flex-col gap-6">
+              <TableOfContents content={post.content} />
+              <AdSlot type="sidebar" />
+            </div>
+          </aside>
+        </div>
+      </div>
+    </>
+  );
+}

@@ -1,0 +1,14 @@
+{
+  "name": "bidev-ecosystem",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:main": "npm run dev --workspace=apps/main-site",
+    "dev:portfolio": "npm run dev --workspace=apps/portfolio",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "build:main": "npm run build --workspace=apps/main-site",
+    "build:portfolio": "npm run build --workspace=apps/portfolio",
+    "build:admin": "npm run build --workspace=apps/admin",
+    "build": "npm run build:main && npm run build:portfolio && npm run build:admin"
+  }
+}

@@ -1,0 +1,171 @@
+---
+title: "Flutter Clean Architecture Guide 2026 – Complete Folder Structure"
+publishedAt: "2026-05-20"
+updatedAt: "2026-05-20"
+summary: "A production-ready Flutter Clean Architecture guide covering domain, data, and presentation layers with dependency injection, use cases, and real Dart code examples."
+tags: ["Flutter", "Architecture", "Dart"]
+author: "Bilal Fali"
+---
+
+Flutter Clean Architecture is the industry standard for building **scalable, testable, and maintainable** mobile apps. This guide walks you through a production-ready implementation for 2026.
+
+## What Is Clean Architecture?
+
+Three concentric layers where **dependencies point inward only**:
+
+1. **Presentation** — Widgets, pages, state management (Bloc/GetX)
+2. **Domain** — Pure Dart: entities, use cases, repository interfaces
+3. **Data** — Repository implementations, models, remote/local data sources
+
+## Recommended Folder Structure
+
+```
+lib/
+├── core/
+│   ├── errors/
+│   │   ├── exceptions.dart
+│   │   └── failures.dart
+│   └── usecases/usecase.dart
+│
+└── features/
+    └── auth/
+        ├── data/
+        │   ├── datasources/auth_remote_datasource.dart
+        │   ├── models/user_model.dart
+        │   └── repositories/auth_repository_impl.dart
+        ├── domain/
+        │   ├── entities/user_entity.dart
+        │   ├── repositories/auth_repository.dart
+        │   └── usecases/login_usecase.dart
+        └── presentation/
+            ├── bloc/
+            │   ├── auth_bloc.dart
+            │   ├── auth_event.dart
+            │   └── auth_state.dart
+            └── pages/login_page.dart
+```
+
+## Domain Layer — The Core
+
+```dart
+// entity — pure Dart, no packages
+class UserEntity {
+  final String id;
+  final String email;
+  final String displayName;
+  const UserEntity({required this.id, required this.email, required this.displayName});
+}
+
+// repository interface
+abstract class AuthRepository {
+  Future<Either<Failure, UserEntity>> login({
+    required String email,
+    required String password,
+  });
+  Future<Either<Failure, void>> logout();
+}
+
+// use case — single responsibility
+class LoginUseCase {
+  final AuthRepository _repo;
+  const LoginUseCase(this._repo);
+
+  Future<Either<Failure, UserEntity>> call(LoginParams params) =>
+      _repo.login(email: params.email, password: params.password);
+}
+```
+
+## Data Layer — Repository Implementation
+
+```dart
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource _remote;
+  AuthRepositoryImpl(this._remote);
+
+  @override
+  Future<Either<Failure, UserEntity>> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final model = await _remote.login(email: email, password: password);
+      return Right(model); // UserModel extends UserEntity
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException {
+      return Left(const NetworkFailure('No internet connection'));
+    }
+  }
+}
+```
+
+## Presentation Layer — Bloc
+
+```dart
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final LoginUseCase _loginUseCase;
+
+  AuthBloc({required LoginUseCase loginUseCase})
+      : _loginUseCase = loginUseCase,
+        super(AuthInitial()) {
+    on<LoginRequested>(_onLoginRequested);
+  }
+
+  Future<void> _onLoginRequested(
+    LoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await _loginUseCase(
+      LoginParams(email: event.email, password: event.password),
+    );
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (user)    => emit(AuthAuthenticated(user)),
+    );
+  }
+}
+```
+
+## Dependency Injection with GetIt
+
+```dart
+// injection_container.dart
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  // Blocs — factory (new instance per registration)
+  sl.registerFactory(() => AuthBloc(loginUseCase: sl()));
+
+  // Use Cases
+  sl.registerLazySingleton(() => LoginUseCase(sl()));
+
+  // Repositories
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(sl()),
+  );
+
+  // Data Sources
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(firebaseAuth: sl()),
+  );
+
+  // Firebase
+  sl.registerLazySingleton(() => FirebaseAuth.instance);
+}
+```
+
+## Key Rules
+
+| Rule | Detail |
+|------|--------|
+| Entities → no packages | Pure Dart classes only |
+| Models → extend entities | Add `fromJson`/`toJson` |
+| Use cases → one `call()` | Single public method |
+| Bloc → presentation only | No business logic in widgets |
+| `Either<Failure, T>` | Always handle errors explicitly |
+
+## Related Articles
+
+- [Firebase Push Notifications Complete Guide](/blog/firebase-push-notifications-flutter)
+- [Fix Gradle Build Errors in Android](/blog/fix-gradle-build-errors)

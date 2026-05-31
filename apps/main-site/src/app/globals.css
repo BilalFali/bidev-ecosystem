@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #050505;
+    color: #f0f0f0;
+    font-family: var(--font-inter), system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: rgba(34, 211, 238, 0.2);
+    color: #22d3ee;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0e0e0e; }
+  ::-webkit-scrollbar-thumb { background: #242424; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #f0f0f0 0%, #71717a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-accent {
+    background: linear-gradient(135deg, #22d3ee 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 40px rgba(34, 211, 238, 0.12);
+  }
+
+  .border-gradient {
+    border: 1px solid transparent;
+    background: linear-gradient(#141414, #141414) padding-box,
+                linear-gradient(135deg, #242424, #1a1a1a) border-box;
+  }
+
+  .glass {
+    background: rgba(20, 20, 20, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* Code block styles for MDX */
+[data-rehype-pretty-code-figure] pre {
+  @apply rounded-xl border border-border bg-bg-card text-sm overflow-x-auto p-5 my-6;
+}
+
+[data-rehype-pretty-code-figure] [data-line] {
+  @apply px-4 leading-relaxed;
+}
+
+[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  @apply bg-accent/5 border-l-2 border-accent -mx-4 px-4;
+}
+
+[data-rehype-pretty-code-figure] [data-line-numbers] [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  @apply inline-block w-8 mr-4 text-ink-faint text-right;
+}
+
+[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  @apply bg-bg-elevated text-ink-muted text-xs px-5 py-2 rounded-t-xl border border-b-0 border-border font-mono;
+}

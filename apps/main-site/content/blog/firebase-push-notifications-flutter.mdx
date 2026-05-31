@@ -1,0 +1,182 @@
+---
+title: "Firebase Push Notifications in Flutter – Complete 2026 Guide"
+publishedAt: "2026-05-15"
+summary: "Master Firebase Cloud Messaging (FCM) in Flutter. Covers foreground, background, and terminated app states, notification channels, deep links, and production-ready Dart code."
+tags: ["Flutter", "Firebase", "FCM", "Mobile"]
+author: "Bilal Fali"
+---
+
+Firebase Cloud Messaging (FCM) is the standard push notification service for Flutter apps. This guide covers every notification state with production-ready code.
+
+## Setup
+
+```yaml
+# pubspec.yaml
+dependencies:
+  firebase_core: ^3.3.0
+  firebase_messaging: ^15.1.0
+  flutter_local_notifications: ^17.2.1
+```
+
+## Android Configuration
+
+```xml
+<!-- AndroidManifest.xml inside <application> -->
+<meta-data
+    android:name="com.google.firebase.messaging.default_notification_channel_id"
+    android:value="high_importance_channel" />
+```
+
+## The Notification Service
+
+```dart
+// lib/services/notification_service.dart
+
+@pragma('vm:entry-point')
+Future<void> _bgHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  await NotificationService.instance.showLocal(message);
+}
+
+class NotificationService {
+  NotificationService._();
+  static final instance = NotificationService._();
+
+  final _fcm   = FirebaseMessaging.instance;
+  final _local = FlutterLocalNotificationsPlugin();
+
+  Future<void> init() async {
+    FirebaseMessaging.onBackgroundMessage(_bgHandler);
+    await _setupLocalNotifications();
+    await _requestPermission();
+    await _setupHandlers();
+  }
+
+  Future<void> _requestPermission() async {
+    await _fcm.requestPermission(alert: true, badge: true, sound: true);
+    // iOS foreground
+    await _fcm.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true,
+    );
+  }
+
+  Future<void> _setupLocalNotifications() async {
+    const android = AndroidInitializationSettings('@drawable/ic_notification');
+    const ios     = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    await _local.initialize(
+      const InitializationSettings(android: android, iOS: ios),
+      onDidReceiveNotificationResponse: _onTap,
+    );
+
+    // Create high-importance channel
+    const channel = AndroidNotificationChannel(
+      'high_importance_channel',
+      'High Importance Notifications',
+      importance: Importance.high,
+    );
+    await _local
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+
+  Future<void> _setupHandlers() async {
+    // Foreground
+    FirebaseMessaging.onMessage.listen(showLocal);
+
+    // Background → tapped
+    FirebaseMessaging.onMessageOpenedApp.listen(_navigate);
+
+    // Terminated → tapped
+    final initial = await _fcm.getInitialMessage();
+    if (initial != null) _navigate(initial);
+  }
+
+  Future<void> showLocal(RemoteMessage msg) async {
+    final n = msg.notification;
+    if (n == null) return;
+    await _local.show(
+      n.hashCode, n.title, n.body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'high_importance_channel', 'High Importance Notifications',
+          importance: Importance.high, priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(presentAlert: true, presentSound: true),
+      ),
+      payload: msg.data['route'],
+    );
+  }
+
+  void _onTap(NotificationResponse r) {
+    if (r.payload != null) _goTo(r.payload!);
+  }
+
+  void _navigate(RemoteMessage msg) {
+    final route = msg.data['route'];
+    if (route != null) _goTo(route);
+  }
+
+  void _goTo(String route) {
+    // Your router: context.go(route) or Navigator.pushNamed
+    debugPrint('Navigate → $route');
+  }
+
+  Future<String?> getToken() => _fcm.getToken();
+  Future<void> subscribe(String topic) => _fcm.subscribeToTopic(topic);
+}
+```
+
+## Initialize in main.dart
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.instance.init();
+  runApp(const MyApp());
+}
+```
+
+## FCM Payload Structure
+
+```json
+{
+  "message": {
+    "token": "device_token",
+    "notification": { "title": "New Order", "body": "Order #1234 placed" },
+    "data": { "route": "/orders/1234", "orderId": "1234" },
+    "android": {
+      "notification": { "channel_id": "high_importance_channel" }
+    }
+  }
+}
+```
+
+## Topics (broadcast to groups)
+
+```dart
+// Subscribe
+await NotificationService.instance.subscribe('all_users');
+await NotificationService.instance.subscribe('flutter_devs');
+
+// Send via FCM API
+// "topic": "flutter_devs" instead of "token"
+```
+
+## Common Issues
+
+| Issue | Fix |
+|-------|-----|
+| No notification on Android | Check channel ID matches manifest |
+| No foreground on iOS | Implement `UNUserNotificationCenterDelegate` |
+| Android 13+ blocked | Request `POST_NOTIFICATIONS` permission |
+| Token null | Wait for Firebase init before calling `getToken()` |
+
+## Related Articles
+
+- [Flutter Clean Architecture Guide 2026](/blog/flutter-clean-architecture-2026)
+- [Best AI Tools for Developers 2026](/blog/best-ai-tools-2026)
