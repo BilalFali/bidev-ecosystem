@@ -55,7 +55,7 @@ export function MenuBar({ editor }: MenuBarProps) {
 
   function setLink() {
     if (!linkUrl) return;
-    editor.chain().focus().extendMarkToUrl(linkUrl).run();
+    editor.chain().focus().extendMarkRange("link").setLink({ href: linkUrl }).run();
     setShowLink(false);
     setLinkUrl("");
   }
