@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileText, Eye, Image as ImageIcon, TrendingUp, Plus, ArrowRight } from "lucide-react";
+import { FileText, Image as ImageIcon, TrendingUp, Plus, ArrowRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { StatsCard } from "@/components/ui/StatsCard";
@@ -11,32 +11,33 @@ import type { ArticleWithRelations } from "@/lib/types/database";
 export const metadata = { title: "Overview" };
 
 async function getStats() {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const [
-    { count: total },
-    { count: published },
-    { count: draft },
-    { data: recentArticles },
-    { count: mediaCount },
-  ] = await Promise.all([
-    supabase.from("articles").select("*", { count: "exact", head: true }),
-    supabase.from("articles").select("*", { count: "exact", head: true }).eq("status", "published"),
-    supabase.from("articles").select("*", { count: "exact", head: true }).eq("status", "draft"),
-    supabase.from("articles_with_relations").select("*").order("updated_at", { ascending: false }).limit(6),
-    supabase.from("media").select("*", { count: "exact", head: true }),
-  ]);
+    const [
+      { count: total },
+      { count: published },
+      { count: draft },
+      { data: recentArticles },
+      { count: mediaCount },
+    ] = await Promise.all([
+      supabase.from("articles").select("*", { count: "exact", head: true }),
+      supabase.from("articles").select("*", { count: "exact", head: true }).eq("status", "published"),
+      supabase.from("articles").select("*", { count: "exact", head: true }).eq("status", "draft"),
+      supabase.from("articles_with_relations").select("*").order("updated_at", { ascending: false }).limit(6),
+      supabase.from("media").select("*", { count: "exact", head: true }),
+    ]);
 
-  const totalViews = 0;
-
-  return {
-    total: total ?? 0,
-    published: published ?? 0,
-    draft: draft ?? 0,
-    totalViews,
-    media: mediaCount ?? 0,
-    recentArticles: (recentArticles ?? []) as ArticleWithRelations[],
-  };
+    return {
+      total:          total      ?? 0,
+      published:      published  ?? 0,
+      draft:          draft      ?? 0,
+      media:          mediaCount ?? 0,
+      recentArticles: (recentArticles ?? []) as ArticleWithRelations[],
+    };
+  } catch {
+    return { total: 0, published: 0, draft: 0, media: 0, recentArticles: [] };
+  }
 }
 
 export default async function OverviewPage() {
