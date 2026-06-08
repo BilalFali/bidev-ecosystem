@@ -15,9 +15,9 @@ interface AdSlotProps {
   className?: string;
 }
 
-const FORMAT: Record<SlotType, { adFormat: string; layout?: string }> = {
+const FORMAT: Record<SlotType, { adFormat: string }> = {
   "banner":     { adFormat: "auto" },
-  "in-article": { adFormat: "fluid", layout: "in-article" },
+  "in-article": { adFormat: "auto" },
   "sidebar":    { adFormat: "auto" },
   "footer":     { adFormat: "auto" },
 };
@@ -49,7 +49,7 @@ export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
   // Nothing to render if env vars aren't set — Auto Ads fills the page instead
   if (!publisherId || !slotId) return null;
 
-  const { adFormat, layout } = FORMAT[type];
+  const { adFormat } = FORMAT[type];
 
   return (
     <div className={className} aria-label="Advertisement">
@@ -60,7 +60,6 @@ export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
         data-ad-client={publisherId}
         data-ad-slot={slotId}
         data-ad-format={adFormat}
-        {...(layout ? { "data-ad-layout": layout } : {})}
         data-full-width-responsive="true"
       />
     </div>
