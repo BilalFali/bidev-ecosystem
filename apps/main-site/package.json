@@ -24,7 +24,8 @@
     "shiki": "^1.0.0",
     "reading-time": "^1.5.0",
     "qrcode": "^1.5.4",
-    "clsx": "^2.1.0"
+    "clsx": "^2.1.0",
+    "@supabase/supabase-js": "^2.49.4"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

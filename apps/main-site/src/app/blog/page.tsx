@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { getAllPosts, getAllTags } from "@/lib/mdx";
+import { getAllArticles } from "@/lib/articles";
+import { getAllTags } from "@/lib/mdx";
 import { formatDate } from "@/lib/utils";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = pageMetadata({
   title: "Blog – Flutter, Mobile Dev & Developer Tools",
@@ -17,13 +21,13 @@ export default async function BlogPage({
   searchParams: Promise<{ tag?: string; q?: string }>;
 }) {
   const { tag, q } = await searchParams;
-  const allPosts = getAllPosts();
-  const allTags  = getAllTags();
+  const allArticles = await getAllArticles();
+  const allTags     = getAllTags();
 
   const activeTag = tag ?? "";
   const query     = q?.toLowerCase() ?? "";
 
-  const posts = allPosts.filter((p) => {
+  const posts = allArticles.filter((p) => {
     const matchTag = !activeTag || p.tags.some((t) => t.toLowerCase() === activeTag.toLowerCase());
     const matchQ   = !query    || p.title.toLowerCase().includes(query) || p.summary.toLowerCase().includes(query);
     return matchTag && matchQ;
@@ -120,8 +124,22 @@ export default async function BlogPage({
                         <span>{post.readingTime} min read</span>
                       </div>
                     </div>
-                    <div className="sm:w-32 sm:h-24 rounded-lg bg-bg-elevated border border-border flex-shrink-0 flex items-center justify-center text-xs text-ink-faint">
-                      Cover
+
+                    {/* Cover thumbnail */}
+                    <div className="sm:w-32 sm:h-24 rounded-lg overflow-hidden bg-bg-elevated border border-border flex-shrink-0">
+                      {post.image ? (
+                        <Image
+                          src={post.image}
+                          alt={post.title}
+                          width={128}
+                          height={96}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-2xl opacity-20 select-none">✦</span>
+                        </div>
+                      )}
                     </div>
                   </Link>
                   {/* In-article ad every 4 posts */}

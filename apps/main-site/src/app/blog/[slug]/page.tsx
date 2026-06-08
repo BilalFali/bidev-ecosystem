@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import Link from "next/link";
-import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/lib/mdx";
+import { getAllArticleSlugs, getArticleBySlug } from "@/lib/articles";
+import { getRelatedPosts } from "@/lib/mdx";
 import { postMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
@@ -14,11 +16,15 @@ import { TableOfContents } from "@/components/blog/TableOfContents";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { articleJsonLd } from "@bidev/shared";
 
+export const revalidate = 60;
+export const dynamicParams = true;
+
 const SITE_URL  = "https://bidev.site";
 const SITE_NAME = "bidev.site";
 
 export async function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
+  const slugs = await getAllArticleSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -27,7 +33,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getArticleBySlug(slug);
   if (!post) return {};
   return postMetadata(post);
 }
@@ -55,7 +61,7 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getArticleBySlug(slug);
   if (!post) notFound();
 
   const related = getRelatedPosts(post, 3);
@@ -115,12 +121,29 @@ export default async function BlogPostPage({
               <span>{post.readingTime} min read</span>
             </div>
 
+            {/* Cover image */}
+            {post.image && (
+              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-10 border border-border">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
+
             {/* Top Ad */}
             <AdSlot type="banner" className="mb-10" />
 
-            {/* MDX Content */}
+            {/* Content */}
             <div className="prose prose-invert max-w-none">
-              <MDXRemote source={post.content} options={mdxOptions} />
+              {post.source === "db" ? (
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              ) : (
+                <MDXRemote source={post.content} options={mdxOptions} />
+              )}
             </div>
 
             {/* Middle Ad */}
