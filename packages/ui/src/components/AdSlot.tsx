@@ -1,4 +1,12 @@
-import React from "react";
+"use client";
+
+import { useEffect, useRef } from "react";
+
+declare global {
+  interface Window {
+    adsbygoogle: Record<string, unknown>[];
+  }
+}
 
 type SlotType = "banner" | "in-article" | "sidebar" | "footer";
 
@@ -7,24 +15,54 @@ interface AdSlotProps {
   className?: string;
 }
 
-const slotStyles: Record<SlotType, { height: string; label: string }> = {
-  "banner":     { height: "h-24",  label: "Advertisement – 728×90" },
-  "in-article": { height: "h-28",  label: "Advertisement – 336×280" },
-  "sidebar":    { height: "h-64",  label: "Advertisement – 300×250" },
-  "footer":     { height: "h-20",  label: "Advertisement – 728×90" },
+const FORMAT: Record<SlotType, { adFormat: string; layout?: string }> = {
+  "banner":     { adFormat: "auto" },
+  "in-article": { adFormat: "fluid", layout: "in-article" },
+  "sidebar":    { adFormat: "auto" },
+  "footer":     { adFormat: "auto" },
+};
+
+const ENV_KEY: Record<SlotType, string> = {
+  "banner":     "NEXT_PUBLIC_AD_SLOT_BANNER",
+  "in-article": "NEXT_PUBLIC_AD_SLOT_IN_ARTICLE",
+  "sidebar":    "NEXT_PUBLIC_AD_SLOT_SIDEBAR",
+  "footer":     "NEXT_PUBLIC_AD_SLOT_FOOTER",
 };
 
 export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
-  const { height, label } = slotStyles[type];
+  const ref    = useRef<HTMLModElement>(null);
+  const pushed = useRef(false);
+
+  const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
+  const slotId      = process.env[ENV_KEY[type]];
+
+  useEffect(() => {
+    if (!publisherId || !slotId || pushed.current || !ref.current) return;
+    try {
+      pushed.current = true;
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch {
+      // AdSense not loaded yet — auto ads script handles it
+    }
+  }, [publisherId, slotId]);
+
+  // Nothing to render if env vars aren't set — Auto Ads fills the page instead
+  if (!publisherId || !slotId) return null;
+
+  const { adFormat, layout } = FORMAT[type];
 
   return (
-    <div
-      aria-hidden="true"
-      className={`w-full ${height} flex items-center justify-center rounded-lg border border-dashed border-border bg-bg-secondary ${className}`}
-    >
-      <span className="text-xs text-ink-faint select-none tracking-wide uppercase">
-        {label}
-      </span>
+    <div className={className} aria-label="Advertisement">
+      <ins
+        ref={ref}
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client={publisherId}
+        data-ad-slot={slotId}
+        data-ad-format={adFormat}
+        {...(layout ? { "data-ad-layout": layout } : {})}
+        data-full-width-responsive="true"
+      />
     </div>
   );
 }
