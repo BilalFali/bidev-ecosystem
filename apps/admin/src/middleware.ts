@@ -2,12 +2,31 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Skip static assets early — no auth needed
+  if (
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/favicon") ||
+    pathname.match(/\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff2?)$/)
+  ) {
+    return NextResponse.next();
+  }
+
+  // Guard: if env vars are not configured, let the request through to
+  // avoid crashing the middleware on first deploy before vars are set.
+  const supabaseUrl  = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error("[middleware] Missing Supabase env vars — skipping auth check");
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  try {
+    const supabase = createServerClient(supabaseUrl, supabaseKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -22,33 +41,36 @@ export async function middleware(request: NextRequest) {
           );
         },
       },
+    });
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const isLoginPage = pathname === "/login";
+    const isApiRoute  = pathname.startsWith("/api/");
+
+    if (isApiRoute) return supabaseResponse;
+
+    if (!user && !isLoginPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
     }
-  );
 
-  const { data: { user } } = await supabase.auth.getUser();
+    if (user && isLoginPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
 
-  const { pathname } = request.nextUrl;
-  const isLoginPage = pathname === "/login";
-  const isApiRoute  = pathname.startsWith("/api/");
-  const isStatic    = pathname.startsWith("/_next/") || pathname.includes(".");
-
-  if (isStatic || isApiRoute) return supabaseResponse;
-
-  if (!user && !isLoginPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    return supabaseResponse;
+  } catch (err) {
+    // If Supabase is unreachable or throws, don't crash — just pass through.
+    // The page-level auth check will handle the redirect.
+    console.error("[middleware] Supabase error:", err);
+    return NextResponse.next();
   }
-
-  if (user && isLoginPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
-
-  return supabaseResponse;
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon\\.ico).*)"],
 };
