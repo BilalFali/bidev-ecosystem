@@ -44,13 +44,7 @@ const mdxOptions = {
     rehypePlugins: [
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: "wrap" }],
-      [
-        rehypePrettyCode,
-        {
-          theme: "github-dark",
-          keepBackground: false,
-        },
-      ],
+      [rehypePrettyCode, { theme: "github-dark", keepBackground: false }],
     ] as any,
   },
 };
@@ -65,34 +59,42 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const related = getRelatedPosts(post, 3);
-  const jsonLd  = articleJsonLd({
-    url: `${SITE_URL}/blog/${post.slug}`,
-    title: post.title,
+
+  const articleSchema = articleJsonLd({
+    url:         `${SITE_URL}/blog/${post.slug}`,
+    title:       post.title,
     description: post.summary,
     publishedAt: post.publishedAt,
-    updatedAt: post.updatedAt,
-    authorName: post.author ?? "Bilal Fali",
-    siteName: SITE_NAME,
-    image: post.image,
+    updatedAt:   post.updatedAt,
+    authorName:  post.author ?? "Bilal Fali",
+    siteName:    SITE_NAME,
+    image:       post.image,
   });
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Blog",  item: `${SITE_URL}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+    ],
+  };
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex gap-12">
-          {/* Article */}
           <article className="flex-1 min-w-0 max-w-3xl">
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-xs text-ink-faint mb-8">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-ink-faint mb-8">
               <Link href="/" className="hover:text-ink-muted transition-colors">Home</Link>
-              <span>/</span>
+              <span aria-hidden="true">/</span>
               <Link href="/blog" className="hover:text-ink-muted transition-colors">Blog</Link>
-              <span>/</span>
+              <span aria-hidden="true">/</span>
               <span className="text-ink-muted truncate">{post.title}</span>
             </nav>
 
@@ -121,15 +123,17 @@ export default async function BlogPostPage({
               <span>{post.readingTime} min read</span>
             </div>
 
-            {/* Cover image */}
+            {/* Cover — priority + explicit aspect ratio prevents CLS */}
             {post.image && (
-              <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-10 border border-border">
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-10 border border-border">
                 <Image
                   src={post.image}
                   alt={post.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 768px"
                   className="object-cover"
                   priority
+                  fetchPriority="high"
                 />
               </div>
             )}
@@ -165,7 +169,6 @@ export default async function BlogPostPage({
               </div>
             </div>
 
-            {/* Related Posts */}
             {related.length > 0 && <RelatedPosts posts={related} />}
           </article>
 

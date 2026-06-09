@@ -125,20 +125,21 @@ export default async function BlogPage({
                       </div>
                     </div>
 
-                    {/* Cover thumbnail */}
-                    <div className="sm:w-32 sm:h-24 rounded-lg overflow-hidden bg-bg-elevated border border-border flex-shrink-0">
+                    {/* Cover thumbnail — priority on first 3 for LCP */}
+                    <div className="sm:w-32 sm:h-24 rounded-lg overflow-hidden bg-bg-elevated border border-border flex-shrink-0 flex items-center justify-center">
                       {post.image ? (
                         <Image
                           src={post.image}
                           alt={post.title}
                           width={128}
                           height={96}
+                          sizes="(max-width: 640px) 100vw, 128px"
                           className="w-full h-full object-cover"
+                          priority={i < 3}
+                          loading={i < 3 ? "eager" : "lazy"}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-2xl opacity-20 select-none">✦</span>
-                        </div>
+                        <span className="text-2xl opacity-20 select-none">✦</span>
                       )}
                     </div>
                   </Link>
