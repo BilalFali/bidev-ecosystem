@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -9,7 +8,7 @@ import { WebVitals } from "@/components/analytics/WebVitals";
 import { websiteJsonLd } from "@bidev/shared";
 
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
-const GA_ID      = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const GA_ID      = "G-C04YP7HRR0";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -99,9 +98,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
           </>
         )}
-        {GA_ID && (
-          <link rel="preconnect" href="https://www.googletagmanager.com" />
-        )}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
 
         {/* Structured data */}
         <script
@@ -127,8 +124,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {GA_ID && <WebVitals />}
       </body>
 
-      {/* Google Analytics 4 */}
-      {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
+      {/* Google Analytics 4 — exact tag from analytics.google.com */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}
+      </Script>
     </html>
   );
 }
