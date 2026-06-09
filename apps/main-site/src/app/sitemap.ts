@@ -42,7 +42,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const { data } = await supabase
       .from("articles")
       .select("slug, updated_at, published_at")
-      .eq("status", "published");
+      .eq("status", "published") as {
+        data: { slug: string; updated_at: string | null; published_at: string | null }[] | null;
+        error: unknown;
+      };
 
     const mdxSlugs = new Set(mdxPosts.map((p) => p.url));
 
