@@ -14,9 +14,13 @@ import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
 import { TableOfContents } from "@/components/blog/TableOfContents";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { ReadingProgress } from "@/components/blog/ReadingProgress";
+import { ProseContent } from "@/components/blog/ProseContent";
+import { ShareButtons } from "@/components/blog/ShareButtons";
+import { Comments } from "@/components/blog/Comments";
 import { articleJsonLd } from "@bidev/shared";
 
-export const revalidate = 60;
+export const revalidate  = 60;
 export const dynamicParams = true;
 
 const SITE_URL  = "https://bidev.site";
@@ -58,10 +62,11 @@ export default async function BlogPostPage({
   const post = await getArticleBySlug(slug);
   if (!post) notFound();
 
-  const related = getRelatedPosts(post, 3);
+  const related   = getRelatedPosts(post, 3);
+  const postUrl   = `${SITE_URL}/blog/${post.slug}`;
 
   const articleSchema = articleJsonLd({
-    url:         `${SITE_URL}/blog/${post.slug}`,
+    url:         postUrl,
     title:       post.title,
     description: post.summary,
     publishedAt: post.publishedAt,
@@ -77,18 +82,21 @@ export default async function BlogPostPage({
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
       { "@type": "ListItem", position: 2, name: "Blog",  item: `${SITE_URL}/blog` },
-      { "@type": "ListItem", position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
     ],
   };
 
   return (
     <>
+      <ReadingProgress />
+
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex gap-12">
           <article className="flex-1 min-w-0 max-w-3xl">
+
             {/* Breadcrumb */}
             <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-ink-faint mb-8">
               <Link href="/" className="hover:text-ink-muted transition-colors">Home</Link>
@@ -123,7 +131,7 @@ export default async function BlogPostPage({
               <span>{post.readingTime} min read</span>
             </div>
 
-            {/* Cover — priority + explicit aspect ratio prevents CLS */}
+            {/* Cover image */}
             {post.image && (
               <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-10 border border-border">
                 <Image
@@ -141,20 +149,25 @@ export default async function BlogPostPage({
             {/* Top Ad */}
             <AdSlot type="banner" className="mb-10" />
 
-            {/* Content */}
-            <div className="prose prose-invert max-w-none">
+            {/* Article body — ProseContent injects copy buttons on every <pre> */}
+            <ProseContent>
               {post.source === "db" ? (
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               ) : (
                 <MDXRemote source={post.content} options={mdxOptions} />
               )}
-            </div>
+            </ProseContent>
 
             {/* Middle Ad */}
             <AdSlot type="in-article" className="my-10" />
 
-            {/* Tags footer */}
+            {/* Share */}
             <div className="mt-10 pt-8 border-t border-border">
+              <ShareButtons url={postUrl} title={post.title} />
+            </div>
+
+            {/* Tags footer */}
+            <div className="mt-8 pt-8 border-t border-border">
               <p className="text-xs text-ink-faint uppercase tracking-wider mb-3">Tagged in</p>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((t) => (
@@ -169,7 +182,15 @@ export default async function BlogPostPage({
               </div>
             </div>
 
+            {/* Related posts */}
             {related.length > 0 && <RelatedPosts posts={related} />}
+
+            {/* Comments */}
+            <div className="mt-12 pt-8 border-t border-border">
+              <h2 className="text-base font-semibold text-ink mb-6">Comments</h2>
+              <Comments />
+            </div>
+
           </article>
 
           {/* Sidebar */}
