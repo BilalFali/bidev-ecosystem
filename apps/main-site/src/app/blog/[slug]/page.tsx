@@ -18,6 +18,7 @@ import { ReadingProgress } from "@/components/blog/ReadingProgress";
 import { ProseContent } from "@/components/blog/ProseContent";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { Comments } from "@/components/blog/Comments";
+import { ViewTracker } from "@/components/blog/ViewTracker";
 import { articleJsonLd } from "@bidev/shared";
 
 export const revalidate  = 60;
@@ -89,6 +90,7 @@ export default async function BlogPostPage({
   return (
     <>
       <ReadingProgress />
+      <ViewTracker slug={post.slug} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
