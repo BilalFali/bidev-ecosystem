@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from "react";
 
-const REPO         = "BilalFali/bidev-ecosystem";
-const REPO_ID      = process.env.NEXT_PUBLIC_GISCUS_REPO_ID;
-const CATEGORY_ID  = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID;
+const REPO        = "BilalFali/bidev-ecosystem";
+const REPO_ID     = process.env.NEXT_PUBLIC_GISCUS_REPO_ID     ?? "R_kgDOSuzFJg";
+const CATEGORY_ID = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? "";
 
 export function Comments() {
   const ref = useRef<HTMLDivElement>(null);
