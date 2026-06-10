@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
     if (!supabase) return NextResponse.json({ ok: false }, { status: 503 });
 
     // Atomic increment — only counts articles that exist in the DB
-    await supabase.rpc("increment_article_views", { article_slug: slug });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.rpc as any)("increment_article_views", { article_slug: slug });
 
     return NextResponse.json({ ok: true });
   } catch {
