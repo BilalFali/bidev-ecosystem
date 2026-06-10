@@ -38,6 +38,11 @@ export const metadata: Metadata = {
   keywords: ["Flutter", "mobile development", "developer tools", "Firebase", "Dart", "Next.js"],
   authors: [{ name: "Bilal Fali", url: SITE_URL }],
   creator: "Bilal Fali",
+  icons: {
+    icon:        [{ url: "/profile.png", type: "image/png" }],
+    apple:       [{ url: "/profile.png", type: "image/png" }],
+    shortcut:    "/profile.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
