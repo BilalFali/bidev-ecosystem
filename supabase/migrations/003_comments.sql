@@ -1,7 +1,10 @@
 -- Comments table
 -- Run this in the Supabase SQL editor
+-- Safe to re-run: drops and recreates if an old version exists
 
-CREATE TABLE IF NOT EXISTS public.comments (
+DROP TABLE IF EXISTS public.comments CASCADE;
+
+CREATE TABLE public.comments (
   id           uuid        DEFAULT gen_random_uuid() PRIMARY KEY,
   article_slug text        NOT NULL,
   author_name  text        NOT NULL CHECK (char_length(author_name) BETWEEN 1 AND 80),
@@ -12,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.comments (
 );
 
 -- Fast lookups: all comments for an article (admin), approved comments (public)
-CREATE INDEX IF NOT EXISTS comments_slug_approved_idx
+CREATE INDEX comments_slug_approved_idx
   ON public.comments (article_slug, approved, created_at DESC);
 
 -- RLS: block all direct anon access — every read/write goes through service-role API routes

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface Comment {
   id: string;
@@ -22,28 +21,57 @@ function timeAgo(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
+const POLL_NORMAL = 15_000;  // 15 s background polling
+const POLL_FAST   =  5_000;  // 5 s after submitting (watch for approval)
+const FAST_TICKS  = 12;      // stay in fast mode for 60 s then relax
+
 interface Props { slug: string }
 
 export function Comments({ slug }: Props) {
-  const [comments, setComments]   = useState<Comment[]>([]);
-  const [loading,  setLoading]    = useState(true);
+  const [comments,  setComments]  = useState<Comment[]>([]);
+  const [loading,   setLoading]   = useState(true);
+  const [fetchErr,  setFetchErr]  = useState(false);
+  const fastTicksLeft = useRef(0);
+  const timerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Form state
-  const [name,     setName]     = useState("");
-  const [email,    setEmail]    = useState("");
-  const [content,  setContent]  = useState("");
-  const [sending,  setSending]  = useState(false);
-  const [sent,     setSent]     = useState(false);
-  const [formErr,  setFormErr]  = useState("");
+  // Form
+  const [name,    setName]    = useState("");
+  const [email,   setEmail]   = useState("");
+  const [content, setContent] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent,    setSent]    = useState(false);
+  const [formErr, setFormErr] = useState("");
+
+  const fetchComments = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
+    try {
+      const r = await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`, { cache: "no-store" });
+      if (!r.ok) throw new Error("fetch failed");
+      const d = await r.json() as { comments: Comment[] };
+      setComments(d.comments ?? []);
+      setFetchErr(false);
+    } catch {
+      if (!silent) setFetchErr(true);
+    } finally {
+      if (!silent) setLoading(false);
+    }
+  }, [slug]);
+
+  // Polling loop
+  const scheduleNext = useCallback(() => {
+    const delay = fastTicksLeft.current > 0 ? POLL_FAST : POLL_NORMAL;
+    if (fastTicksLeft.current > 0) fastTicksLeft.current--;
+
+    timerRef.current = setTimeout(async () => {
+      await fetchComments(true);
+      scheduleNext();
+    }, delay);
+  }, [fetchComments]);
 
   useEffect(() => {
-    setLoading(true);
-    fetch(`/api/comments?slug=${encodeURIComponent(slug)}`)
-      .then((r) => r.json())
-      .then((d: { comments: Comment[] }) => setComments(d.comments ?? []))
-      .catch(() => setComments([]))
-      .finally(() => setLoading(false));
-  }, [slug]);
+    fetchComments(false).then(() => scheduleNext());
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [fetchComments, scheduleNext]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,6 +88,10 @@ export function Comments({ slug }: Props) {
       if (data.ok) {
         setSent(true);
         setName(""); setEmail(""); setContent("");
+        // Switch to fast polling so the comment appears quickly after approval
+        fastTicksLeft.current = FAST_TICKS;
+        if (timerRef.current) clearTimeout(timerRef.current);
+        scheduleNext();
       } else {
         setFormErr(data.error ?? "Something went wrong.");
       }
@@ -86,6 +118,11 @@ export function Comments({ slug }: Props) {
             <div key={i} className="animate-pulse h-20 rounded-xl bg-bg-elevated border border-border" />
           ))}
         </div>
+      ) : fetchErr ? (
+        <div className="py-8 text-center rounded-xl border border-dashed border-border text-ink-faint text-sm">
+          Could not load comments.{" "}
+          <button onClick={() => fetchComments(false)} className="text-accent hover:underline">Retry</button>
+        </div>
       ) : comments.length === 0 ? (
         <div className="py-10 text-center rounded-xl border border-dashed border-border text-ink-faint text-sm">
           No comments yet — be the first to leave one below.
@@ -94,13 +131,11 @@ export function Comments({ slug }: Props) {
         <div className="space-y-4">
           {comments.map((c) => (
             <div key={c.id} className="flex gap-3">
-              {/* Avatar */}
               <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center shrink-0 mt-0.5">
                 <span className="text-accent text-sm font-bold uppercase">
                   {c.author_name.charAt(0)}
                 </span>
               </div>
-              {/* Bubble */}
               <div className="flex-1 min-w-0 bg-bg-elevated border border-border rounded-xl px-4 py-3">
                 <div className="flex items-baseline gap-2 mb-1.5">
                   <span className="text-sm font-semibold text-ink">{c.author_name}</span>
@@ -117,9 +152,13 @@ export function Comments({ slug }: Props) {
       <div className="mt-8 rounded-xl border border-border bg-bg-elevated p-5">
         {sent ? (
           <div className="text-center py-4">
-            <p className="text-2xl mb-2">✓</p>
+            <div className="w-10 h-10 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center mx-auto mb-3">
+              <span className="text-amber-400 text-lg">⏳</span>
+            </div>
             <p className="font-medium text-ink mb-1">Comment submitted!</p>
-            <p className="text-sm text-ink-faint">It will appear after review — usually within 24 hours.</p>
+            <p className="text-sm text-ink-faint max-w-xs mx-auto">
+              It&apos;s pending review and will appear here automatically once approved — no need to refresh.
+            </p>
             <button
               onClick={() => setSent(false)}
               className="mt-4 text-xs text-accent hover:underline"
@@ -146,7 +185,9 @@ export function Comments({ slug }: Props) {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-ink-faint mb-1 block">Email <span className="text-ink-faint/60">(optional, not shown)</span></label>
+                  <label className="text-xs text-ink-faint mb-1 block">
+                    Email <span className="text-ink-faint/60">(optional, not shown)</span>
+                  </label>
                   <input
                     type="email"
                     value={email}
@@ -181,12 +222,12 @@ export function Comments({ slug }: Props) {
                 </p>
               )}
 
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-ink-faint">Comments are reviewed before publishing.</p>
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-xs text-ink-faint">Comments appear after review.</p>
                 <button
                   type="submit"
                   disabled={sending}
-                  className="px-5 py-2 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors disabled:opacity-60"
+                  className="px-5 py-2 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors disabled:opacity-60 shrink-0"
                 >
                   {sending ? "Posting…" : "Post Comment"}
                 </button>
