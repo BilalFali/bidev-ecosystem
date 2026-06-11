@@ -4,12 +4,20 @@ import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Free Developer Tools",
-  description: "Free online tools for developers: QR code generator, JSON formatter, password generator, Base64 encoder, UUID generator, and more.",
+  title: "Free Developer Tools – JSON to Dart, QR, UUID & More",
+  description: "Free online tools for developers: JSON to Dart converter, QR code generator, JSON formatter, password generator, Base64 encoder, UUID generator, and more.",
   path: "/tools",
 });
 
 const TOOLS = [
+  {
+    href: "/tools/json-to-dart",
+    icon: "🎯",
+    title: "JSON to Dart Converter",
+    description: "Convert JSON to Dart model classes. Generates fromJson, toJson, copyWith with null safety. Supports Freezed & json_serializable.",
+    tags: ["Flutter", "Dart"],
+    popular: true,
+  },
   {
     href: "/tools/qr-generator",
     icon: "⬛",
@@ -24,7 +32,7 @@ const TOOLS = [
     title: "JSON Formatter & Validator",
     description: "Format, validate, and minify JSON. Real-time error detection with line numbers.",
     tags: ["Formatter", "Validator"],
-    popular: true,
+    popular: false,
   },
   {
     href: "/tools/password-generator",

@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/mdx";
 import { getSupabaseClient } from "@/lib/supabase";
+import { SNIPPETS } from "@/lib/snippets";
 
 export const revalidate = 3600;
 
@@ -13,15 +14,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE,                                  lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/blog`,                        lastModified: now, changeFrequency: "daily",   priority: 0.9 },
     { url: `${BASE}/tools`,                       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/snippets`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/resources`,                   lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/flutter`,                     lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}/ai-tools`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
+    { url: `${BASE}/ai-tools`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.7 },
     { url: `${BASE}/about`,                       lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${BASE}/contact`,                     lastModified: now, changeFrequency: "yearly",  priority: 0.4 },
     { url: `${BASE}/privacy-policy`,              lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,                       lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
+    { url: `${BASE}/tools/json-to-dart`,          lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/tools/qr-generator`,          lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/tools/json-formatter`,        lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/tools/password-generator`,    lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE}/tools/password-generator`,    lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/tools/base64`,                lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/tools/uuid-generator`,        lastModified: now, changeFrequency: "monthly", priority: 0.7 },
   ];
@@ -59,5 +63,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
   }
 
-  return [...staticPages, ...mdxPosts, ...dbPosts];
+  const snippetPages: MetadataRoute.Sitemap = SNIPPETS.map((s) => ({
+    url:             `${BASE}/snippets/${s.slug}`,
+    lastModified:    now,
+    changeFrequency: "monthly" as const,
+    priority:        0.7,
+  }));
+
+  return [...staticPages, ...snippetPages, ...mdxPosts, ...dbPosts];
 }

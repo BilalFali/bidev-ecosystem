@@ -4,22 +4,24 @@ import { getAllArticles } from "@/lib/articles";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
+import { SNIPPETS } from "@/lib/snippets";
 
 export const revalidate = 60;
 
 const TOOLS = [
-  { href: "/tools/qr-generator",      icon: "⬛", title: "QR Generator",         desc: "Any URL or text, instant QR code."         },
-  { href: "/tools/json-formatter",    icon: "{ }", title: "JSON Formatter",       desc: "Validate and pretty-print JSON."           },
-  { href: "/tools/password-generator",icon: "🔐", title: "Password Generator",   desc: "Secure passwords via Web Crypto API."      },
-  { href: "/tools/base64",            icon: "🔡", title: "Base64 Encode/Decode", desc: "Encode or decode Base64 in-browser."       },
-  { href: "/tools/uuid-generator",    icon: "🆔", title: "UUID Generator",       desc: "RFC-4122 compliant UUIDs, one click."      },
+  { href: "/tools/json-to-dart",       icon: "🎯", title: "JSON to Dart",         desc: "Convert JSON to Dart models with null safety, Freezed, and more.", new: true },
+  { href: "/tools/qr-generator",       icon: "⬛", title: "QR Generator",         desc: "Any URL or text, instant QR code.",                                new: false },
+  { href: "/tools/json-formatter",     icon: "{ }", title: "JSON Formatter",      desc: "Validate and pretty-print JSON.",                                  new: false },
+  { href: "/tools/password-generator", icon: "🔐", title: "Password Generator",  desc: "Secure passwords via Web Crypto API.",                             new: false },
+  { href: "/tools/base64",             icon: "🔡", title: "Base64 Encode/Decode",desc: "Encode or decode Base64 in-browser.",                              new: false },
+  { href: "/tools/uuid-generator",     icon: "🆔", title: "UUID Generator",      desc: "RFC-4122 compliant UUIDs, one click.",                             new: false },
 ];
 
 const TOPICS = [
-  { label: "Flutter",   href: "/flutter",            color: "from-cyan-500/10 to-cyan-500/5",   border: "border-cyan-500/25",   dot: "bg-cyan-400"   },
-  { label: "Firebase",  href: "/blog?tag=Firebase",  color: "from-orange-500/10 to-orange-500/5", border: "border-orange-500/25", dot: "bg-orange-400" },
-  { label: "AI Tools",  href: "/ai-tools",           color: "from-violet-500/10 to-violet-500/5", border: "border-violet-500/25", dot: "bg-violet-400" },
-  { label: "Dev Tools", href: "/tools",              color: "from-green-500/10 to-green-500/5",   border: "border-green-500/25",  dot: "bg-green-400"  },
+  { label: "Flutter",   href: "/flutter",    color: "from-cyan-500/10 to-cyan-500/5",    border: "border-cyan-500/25",   dot: "bg-cyan-400"   },
+  { label: "Snippets",  href: "/snippets",   color: "from-green-500/10 to-green-500/5",  border: "border-green-500/25",  dot: "bg-green-400"  },
+  { label: "Resources", href: "/resources",  color: "from-violet-500/10 to-violet-500/5",border: "border-violet-500/25", dot: "bg-violet-400" },
+  { label: "Dev Tools", href: "/tools",      color: "from-amber-500/10 to-amber-500/5",  border: "border-amber-500/25",  dot: "bg-amber-400"  },
 ];
 
 const CODE_SNIPPET = `// Flutter BLoC pattern
@@ -96,9 +98,9 @@ export default async function HomePage() {
             <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-3 mt-10">
               {[
                 { v: `${allArticles.length}+`, l: "Articles" },
-                { v: "5+",  l: "Years Flutter" },
-                { v: "7+",  l: "Apps Published" },
-                { v: "5",   l: "Free Tools" },
+                { v: `${SNIPPETS.length}+`,    l: "Snippets" },
+                { v: "6",                      l: "Free Tools" },
+                { v: "5+",                     l: "Years Flutter" },
               ].map(s => (
                 <div key={s.l} className="flex flex-col">
                   <span className="text-2xl font-bold text-gradient-accent">{s.v}</span>
@@ -304,8 +306,13 @@ export default async function HomePage() {
             <Link
               key={tool.href}
               href={tool.href}
-              className="group flex items-start gap-4 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
+              className="group relative flex items-start gap-4 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
             >
+              {tool.new && (
+                <span className="absolute top-3 right-3 text-[10px] px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/25 font-semibold">
+                  New
+                </span>
+              )}
               <span className="text-2xl mt-0.5 shrink-0">{tool.icon}</span>
               <div className="min-w-0">
                 <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm">
@@ -315,6 +322,51 @@ export default async function HomePage() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── SNIPPETS ──────────────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex items-end justify-between mb-7">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1">Copy-ready</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-ink">Code Snippets</h2>
+          </div>
+          <Link href="/snippets" className="text-sm text-ink-muted hover:text-accent transition-colors hidden sm:block">
+            All snippets →
+          </Link>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {SNIPPETS.slice(0, 6).map(snippet => (
+            <Link
+              key={snippet.slug}
+              href={`/snippets/${snippet.slug}`}
+              className="group flex flex-col gap-3 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm leading-snug">
+                  {snippet.title}
+                </h3>
+                <span className={`shrink-0 text-[10px] px-1.5 py-0.5 rounded border font-medium ${
+                  snippet.difficulty === "beginner"     ? "text-green-400 bg-green-400/10 border-green-400/20"
+                  : snippet.difficulty === "intermediate" ? "text-yellow-400 bg-yellow-400/10 border-yellow-400/20"
+                  : "text-red-400 bg-red-400/10 border-red-400/20"
+                }`}>
+                  {snippet.difficulty}
+                </span>
+              </div>
+              <p className="text-xs text-ink-muted line-clamp-2 leading-relaxed">{snippet.description}</p>
+              <pre className="text-[10px] font-mono text-ink-faint bg-bg-elevated rounded-lg px-3 py-2 line-clamp-2 overflow-hidden border border-border/50">
+                {snippet.code.split("\n").slice(0, 3).join("\n")}
+              </pre>
+              <span className="text-xs text-ink-faint">{snippet.category}</span>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-6 text-center sm:hidden">
+          <Link href="/snippets" className="text-sm text-accent hover:underline">View all snippets →</Link>
         </div>
       </section>
 

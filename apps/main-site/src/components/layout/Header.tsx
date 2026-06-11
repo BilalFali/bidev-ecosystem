@@ -5,11 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV = [
-  { label: "Blog",     href: "/blog" },
-  { label: "Tools",    href: "/tools" },
-  { label: "Flutter",  href: "/flutter" },
-  { label: "AI Tools", href: "/ai-tools" },
-  { label: "About",    href: "/about" },
+  { label: "Blog",      href: "/blog" },
+  { label: "Snippets",  href: "/snippets" },
+  { label: "Tools",     href: "/tools" },
+  { label: "Resources", href: "/resources" },
+  { label: "Flutter",   href: "/flutter" },
+  { label: "About",     href: "/about" },
 ];
 
 export function Header() {
