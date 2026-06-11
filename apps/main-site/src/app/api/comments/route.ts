@@ -56,6 +56,14 @@ export async function POST(req: NextRequest) {
     const supabase = getSupabaseClient();
     if (!supabase) return NextResponse.json({ ok: false, error: "Service unavailable." }, { status: 503 });
 
+    // Read auto-approve setting (default true if table/key missing)
+    const { data: settingRow } = await (supabase as any)
+      .from("site_settings")
+      .select("value")
+      .eq("key", "auto_approve_comments")
+      .single();
+    const autoApprove = settingRow ? settingRow.value !== "false" : true;
+
     const { error } = await (supabase as any)
       .from("comments")
       .insert({
@@ -63,7 +71,7 @@ export async function POST(req: NextRequest) {
         author_name:  author_name.trim(),
         author_email: author_email?.trim() || null,
         content:      content.trim(),
-        approved:     false,
+        approved:     autoApprove,
       });
 
     if (error) {
@@ -71,7 +79,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false, error: "Failed to save comment." }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, approved: autoApprove });
   } catch {
     return NextResponse.json({ ok: false, error: "Unexpected error." }, { status: 500 });
   }

@@ -38,9 +38,10 @@ export function Comments({ slug }: Props) {
   const [name,    setName]    = useState("");
   const [email,   setEmail]   = useState("");
   const [content, setContent] = useState("");
-  const [sending, setSending] = useState(false);
-  const [sent,    setSent]    = useState(false);
-  const [formErr, setFormErr] = useState("");
+  const [sending,       setSending]       = useState(false);
+  const [sent,          setSent]          = useState(false);
+  const [wasAutoApproved, setWasAutoApproved] = useState(false);
+  const [formErr,       setFormErr]       = useState("");
 
   const fetchComments = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -84,9 +85,10 @@ export function Comments({ slug }: Props) {
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify({ slug, author_name: name, author_email: email, content }),
       });
-      const data = await res.json() as { ok: boolean; error?: string };
+      const data = await res.json() as { ok: boolean; approved?: boolean; error?: string };
       if (data.ok) {
         setSent(true);
+        setWasAutoApproved(data.approved !== false);
         setName(""); setEmail(""); setContent("");
         // Switch to fast polling so the comment appears quickly after approval
         fastTicksLeft.current = FAST_TICKS;
@@ -152,12 +154,16 @@ export function Comments({ slug }: Props) {
       <div className="mt-8 rounded-xl border border-border bg-bg-elevated p-5">
         {sent ? (
           <div className="text-center py-4">
-            <div className="w-10 h-10 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center mx-auto mb-3">
-              <span className="text-amber-400 text-lg">⏳</span>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3 ${wasAutoApproved ? "bg-green-500/15 border border-green-500/25" : "bg-amber-500/15 border border-amber-500/25"}`}>
+              <span className="text-lg">{wasAutoApproved ? "✓" : "⏳"}</span>
             </div>
-            <p className="font-medium text-ink mb-1">Comment submitted!</p>
+            <p className="font-medium text-ink mb-1">
+              {wasAutoApproved ? "Comment posted!" : "Comment submitted!"}
+            </p>
             <p className="text-sm text-ink-faint max-w-xs mx-auto">
-              It&apos;s pending review and will appear here automatically once approved — no need to refresh.
+              {wasAutoApproved
+                ? "Your comment is now live. Scroll up to see it."
+                : "It’s pending review and will appear automatically once approved."}
             </p>
             <button
               onClick={() => setSent(false)}
