@@ -190,7 +190,7 @@ export default async function BlogPostPage({
             {/* Comments */}
             <div className="mt-12 pt-8 border-t border-border">
               <h2 className="text-base font-semibold text-ink mb-6">Comments</h2>
-              <Comments />
+              <Comments slug={post.slug} />
             </div>
 
           </article>
