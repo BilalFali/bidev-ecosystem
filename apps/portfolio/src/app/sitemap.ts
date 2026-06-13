@@ -1,13 +1,36 @@
-import { MetadataRoute } from "next";
-const BASE = "https://portfolio.bidev.site";
-export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date().toISOString();
-  return [
-    { url: BASE,                    lastModified: now, priority: 1.0 },
-    { url: `${BASE}/about`,         lastModified: now, priority: 0.9 },
-    { url: `${BASE}/projects`,      lastModified: now, priority: 0.9 },
-    { url: `${BASE}/services`,      lastModified: now, priority: 0.8 },
-    { url: `${BASE}/experience`,    lastModified: now, priority: 0.7 },
-    { url: `${BASE}/contact`,       lastModified: now, priority: 0.6 },
-  ];
+import { getPosts } from "@/app/utils/utils";
+import { baseURL, routes as routesConfig } from "@/app/resources";
+
+const toolsRoutes = [
+  "/tools/qr-generator",
+  "/tools/json-formatter",
+  "/tools/password-generator",
+];
+
+export default async function sitemap() {
+  const blogs = getPosts(["src", "app", "blog", "posts"]).map((post) => ({
+    url: `https://${baseURL}/blog/${post.slug}`,
+    lastModified: post.metadata.publishedAt,
+  }));
+
+  const works = getPosts(["src", "app", "work", "projects"]).map((post) => ({
+    url: `https://${baseURL}/work/${post.slug}`,
+    lastModified: post.metadata.publishedAt,
+  }));
+
+  const activeRoutes = Object.keys(routesConfig).filter(
+    (route) => routesConfig[route as keyof typeof routesConfig]
+  );
+
+  const routes = activeRoutes.map((route) => ({
+    url: `https://${baseURL}${route !== "/" ? route : ""}`,
+    lastModified: new Date().toISOString().split("T")[0],
+  }));
+
+  const tools = toolsRoutes.map((route) => ({
+    url: `https://${baseURL}${route}`,
+    lastModified: new Date().toISOString().split("T")[0],
+  }));
+
+  return [...routes, ...blogs, ...works, ...tools];
 }

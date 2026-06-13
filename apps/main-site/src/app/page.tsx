@@ -4,272 +4,212 @@ import { getAllArticles } from "@/lib/articles";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
-import { SNIPPETS } from "@/lib/snippets";
 
 export const revalidate = 60;
-
-const TOOLS = [
-  { href: "/tools/json-to-dart",       icon: "🎯", title: "JSON to Dart",         desc: "Convert JSON to Dart models with null safety, Freezed, and more.", new: true },
-  { href: "/tools/qr-generator",       icon: "⬛", title: "QR Generator",         desc: "Any URL or text, instant QR code.",                                new: false },
-  { href: "/tools/json-formatter",     icon: "{ }", title: "JSON Formatter",      desc: "Validate and pretty-print JSON.",                                  new: false },
-  { href: "/tools/password-generator", icon: "🔐", title: "Password Generator",  desc: "Secure passwords via Web Crypto API.",                             new: false },
-  { href: "/tools/base64",             icon: "🔡", title: "Base64 Encode/Decode",desc: "Encode or decode Base64 in-browser.",                              new: false },
-  { href: "/tools/uuid-generator",     icon: "🆔", title: "UUID Generator",      desc: "RFC-4122 compliant UUIDs, one click.",                             new: false },
-];
-
-const TOPICS = [
-  { label: "Flutter",   href: "/flutter",    color: "from-cyan-500/10 to-cyan-500/5",    border: "border-cyan-500/25",   dot: "bg-cyan-400"   },
-  { label: "Snippets",  href: "/snippets",   color: "from-green-500/10 to-green-500/5",  border: "border-green-500/25",  dot: "bg-green-400"  },
-  { label: "Resources", href: "/resources",  color: "from-violet-500/10 to-violet-500/5",border: "border-violet-500/25", dot: "bg-violet-400" },
-  { label: "Dev Tools", href: "/tools",      color: "from-amber-500/10 to-amber-500/5",  border: "border-amber-500/25",  dot: "bg-amber-400"  },
-];
-
-const CODE_SNIPPET = `// Flutter BLoC pattern
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
-    on<LoginRequested>((event, emit) async {
-      emit(AuthLoading());
-      try {
-        final user = await _repo.login(
-          event.email,
-          event.password,
-        );
-        emit(AuthSuccess(user));
-      } catch (e) {
-        emit(AuthFailure(e.toString()));
-      }
-    });
-  }
-}`;
 
 export default async function HomePage() {
   const allArticles = await getAllArticles();
   const featured    = allArticles[0];
-  const recent      = allArticles.slice(1, 7);
+  const popular     = allArticles.slice(1, 5);
+  const latest      = allArticles.slice(1, 9);
 
   return (
-    <div className="flex flex-col gap-28 py-16 overflow-hidden">
+    <div className="flex flex-col">
 
-      {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Background glow */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[400px] rounded-full bg-accent/6 blur-[120px]" />
+      {/* ── HERO — Trending Now ─────────────────────────────────── */}
+      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+
+        {/* Section label */}
+        <div className="flex items-center gap-2 mb-6">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-light opacity-60" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent-light" />
+          </span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-ink-faint">
+            Trending Now
+          </span>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          {/* Left: text */}
-          <div className="flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-xs font-medium mb-7">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
-              </span>
-              Flutter · Firebase · AI · Dev Tools
-            </div>
+        <div className="grid lg:grid-cols-[1fr_320px] gap-6">
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-ink leading-[1.1] tracking-tight mb-6">
-              Build{" "}
-              <span className="text-gradient-accent">better apps</span>
-              {" "}with every article
-            </h1>
+          {/* ── Featured article ──────────────────────────────── */}
+          {featured ? (
+            <Link
+              href={`/blog/${featured.slug}`}
+              className="group relative rounded-2xl border border-border bg-bg-card overflow-hidden hover:border-border-strong transition-all duration-300 flex flex-col"
+            >
+              {/* Cover */}
+              <div className="relative h-56 sm:h-72 lg:h-80 bg-bg-elevated shrink-0 overflow-hidden">
+                {featured.image ? (
+                  <Image
+                    src={featured.image}
+                    alt={featured.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                    className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                    priority
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-bg-elevated to-bg-card" />
+                )}
+                {/* Gradient overlay at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-bg-card via-transparent to-transparent" />
 
-            <p className="text-lg text-ink-muted max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
-              In-depth Flutter tutorials, Firebase guides, and AI tools for developers
-              who care about quality code and shipping fast.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-              <Link
-                href="/blog"
-                className="px-7 py-3 rounded-xl bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-all shadow-[0_0_30px_rgba(34,211,238,0.18)] hover:shadow-[0_0_40px_rgba(34,211,238,0.3)]"
-              >
-                Read the blog →
-              </Link>
-              <Link
-                href="/tools"
-                className="px-7 py-3 rounded-xl border border-border bg-bg-card text-ink font-semibold text-sm hover:border-border-strong transition-all"
-              >
-                Free dev tools
-              </Link>
-            </div>
-
-            {/* Stats row */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-x-8 gap-y-3 mt-10">
-              {[
-                { v: `${allArticles.length}+`, l: "Articles" },
-                { v: `${SNIPPETS.length}+`,    l: "Snippets" },
-                { v: "6",                      l: "Free Tools" },
-                { v: "5+",                     l: "Years Flutter" },
-              ].map(s => (
-                <div key={s.l} className="flex flex-col">
-                  <span className="text-2xl font-bold text-gradient-accent">{s.v}</span>
-                  <span className="text-xs text-ink-faint uppercase tracking-wide">{s.l}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: code window */}
-          <div className="flex-1 w-full max-w-lg lg:max-w-none shrink-0">
-            <div className="rounded-xl border border-border bg-bg-card overflow-hidden shadow-2xl">
-              {/* Window chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-bg-elevated">
-                <span className="w-3 h-3 rounded-full bg-red-500/70" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                <span className="w-3 h-3 rounded-full bg-green-500/70" />
-                <span className="ml-3 text-xs text-ink-faint font-mono">auth_bloc.dart</span>
-              </div>
-              {/* Code */}
-              <pre className="p-5 text-xs font-mono leading-relaxed overflow-x-auto text-ink-muted">
-                <code>{CODE_SNIPPET.split("\n").map((line, i) => {
-                  const keyword = /^(\/\/|class|extends|on|try|catch|final|emit|async|await|return)/.test(line.trim());
-                  return (
-                    <span key={i} className="block">
-                      <span className="select-none text-ink-faint/40 mr-4 text-[10px] w-4 inline-block text-right">{i + 1}</span>
-                      <span className={keyword ? "text-accent/90" : "text-ink-muted"}>{line}</span>
+                {/* Tags over image */}
+                <div className="absolute top-4 left-4 flex gap-2">
+                  {featured.tags.slice(0, 2).map((t) => (
+                    <span
+                      key={t}
+                      className="text-xs px-2.5 py-1 rounded-md bg-bg-card/80 backdrop-blur-sm text-accent-light border border-accent/20 font-mono"
+                    >
+                      {t}
                     </span>
-                  );
-                })}</code>
-              </pre>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── AD ────────────────────────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full -mt-10">
-        <AdSlot type="banner" />
-      </div>
-
-      {/* ── FEATURED ARTICLE ──────────────────────────────────── */}
-      {featured && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-5">Featured article</p>
-          <Link
-            href={`/blog/${featured.slug}`}
-            className="group grid md:grid-cols-5 gap-0 rounded-2xl border border-border bg-bg-card overflow-hidden hover:border-accent/30 transition-all duration-300"
-          >
-            {/* Cover */}
-            <div className="md:col-span-2 h-52 md:h-auto bg-bg-elevated flex items-center justify-center relative overflow-hidden">
-              {featured.image ? (
-                <Image
-                  src={featured.image}
-                  alt={featured.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 40vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  priority
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-accent/10 to-accent/5 flex items-center justify-center">
-                  <span className="text-5xl opacity-30">✦</span>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* Content */}
-            <div className="md:col-span-3 flex flex-col gap-4 p-7 justify-between">
-              <div className="flex flex-wrap gap-2">
-                {featured.tags.slice(0, 3).map(t => (
-                  <span key={t} className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-ink group-hover:text-accent transition-colors leading-snug mb-3">
+              {/* Content */}
+              <div className="flex flex-col gap-3 p-6">
+                <h1 className="text-xl sm:text-2xl font-semibold text-ink group-hover:text-accent-light transition-colors leading-snug">
                   {featured.title}
-                </h2>
-                <p className="text-sm text-ink-muted leading-relaxed line-clamp-3">{featured.summary}</p>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 text-xs text-ink-faint">
-                  <span className="font-medium text-ink-muted">{featured.author}</span>
+                </h1>
+                <p className="text-sm text-ink-muted leading-relaxed line-clamp-2">
+                  {featured.summary}
+                </p>
+                <div className="flex items-center gap-3 text-xs text-ink-faint mt-1">
+                  <span className="font-medium text-ink-muted">{featured.author ?? "Bilal Fali"}</span>
                   <span>·</span>
-                  <span>{formatDate(featured.publishedAt)}</span>
+                  <time dateTime={featured.publishedAt}>{formatDate(featured.publishedAt)}</time>
                   <span>·</span>
                   <span>{featured.readingTime} min read</span>
                 </div>
-                <span className="text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  Read article →
-                </span>
               </div>
-            </div>
-          </Link>
-        </section>
-      )}
-
-      {/* ── TOPICS ────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <p className="text-xs font-semibold uppercase tracking-widest text-ink-faint mb-5">Browse by topic</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {TOPICS.map(t => (
-            <Link
-              key={t.href}
-              href={t.href}
-              className={`group flex items-center gap-3 p-4 rounded-xl border ${t.border} bg-gradient-to-br ${t.color} hover:scale-[1.02] transition-all duration-200`}
-            >
-              <span className={`w-2 h-2 rounded-full ${t.dot} shrink-0`} />
-              <span className="font-semibold text-sm text-ink group-hover:text-accent transition-colors">
-                {t.label}
-              </span>
             </Link>
-          ))}
+          ) : (
+            <div className="rounded-2xl border border-border bg-bg-card h-64 flex items-center justify-center text-ink-faint text-sm">
+              No articles yet
+            </div>
+          )}
+
+          {/* ── Right sidebar ─────────────────────────────────── */}
+          <div className="flex flex-col gap-4">
+
+            {/* Build smarter CTA */}
+            <div className="rounded-xl border border-accent/20 bg-gradient-to-br from-accent/8 to-bg-card p-5">
+              <p className="text-xs font-mono text-accent-light mb-2 uppercase tracking-widest">Build smarter</p>
+              <p className="text-sm font-semibold text-ink leading-snug mb-3">
+                Top Flutter packages, articles, and tools — all in one place.
+              </p>
+              <p className="text-xs text-ink-muted mb-4 leading-relaxed">
+                Stay ahead with curated Flutter dev content, weekly.
+              </p>
+              <Link
+                href="/newsletter"
+                className="block w-full py-2 rounded-lg bg-accent text-white text-xs font-semibold text-center hover:bg-accent-hover transition-colors"
+              >
+                Subscribe free →
+              </Link>
+            </div>
+
+            {/* Popular this week */}
+            <div className="rounded-xl border border-border bg-bg-card p-5 flex-1">
+              <p className="text-xs font-semibold text-ink-faint uppercase tracking-widest mb-4">
+                Popular This Week
+              </p>
+              <ol className="flex flex-col gap-4">
+                {popular.map((post, i) => (
+                  <li key={post.slug}>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="group flex items-start gap-3"
+                    >
+                      <span className="text-2xl font-bold text-border-strong leading-none shrink-0 w-6 text-right">
+                        {i + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-ink-muted group-hover:text-ink transition-colors leading-snug line-clamp-2">
+                          {post.title}
+                        </p>
+                        <p className="text-xs text-ink-faint mt-1">
+                          {post.readingTime} min read
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── RECENT ARTICLES ───────────────────────────────────── */}
-      {recent.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-end justify-between mb-7">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1">Fresh content</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-ink">Latest Articles</h2>
-            </div>
-            <Link href="/blog" className="text-sm text-ink-muted hover:text-accent transition-colors hidden sm:block">
+      {/* ── AD ──────────────────────────────────────────────────── */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <AdSlot type="banner" />
+      </div>
+
+      {/* ── LATEST ARTICLES ─────────────────────────────────────── */}
+      {latest.length > 1 && (
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-lg font-semibold text-ink">Latest Articles</h2>
+            <Link href="/blog" className="text-xs text-ink-faint hover:text-ink transition-colors">
               View all →
             </Link>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {recent.map(post => (
+          <div className="flex flex-col divide-y divide-border">
+            {latest.map((post) => (
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group flex flex-col rounded-xl border border-border bg-bg-card hover:border-accent/30 hover:bg-bg-elevated overflow-hidden transition-all duration-200"
+                className="group flex gap-5 py-5 hover:bg-bg-card/40 -mx-3 px-3 rounded-xl transition-colors"
               >
                 {/* Thumbnail */}
-                <div className="h-40 bg-bg-elevated relative overflow-hidden shrink-0">
+                <div className="relative w-24 h-16 sm:w-32 sm:h-20 rounded-lg overflow-hidden bg-bg-elevated shrink-0">
                   {post.image ? (
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="128px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-bg-elevated to-bg-card flex items-center justify-center">
-                      <span className="text-3xl opacity-20">✦</span>
-                    </div>
-                  )}
-                  {/* Tag overlay */}
-                  {post.tags[0] && (
-                    <span className="absolute top-3 left-3 text-xs px-2 py-0.5 rounded-full bg-bg/80 backdrop-blur-sm text-accent border border-accent/20">
-                      {post.tags[0]}
-                    </span>
+                    <div className="w-full h-full bg-gradient-to-br from-accent/10 to-bg-elevated" />
                   )}
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col gap-2 p-5 flex-1">
-                  <h3 className="font-semibold text-ink group-hover:text-accent transition-colors leading-snug line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-xs text-ink-muted leading-relaxed line-clamp-2 flex-1">{post.summary}</p>
-                  <div className="flex items-center gap-2 text-xs text-ink-faint mt-1 pt-3 border-t border-border">
-                    <span>{formatDate(post.publishedAt)}</span>
+                <div className="flex flex-col justify-between min-w-0 flex-1">
+                  <div>
+                    {/* Category + date */}
+                    <div className="flex items-center gap-2 mb-1.5">
+                      {post.tags[0] && (
+                        <span className="text-[11px] font-mono text-accent-light">
+                          {post.tags[0]}
+                        </span>
+                      )}
+                      <span className="text-[11px] text-border-strong">·</span>
+                      <time className="text-[11px] text-ink-faint" dateTime={post.publishedAt}>
+                        {formatDate(post.publishedAt)}
+                      </time>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-sm font-semibold text-ink group-hover:text-accent-light transition-colors leading-snug line-clamp-2 mb-1">
+                      {post.title}
+                    </h3>
+
+                    {/* Summary */}
+                    <p className="text-xs text-ink-faint leading-relaxed line-clamp-2 hidden sm:block">
+                      {post.summary}
+                    </p>
+                  </div>
+
+                  {/* Author + read time */}
+                  <div className="flex items-center gap-2 mt-2 text-[11px] text-ink-faint">
+                    <span>{post.author ?? "Bilal Fali"}</span>
                     <span>·</span>
                     <span>{post.readingTime} min read</span>
                   </div>
@@ -278,115 +218,37 @@ export default async function HomePage() {
             ))}
           </div>
 
-          <div className="mt-6 text-center sm:hidden">
-            <Link href="/blog" className="text-sm text-accent hover:underline">View all articles →</Link>
+          {/* Load more */}
+          <div className="flex justify-center mt-10">
+            <Link
+              href="/blog"
+              className="px-6 py-2.5 rounded-lg border border-border text-sm text-ink-muted hover:border-border-strong hover:text-ink transition-all"
+            >
+              Load more articles
+            </Link>
           </div>
         </section>
       )}
 
-      {/* ── AD ────────────────────────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full -mt-10">
+      {/* ── IN-ARTICLE AD ───────────────────────────────────────── */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <AdSlot type="in-article" />
       </div>
 
-      {/* ── TOOLS ─────────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-end justify-between mb-7">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1">Free · No sign-up</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-ink">Developer Tools</h2>
-          </div>
-          <Link href="/tools" className="text-sm text-ink-muted hover:text-accent transition-colors hidden sm:block">
-            All tools →
-          </Link>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {TOOLS.map(tool => (
-            <Link
-              key={tool.href}
-              href={tool.href}
-              className="group relative flex items-start gap-4 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
-            >
-              {tool.new && (
-                <span className="absolute top-3 right-3 text-[10px] px-1.5 py-0.5 rounded bg-accent/15 text-accent border border-accent/25 font-semibold">
-                  New
-                </span>
-              )}
-              <span className="text-2xl mt-0.5 shrink-0">{tool.icon}</span>
-              <div className="min-w-0">
-                <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm">
-                  {tool.title}
-                </h3>
-                <p className="text-xs text-ink-muted mt-1 leading-relaxed">{tool.desc}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ── SNIPPETS ──────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-end justify-between mb-7">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1">Copy-ready</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-ink">Code Snippets</h2>
-          </div>
-          <Link href="/snippets" className="text-sm text-ink-muted hover:text-accent transition-colors hidden sm:block">
-            All snippets →
-          </Link>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SNIPPETS.slice(0, 6).map(snippet => (
-            <Link
-              key={snippet.slug}
-              href={`/snippets/${snippet.slug}`}
-              className="group flex flex-col gap-3 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm leading-snug">
-                  {snippet.title}
-                </h3>
-                <span className={`shrink-0 text-[10px] px-1.5 py-0.5 rounded border font-medium ${
-                  snippet.difficulty === "beginner"     ? "text-green-400 bg-green-400/10 border-green-400/20"
-                  : snippet.difficulty === "intermediate" ? "text-yellow-400 bg-yellow-400/10 border-yellow-400/20"
-                  : "text-red-400 bg-red-400/10 border-red-400/20"
-                }`}>
-                  {snippet.difficulty}
-                </span>
-              </div>
-              <p className="text-xs text-ink-muted line-clamp-2 leading-relaxed">{snippet.description}</p>
-              <pre className="text-[10px] font-mono text-ink-faint bg-bg-elevated rounded-lg px-3 py-2 line-clamp-2 overflow-hidden border border-border/50">
-                {snippet.code.split("\n").slice(0, 3).join("\n")}
-              </pre>
-              <span className="text-xs text-ink-faint">{snippet.category}</span>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-6 text-center sm:hidden">
-          <Link href="/snippets" className="text-sm text-accent hover:underline">View all snippets →</Link>
-        </div>
-      </section>
-
-      {/* ── NEWSLETTER ────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full" id="newsletter">
+      {/* ── NEWSLETTER ──────────────────────────────────────────── */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10" id="newsletter">
         <div className="relative overflow-hidden rounded-2xl border border-accent/20 p-10 text-center">
-          {/* Gradient bg */}
-          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent/8 via-bg-card to-violet-500/5" />
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(34,211,238,0.06),transparent_70%)]" />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent/6 via-bg-card to-bg-card" />
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(1,117,194,0.08),transparent_70%)]" />
 
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/25 bg-accent/8 text-accent text-xs font-medium mb-5">
-            ✦ Weekly dev digest
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-ink mb-3">Stay ahead of the curve</h2>
-          <p className="text-ink-muted mb-8 max-w-md mx-auto text-sm leading-relaxed">
-            Flutter tutorials, Firebase tips, and the best AI tools for developers —
+          <p className="text-xs font-mono text-accent-light uppercase tracking-widest mb-3">Weekly dev digest</p>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-ink mb-3">Stay ahead of the curve</h2>
+          <p className="text-sm text-ink-muted mb-8 max-w-md mx-auto leading-relaxed">
+            Flutter tutorials, Dart tips, and the best developer tools —
             delivered every week. No spam, ever.
           </p>
           <NewsletterForm />
-          <p className="text-xs text-ink-faint mt-4">Join 1,000+ developers. Unsubscribe anytime.</p>
+          <p className="text-xs text-ink-faint mt-4">Join developers building with Flutter. Unsubscribe anytime.</p>
         </div>
       </section>
 

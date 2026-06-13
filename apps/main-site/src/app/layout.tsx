@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Geist, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -10,9 +10,9 @@ import { websiteJsonLd, personJsonLd } from "@bidev/shared";
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 const GA_ID      = "G-C04YP7HRR0";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-geist",
   display: "swap",
   preload: true,
 });
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050505",
+  themeColor: "#101418",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const personSchema = personJsonLd(SITE_URL);
 
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         {/* Preconnect to speed up external resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -1,0 +1,308 @@
+---
+title: "Flutter Clean Architecture Guide 2026 – Complete Folder Structure"
+publishedAt: "2026-05-20"
+summary: "A complete, production-ready Flutter Clean Architecture guide for 2026. Learn how to structure your app with proper layers, dependency injection, and state management using GetX or Bloc."
+image: "/images/blog/flutter-clean-architecture.jpg"
+images: []
+tag: "Flutter"
+team: []
+---
+
+Flutter Clean Architecture is the gold standard for building **scalable, testable, and maintainable** mobile apps. In 2026, with Flutter 3.x and Dart 3, the patterns have matured significantly. This guide walks you through a production-ready folder structure, layer separation, and real code examples.
+
+## What Is Clean Architecture?
+
+Clean Architecture — originally by Uncle Bob (Robert C. Martin) — separates your code into concentric layers where **dependencies only point inward**. In Flutter, this translates to three main layers:
+
+1. **Presentation Layer** — UI widgets, pages, state management
+2. **Domain Layer** — Business logic, use cases, entities (pure Dart, no Flutter)
+3. **Data Layer** — Repositories implementation, data sources (API, local DB)
+
+The core rule: **inner layers must not know about outer layers**.
+
+## Recommended Folder Structure
+
+```
+lib/
+├── core/
+│   ├── errors/
+│   │   ├── exceptions.dart
+│   │   └── failures.dart
+│   ├── usecases/
+│   │   └── usecase.dart
+│   └── utils/
+│       └── constants.dart
+│
+├── features/
+│   └── auth/
+│       ├── data/
+│       │   ├── datasources/
+│       │   │   ├── auth_remote_datasource.dart
+│       │   │   └── auth_local_datasource.dart
+│       │   ├── models/
+│       │   │   └── user_model.dart
+│       │   └── repositories/
+│       │       └── auth_repository_impl.dart
+│       │
+│       ├── domain/
+│       │   ├── entities/
+│       │   │   └── user_entity.dart
+│       │   ├── repositories/
+│       │   │   └── auth_repository.dart
+│       │   └── usecases/
+│       │       ├── login_usecase.dart
+│       │       └── logout_usecase.dart
+│       │
+│       └── presentation/
+│           ├── bloc/          # or getx/
+│           │   ├── auth_bloc.dart
+│           │   ├── auth_event.dart
+│           │   └── auth_state.dart
+│           ├── pages/
+│           │   └── login_page.dart
+│           └── widgets/
+│               └── login_form.dart
+│
+└── main.dart
+```
+
+## Layer 1: Domain Layer (The Heart)
+
+The **domain layer** contains pure Dart code — no Flutter, no packages. This is what makes it testable and framework-independent.
+
+### Entity
+
+```dart
+// features/auth/domain/entities/user_entity.dart
+class UserEntity {
+  final String id;
+  final String email;
+  final String displayName;
+  final bool isEmailVerified;
+
+  const UserEntity({
+    required this.id,
+    required this.email,
+    required this.displayName,
+    required this.isEmailVerified,
+  });
+}
+```
+
+### Repository Interface
+
+```dart
+// features/auth/domain/repositories/auth_repository.dart
+import 'package:dartz/dartz.dart';
+import '../entities/user_entity.dart';
+import '../../core/errors/failures.dart';
+
+abstract class AuthRepository {
+  Future<Either<Failure, UserEntity>> login({
+    required String email,
+    required String password,
+  });
+
+  Future<Either<Failure, void>> logout();
+
+  Stream<UserEntity?> get authStateChanges;
+}
+```
+
+### Use Case
+
+```dart
+// features/auth/domain/usecases/login_usecase.dart
+import 'package:dartz/dartz.dart';
+import '../entities/user_entity.dart';
+import '../repositories/auth_repository.dart';
+import '../../core/errors/failures.dart';
+import '../../core/usecases/usecase.dart';
+
+class LoginParams {
+  final String email;
+  final String password;
+  const LoginParams({required this.email, required this.password});
+}
+
+class LoginUseCase implements UseCase<UserEntity, LoginParams> {
+  final AuthRepository repository;
+  const LoginUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, UserEntity>> call(LoginParams params) {
+    return repository.login(
+      email: params.email,
+      password: params.password,
+    );
+  }
+}
+```
+
+## Layer 2: Data Layer
+
+The data layer implements the domain interfaces. It contains models (which extend entities with serialization), data sources, and repository implementations.
+
+### Model
+
+```dart
+// features/auth/data/models/user_model.dart
+import '../../domain/entities/user_entity.dart';
+
+class UserModel extends UserEntity {
+  const UserModel({
+    required super.id,
+    required super.email,
+    required super.displayName,
+    required super.isEmailVerified,
+  });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        id: json['id'] as String,
+        email: json['email'] as String,
+        displayName: json['display_name'] as String,
+        isEmailVerified: json['email_verified'] as bool? ?? false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'email': email,
+        'display_name': displayName,
+        'email_verified': isEmailVerified,
+      };
+}
+```
+
+### Repository Implementation
+
+```dart
+// features/auth/data/repositories/auth_repository_impl.dart
+import 'package:dartz/dartz.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_remote_datasource.dart';
+import '../../core/errors/failures.dart';
+import '../../core/errors/exceptions.dart';
+
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource remoteDataSource;
+
+  AuthRepositoryImpl({required this.remoteDataSource});
+
+  @override
+  Future<Either<Failure, UserEntity>> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final user = await remoteDataSource.login(email: email, password: password);
+      return Right(user);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException {
+      return Left(const NetworkFailure('No internet connection'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await remoteDataSource.logout();
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Stream<UserEntity?> get authStateChanges => remoteDataSource.authStateChanges;
+}
+```
+
+## Layer 3: Presentation Layer with Bloc
+
+```dart
+// features/auth/presentation/bloc/auth_bloc.dart
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/usecases/login_usecase.dart';
+import 'auth_event.dart';
+import 'auth_state.dart';
+
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final LoginUseCase loginUseCase;
+
+  AuthBloc({required this.loginUseCase}) : super(AuthInitial()) {
+    on<LoginRequested>(_onLoginRequested);
+  }
+
+  Future<void> _onLoginRequested(
+    LoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await loginUseCase(
+      LoginParams(email: event.email, password: event.password),
+    );
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (user) => emit(AuthAuthenticated(user)),
+    );
+  }
+}
+```
+
+## Dependency Injection with GetIt
+
+Use `get_it` and `injectable` for automatic DI registration:
+
+```dart
+// lib/injection_container.dart
+import 'package:get_it/get_it.dart';
+
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  // Blocs
+  sl.registerFactory(() => AuthBloc(loginUseCase: sl()));
+
+  // Use Cases
+  sl.registerLazySingleton(() => LoginUseCase(sl()));
+
+  // Repositories
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data Sources
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(firebaseAuth: sl()),
+  );
+
+  // External
+  sl.registerLazySingleton(() => FirebaseAuth.instance);
+}
+```
+
+## Key Principles to Remember
+
+- **Entities** = pure Dart classes, no JSON serialization
+- **Models** = extend entities, add `fromJson`/`toJson`
+- **Use cases** = one public method (`call`), one responsibility
+- **Repository interfaces** = live in domain, implementations in data
+- **State management** = lives entirely in presentation layer
+
+## When to Use This Architecture
+
+Clean Architecture shines for apps with:
+- Multiple data sources (API + local cache)
+- Complex business logic that needs testing
+- Teams of 2+ developers
+- Long-term maintenance requirements
+
+For simple apps or prototypes, a simpler structure (feature-first with repositories) is often more productive.
+
+## Related Articles
+
+- [Firebase Push Notifications Complete Guide](/blog/firebase-push-notifications-complete-guide)
+- [Top 5 Flutter Project Ideas for Your Portfolio](/blog/top-5-flutter-project-ideas)
+- [Best AI Tools for Developers in 2026](/blog/best-ai-tools-for-developers-2026)

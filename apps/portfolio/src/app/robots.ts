@@ -1,4 +1,14 @@
-import { MetadataRoute } from "next";
-export default function robots(): MetadataRoute.Robots {
-  return { rules: [{ userAgent: "*", allow: "/" }], sitemap: "https://portfolio.bidev.site/sitemap.xml" };
+import { baseURL } from "@/app/resources";
+
+export default function robots() {
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/dashboard/", "/login/", "/api/"],
+      },
+    ],
+    sitemap: `https://${baseURL}/sitemap.xml`,
+  };
 }

@@ -19,11 +19,13 @@ import TableCell from "@tiptap/extension-table-cell";
 import Color from "@tiptap/extension-color";
 import TextStyle from "@tiptap/extension-text-style";
 import { common, createLowlight } from "lowlight";
+import dart from "highlight.js/lib/languages/dart";
 import { Bold, Italic, Underline as UnderlineIcon, Link as LinkIcon, Code } from "lucide-react";
 import { MenuBar } from "./MenuBar";
 import { cn } from "@/lib/utils";
 
 const lowlight = createLowlight(common);
+lowlight.register("dart", dart);
 
 interface TipTapEditorProps {
   content: string;

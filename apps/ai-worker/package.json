@@ -1,0 +1,26 @@
+{
+  "name": "@bidev/ai-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI content automation worker — reads ideas from Google Sheets, generates articles with Claude, saves drafts to Supabase",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "run-once": "tsx src/index.ts --once"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.55.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.4.5",
+    "googleapis": "^143.0.0",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/node-cron": "^3.0.11",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

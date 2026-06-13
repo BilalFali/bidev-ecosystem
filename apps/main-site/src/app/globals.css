@@ -12,55 +12,66 @@
   }
 
   body {
-    background-color: #050505;
-    color: #f0f0f0;
-    font-family: var(--font-inter), system-ui, sans-serif;
+    background-color: #101418;
+    color: #e0e2e9;
+    font-family: var(--font-geist), system-ui, sans-serif;
   }
 
   ::selection {
-    background-color: rgba(34, 211, 238, 0.2);
-    color: #22d3ee;
+    background-color: rgba(1, 117, 194, 0.25);
+    color: #9ecaff;
   }
 
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #0e0e0e; }
-  ::-webkit-scrollbar-thumb { background: #242424; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #0b0e13; }
+  ::-webkit-scrollbar-thumb { background: #404751; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #8a919c; }
 }
 
 @layer utilities {
+  /* Flutter-blue gradient text */
   .text-gradient {
-    background: linear-gradient(135deg, #f0f0f0 0%, #71717a 100%);
+    background: linear-gradient(135deg, #e0e2e9 0%, #8a919c 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-accent {
-    background: linear-gradient(135deg, #22d3ee 0%, #818cf8 100%);
+    background: linear-gradient(135deg, #9ecaff 0%, #0175c2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  /* Subtle blue glow for hero moments */
   .glow-accent {
-    box-shadow: 0 0 40px rgba(34, 211, 238, 0.12);
+    box-shadow: 0 0 40px rgba(1, 117, 194, 0.18);
   }
 
-  .border-gradient {
-    border: 1px solid transparent;
-    background: linear-gradient(#141414, #141414) padding-box,
-                linear-gradient(135deg, #242424, #1a1a1a) border-box;
+  .glow-accent-lg {
+    box-shadow: 0 0 80px rgba(1, 117, 194, 0.12), 0 0 40px rgba(158, 202, 255, 0.08);
   }
 
+  /* Glassmorphism — floating nav, dropdowns */
   .glass {
-    background: rgba(20, 20, 20, 0.8);
+    background: rgba(16, 20, 24, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
+
+  /* Tonal border for cards */
+  .border-tonal {
+    border: 1px solid #404751;
+  }
+
+  /* Primary action gradient (button fill) */
+  .bg-primary-gradient {
+    background: linear-gradient(135deg, #0175c2 0%, #02569b 100%);
+  }
 }
 
-/* Code block styles for MDX */
+/* ── Code blocks (rehype-pretty-code) ────────────────────────────── */
 [data-rehype-pretty-code-figure] pre {
   @apply rounded-xl border border-border bg-bg-card text-sm overflow-x-auto p-5 my-6;
 }

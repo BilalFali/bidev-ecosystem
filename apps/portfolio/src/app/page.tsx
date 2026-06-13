@@ -1,105 +1,328 @@
-import Link from "next/link";
+import React from "react";
 
-const STACK = ["Flutter", "Dart", "Firebase", "Supabase", "GetX", "Bloc", "REST APIs", "Google Maps", "Stripe", "Git"];
+import {
+  Heading,
+  Flex,
+  Text,
+  Button,
+  RevealFx,
+  Column,
+  Badge,
+  Row,
+  Icon,
+  Card,
+  Grid,
+} from "@/once-ui/components";
 
-const APPS = [
-  { name: "WegoFleet",  desc: "VTC ride-hailing platform",   users: "30K+", store: "both" },
-  { name: "PrivateLoc", desc: "Real-time location sharing",  users: "15K+", store: "android" },
-  { name: "Ta7ssil",    desc: "Payment collection app",      users: "10K+", store: "both" },
-  { name: "Afnek",      desc: "Service marketplace",         users: "25K+", store: "both" },
+import { baseURL, routes } from "@/app/resources";
+import { home, about, person, newsletter } from "@/app/resources/content";
+import { Mailchimp } from "@/components";
+import { Meta, Schema } from "@/once-ui/modules";
+import { getPosts } from "@/app/utils/utils";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export async function generateMetadata() {
+  return Meta.generate({
+    title: home.title,
+    description: home.description,
+    baseURL: baseURL,
+    path: home.path,
+  });
+}
+
+const featuredTools = [
+  {
+    href: "/tools/qr-generator",
+    icon: "tools" as const,
+    title: "QR Code Generator",
+    description: "Generate QR codes for URLs, text, email instantly.",
+  },
+  {
+    href: "/tools/json-formatter",
+    icon: "document" as const,
+    title: "JSON Formatter",
+    description: "Format and validate JSON with real-time error detection.",
+  },
+  {
+    href: "/tools/password-generator",
+    icon: "eyeOff" as const,
+    title: "Password Generator",
+    description: "Cryptographically secure passwords with strength indicator.",
+  },
 ];
 
-export default function HomePage() {
+export default function Home() {
+  const posts = getPosts(["src", "app", "blog", "posts"])
+    .sort((a, b) => new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime())
+    .slice(0, 3);
+
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <Column maxWidth="m" gap="xl" horizontal="center">
+      <Schema
+        as="webPage"
+        baseURL={baseURL}
+        path={home.path}
+        title={home.title}
+        description={home.description}
+        image={`${baseURL}/og?title=${encodeURIComponent(home.title)}`}
+        author={{
+          name: person.name,
+          url: `${baseURL}${about.path}`,
+          image: `${baseURL}${person.avatar}`,
+        }}
+      />
 
-      {/* Hero */}
-      <section className="py-24 md:py-32">
-        <div className="relative">
-          <div className="absolute -top-20 -left-20 w-72 h-72 bg-accent/5 rounded-full blur-[80px] -z-10" />
-        </div>
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-green-500/30 bg-green-500/8 text-green-400 text-xs font-medium mb-8">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          Available for freelance projects
-        </div>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-ink leading-[1.05] mb-6">
-          Bilal Fali
-          <br />
-          <span className="text-gradient-accent">Flutter Developer</span>
-        </h1>
-        <p className="text-xl text-ink-muted max-w-xl leading-relaxed mb-10">
-          I build cross-platform mobile apps with Flutter that scale to hundreds of thousands of users.
-          Based in Algeria, working worldwide.
-        </p>
-        <div className="flex flex-wrap gap-4">
-          <Link href="/projects" className="px-8 py-3.5 rounded-xl bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-all shadow-[0_0_30px_rgba(129,140,248,0.2)]">
-            View Projects →
-          </Link>
-          <Link href="/contact" className="px-8 py-3.5 rounded-xl border border-border bg-bg-card text-ink font-semibold text-sm hover:border-border-strong hover:bg-bg-elevated transition-all">
-            Hire Me
-          </Link>
-          <a href="https://drive.google.com/file/d/1EwRJ_6Ns7tWK7AIOCP6MSJx3Qamc5_Xr" target="_blank" rel="noopener noreferrer"
-            className="px-8 py-3.5 rounded-xl text-ink-muted text-sm hover:text-ink transition-colors">
-            Download CV ↗
-          </a>
-        </div>
+      {/* Hero Section */}
+      <Column fillWidth paddingY="40" gap="l">
+        <Column maxWidth="s" gap="m">
+          {home.featured && (
+            <RevealFx fillWidth horizontal="start" paddingBottom="16">
+              <Badge
+                background="brand-alpha-weak"
+                paddingX="16"
+                paddingY="8"
+                onBackground="neutral-strong"
+                textVariant="label-default-m"
+                arrow={true}
+                href={home.featured.href}
+              >
+                <Row paddingY="4" gap="8">
+                  <Text variant="label-default-s">⚡</Text>
+                  {home.featured.title}
+                </Row>
+              </Badge>
+            </RevealFx>
+          )}
 
-        {/* Stats */}
-        <div className="mt-16 flex flex-wrap gap-x-12 gap-y-6">
-          {[["5+","Years Flutter"],["100K+","App Users"],["7+","Apps Published"],["2","App Stores"]].map(([v,l]) => (
-            <div key={l} className="flex flex-col gap-1">
-              <span className="text-3xl font-bold text-gradient-accent">{v}</span>
-              <span className="text-xs text-ink-muted">{l}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+          <RevealFx translateY="4" fillWidth horizontal="start">
+            <Heading wrap="balance" variant="display-strong-xl">
+              {home.headline}
+            </Heading>
+          </RevealFx>
 
-      {/* Tech Stack */}
-      <section className="py-16 border-t border-border">
-        <p className="text-xs uppercase tracking-widest text-ink-faint mb-6">Tech Stack</p>
-        <div className="flex flex-wrap gap-2">
-          {STACK.map(t => (
-            <span key={t} className="px-4 py-2 rounded-lg border border-border bg-bg-card text-sm text-ink-muted hover:border-accent/40 hover:text-accent transition-colors">
-              {t}
-            </span>
-          ))}
-        </div>
-      </section>
+          <RevealFx
+            translateY="8"
+            delay={0.1}
+            fillWidth
+            horizontal="start"
+            paddingTop="8"
+          >
+            <Text
+              wrap="balance"
+              onBackground="neutral-weak"
+              variant="heading-default-l"
+            >
+              {home.subline}
+            </Text>
+          </RevealFx>
 
-      {/* Featured Apps */}
-      <section className="py-16 border-t border-border">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <p className="text-xs uppercase tracking-widest text-accent mb-2">Featured Work</p>
-            <h2 className="text-2xl font-bold text-ink">Apps I've Shipped</h2>
-          </div>
-          <Link href="/projects" className="text-sm text-ink-muted hover:text-accent transition-colors">All projects →</Link>
-        </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {APPS.map(app => (
-            <Link key={app.name} href="/projects"
-              className="group p-6 rounded-xl border border-border bg-bg-card hover:border-accent/30 hover:bg-bg-elevated transition-all">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="font-bold text-ink group-hover:text-accent transition-colors">{app.name}</h3>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">{app.users} users</span>
-              </div>
-              <p className="text-sm text-ink-muted">{app.desc}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
+          {/* CTA Buttons */}
+          <RevealFx paddingTop="32" delay={0.2} horizontal="start">
+            <Flex gap="12" wrap>
+              <Button
+                id="start-reading"
+                data-border="rounded"
+                href="/blog"
+                variant="primary"
+                size="l"
+                suffixIcon="chevronRight"
+              >
+                Start Reading
+              </Button>
+              <Button
+                id="explore-tools"
+                data-border="rounded"
+                href="/tools"
+                variant="secondary"
+                size="l"
+                prefixIcon="tools"
+              >
+                Explore Tools
+              </Button>
+              <Button
+                id="about"
+                data-border="rounded"
+                href={about.path}
+                variant="tertiary"
+                size="l"
+              >
+                About
+              </Button>
+            </Flex>
+          </RevealFx>
 
-      {/* CTA */}
-      <section className="py-16 border-t border-border mb-8">
-        <div className="p-8 rounded-2xl border border-accent/20 bg-gradient-to-br from-bg-card to-bg-secondary text-center">
-          <h2 className="text-2xl font-bold text-ink mb-3">Have a project in mind?</h2>
-          <p className="text-ink-muted mb-6">I'm currently accepting freelance projects. Let's build something great.</p>
-          <Link href="/contact" className="inline-flex px-8 py-3.5 rounded-xl bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors">
-            Start a Conversation →
-          </Link>
-        </div>
-      </section>
-    </div>
+          {/* Stats */}
+          <RevealFx paddingTop="48" delay={0.3} fillWidth>
+            <Flex fillWidth gap="32" wrap>
+              <Column gap="4">
+                <Heading variant="display-strong-s" onBackground="brand-strong">5+</Heading>
+                <Text variant="body-default-s" onBackground="neutral-weak">Years in Flutter</Text>
+              </Column>
+              <Column gap="4">
+                <Heading variant="display-strong-s" onBackground="brand-strong">100K+</Heading>
+                <Text variant="body-default-s" onBackground="neutral-weak">App Users</Text>
+              </Column>
+              <Column gap="4">
+                <Heading variant="display-strong-s" onBackground="brand-strong">3</Heading>
+                <Text variant="body-default-s" onBackground="neutral-weak">Free Tools</Text>
+              </Column>
+            </Flex>
+          </RevealFx>
+        </Column>
+      </Column>
+
+      {/* AdSense placeholder — top */}
+      <RevealFx translateY="8" delay={0.3} fillWidth>
+        <Row
+          fillWidth padding="16" radius="m" border="neutral-alpha-weak"
+          background="neutral-alpha-weak" horizontal="center" vertical="center"
+          style={{ minHeight: "90px" }}
+        >
+          <Text variant="label-default-s" onBackground="neutral-weak">[ Advertisement ]</Text>
+        </Row>
+      </RevealFx>
+
+      {/* Tools Section */}
+      {routes["/tools"] && (
+        <RevealFx translateY="16" delay={0.4} fillWidth>
+          <Column fillWidth gap="l">
+            <Flex fillWidth horizontal="space-between" vertical="center" wrap>
+              <Column gap="4">
+                <Heading as="h2" variant="display-strong-s" wrap="balance">
+                  Free Developer Tools
+                </Heading>
+                <Text variant="body-default-m" onBackground="neutral-weak">
+                  Client-side, fast, no account needed.
+                </Text>
+              </Column>
+              <Button
+                href="/tools"
+                variant="tertiary"
+                size="s"
+                suffixIcon="chevronRight"
+              >
+                All tools
+              </Button>
+            </Flex>
+
+            <Grid columns="3" mobileColumns="1" gap="m">
+              {featuredTools.map((tool) => (
+                <Card
+                  key={tool.href}
+                  href={tool.href}
+                  padding="m"
+                  radius="l"
+                  border="neutral-alpha-medium"
+                  background="surface"
+                >
+                  <Column gap="m">
+                    <Row
+                      padding="s"
+                      radius="m"
+                      background="brand-alpha-weak"
+                      horizontal="center"
+                      vertical="center"
+                      style={{ width: "fit-content" }}
+                    >
+                      <Icon name={tool.icon} size="m" onBackground="brand-strong" />
+                    </Row>
+                    <Column gap="4">
+                      <Text variant="heading-strong-s">{tool.title}</Text>
+                      <Text variant="body-default-s" onBackground="neutral-weak">
+                        {tool.description}
+                      </Text>
+                    </Column>
+                  </Column>
+                </Card>
+              ))}
+            </Grid>
+          </Column>
+        </RevealFx>
+      )}
+
+      {/* Blog Section */}
+      {routes["/blog"] && posts.length > 0 && (
+        <RevealFx translateY="16" delay={0.5} fillWidth>
+          <Column fillWidth gap="l">
+            <Flex fillWidth horizontal="space-between" vertical="center" wrap>
+              <Column gap="4">
+                <Heading as="h2" variant="display-strong-s" wrap="balance">
+                  Latest Articles
+                </Heading>
+                <Text variant="body-default-m" onBackground="neutral-weak">
+                  Flutter, mobile dev, Firebase, and AI tools.
+                </Text>
+              </Column>
+              <Button href="/blog" variant="tertiary" size="s" suffixIcon="chevronRight">
+                All articles
+              </Button>
+            </Flex>
+
+            <Column gap="m" fillWidth>
+              {posts.map((post) => (
+                <Card
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  padding="m"
+                  radius="l"
+                  border="neutral-alpha-medium"
+                  background="surface"
+                >
+                  <Row gap="m" vertical="start" wrap>
+                    <Column gap="s" style={{ flex: 1 }}>
+                      <Row gap="8" vertical="center">
+                        {post.metadata.tag && (
+                          <Badge
+                            background="brand-alpha-weak"
+                            paddingX="8"
+                            paddingY="4"
+                            textVariant="label-default-xs"
+                            onBackground="brand-strong"
+                          >
+                            {post.metadata.tag}
+                          </Badge>
+                        )}
+                        <Text variant="label-default-xs" onBackground="neutral-weak">
+                          {new Date(post.metadata.publishedAt).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </Text>
+                      </Row>
+                      <Text variant="heading-strong-m">{post.metadata.title}</Text>
+                      <Text variant="body-default-s" onBackground="neutral-weak">
+                        {post.metadata.summary}
+                      </Text>
+                    </Column>
+                    <Icon name="chevronRight" size="s" onBackground="neutral-weak" style={{ flexShrink: 0, marginTop: "4px" }} />
+                  </Row>
+                </Card>
+              ))}
+            </Column>
+          </Column>
+        </RevealFx>
+      )}
+
+      {/* AdSense placeholder — middle */}
+      <RevealFx translateY="8" delay={0.5} fillWidth>
+        <Row
+          fillWidth padding="16" radius="m" border="neutral-alpha-weak"
+          background="neutral-alpha-weak" horizontal="center" vertical="center"
+          style={{ minHeight: "90px" }}
+        >
+          <Text variant="label-default-s" onBackground="neutral-weak">[ Advertisement ]</Text>
+        </Row>
+      </RevealFx>
+
+      {/* Newsletter */}
+      {newsletter.display && (
+        <RevealFx translateY="16" delay={0.6} fillWidth>
+          <Mailchimp newsletter={newsletter} />
+        </RevealFx>
+      )}
+    </Column>
   );
 }

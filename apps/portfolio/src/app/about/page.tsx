@@ -1,62 +1,381 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import {
+  Avatar,
+  Button,
+  Column,
+  Flex,
+  Heading,
+  Icon,
+  IconButton,
+  SmartImage,
+  Tag,
+  Text,
+} from "@/once-ui/components";
+import { baseURL } from "@/app/resources";
+import TableOfContents from "@/components/about/TableOfContents";
+import styles from "@/components/about/about.module.scss";
+import { person, about, social } from "@/app/resources/content";
+import React from "react";
+import { Meta, Schema } from "@/once-ui/modules";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "About Bilal Fali — Flutter Mobile App Developer from M'sila, Algeria. Master's in Computer Science. 5+ years experience building cross-platform apps.",
-};
+export async function generateMetadata() {
+  return Meta.generate({
+    title: about.title,
+    description: about.description,
+    baseURL: baseURL,
+    image: `${baseURL}/og?title=${encodeURIComponent(about.title)}`,
+    path: about.path,
+  });
+}
 
-export default function AboutPage() {
+export default function About() {
+  const structure = [
+    {
+      title: about.intro.title,
+      display: about.intro.display,
+      items: [],
+    },
+    {
+      title: about.work.title,
+      display: about.work.display,
+      items: about.work.experiences.map((experience) => experience.company),
+    },
+    {
+      title: about.studies.title,
+      display: about.studies.display,
+      items: about.studies.institutions.map((institution) => institution.name),
+    },
+    {
+      title: about.technical.title,
+      display: about.technical.display,
+      items: about.technical.skills.map((skill) => skill.title),
+    },
+  ];
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
-      <div className="flex flex-col sm:flex-row items-start gap-10 mb-14">
-        <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-accent/20 to-violet-500/20 border border-accent/30 flex-shrink-0 flex items-center justify-center text-4xl">
-          👨‍💻
-        </div>
-        <div>
-          <h1 className="text-4xl font-bold text-ink mb-2">Bilal Fali</h1>
-          <p className="text-accent font-medium mb-1">Flutter Mobile App Developer</p>
-          <p className="text-ink-muted text-sm">M'sila, Algeria · Available worldwide</p>
-          <div className="flex gap-3 mt-4">
-            {[
-              { label:"GitHub",   href:"https://github.com/BilalFali" },
-              { label:"LinkedIn", href:"https://linkedin.com/in/falibilal" },
-              { label:"YouTube",  href:"https://youtube.com/@bidev97" },
-              { label:"Email",    href:"mailto:bilalfali60@gmail.com" },
-            ].map(s => <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-              className="text-xs px-3 py-1.5 rounded-lg border border-border bg-bg-card text-ink-muted hover:border-accent/40 hover:text-accent transition-colors">{s.label}</a>)}
-          </div>
-        </div>
-      </div>
+    <Column maxWidth="m">
+      <Schema
+        as="webPage"
+        baseURL={baseURL}
+        title={about.title}
+        description={about.description}
+        path={about.path}
+        image={`${baseURL}/og?title=${encodeURIComponent(about.title)}`}
+        author={{
+          name: person.name,
+          url: `${baseURL}${about.path}`,
+          image: `${baseURL}${person.avatar}`,
+        }}
+      />
+      {about.tableOfContent.display && (
+        <Column
+          left="0"
+          style={{ top: "50%", transform: "translateY(-50%)" }}
+          position="fixed"
+          paddingLeft="24"
+          gap="32"
+          hide="s"
+        >
+          <TableOfContents structure={structure} about={about} />
+        </Column>
+      )}
+      <Flex fillWidth mobileDirection="column" horizontal="center">
+        {about.avatar.display && (
+          <Column
+            className={styles.avatar}
+            position="sticky"
+            minWidth="160"
+            paddingX="l"
+            paddingBottom="xl"
+            gap="m"
+            flex={3}
+            horizontal="center"
+          >
+            <Avatar src={person.avatar} size="xl" />
+            <Flex gap="8" vertical="center">
+              <Icon onBackground="accent-weak" name="globe" />
+              M'sila, Algeria
+            </Flex>
+            {person.languages.length > 0 && (
+              <Flex wrap gap="8">
+                {person.languages.map((language, index) => (
+                  <Tag key={language} size="l">
+                    {language}
+                  </Tag>
+                ))}
+              </Flex>
+            )}
+            <Button
+              href="https://drive.google.com/file/d/1EwRJ_6Ns7tWK7AIOCP6MSJx3Qamc5_Xr/view?usp=sharing"
+              variant="secondary"
+              size="m"
+              prefixIcon="document"
+            >
+              View Resume
+            </Button>
+          </Column>
+        )}
+        <Column className={styles.blockAlign} flex={9} maxWidth={40}>
+          <Column
+            id={about.intro.title}
+            fillWidth
+            minHeight="160"
+            vertical="center"
+            marginBottom="32"
+          >
+            {about.calendar.display && (
+              <Flex
+                fitWidth
+                border="brand-alpha-medium"
+                className={styles.blockAlign}
+                style={{
+                  backdropFilter: "blur(var(--static-space-1))",
+                }}
+                background="brand-alpha-weak"
+                radius="full"
+                padding="4"
+                gap="8"
+                marginBottom="m"
+                vertical="center"
+              >
+                <Icon
+                  paddingLeft="12"
+                  name="calendar"
+                  onBackground="brand-weak"
+                />
+                <Flex paddingX="8">Schedule a call</Flex>
+                <IconButton
+                  href={about.calendar.link}
+                  data-border="rounded"
+                  variant="secondary"
+                  icon="chevronRight"
+                />
+              </Flex>
+            )}
+            <Heading className={styles.textAlign} variant="display-strong-xl">
+              {person.name}
+            </Heading>
+            <Text
+              className={styles.textAlign}
+              variant="display-default-xs"
+              onBackground="neutral-weak"
+            >
+              {person.role}
+            </Text>
+            {social.length > 0 && (
+              <Flex
+                className={styles.blockAlign}
+                paddingTop="20"
+                paddingBottom="8"
+                gap="8"
+                wrap
+                horizontal="center"
+                fitWidth
+                data-border="rounded"
+              >
+                {social.map(
+                  (item) =>
+                    item.link && (
+                      <React.Fragment key={item.name}>
+                        <Button
+                          className="s-flex-hide"
+                          key={item.name}
+                          href={item.link}
+                          prefixIcon={item.icon}
+                          label={item.name}
+                          size="s"
+                          variant="secondary"
+                        />
+                        <IconButton
+                          className="s-flex-show"
+                          size="l"
+                          key={`${item.name}-icon`}
+                          href={item.link}
+                          icon={item.icon}
+                          variant="secondary"
+                        />
+                      </React.Fragment>
+                    ),
+                )}
+              </Flex>
+            )}
+          </Column>
 
-      <div className="prose prose-invert max-w-none">
-        <h2>About me</h2>
-        <p>
-          I'm a Flutter Mobile App Developer with a Master's degree in Computer Science from the University of M'sila.
-          I specialize in building production-ready cross-platform mobile applications for Android and iOS using Flutter and Dart.
-        </p>
-        <p>
-          At DevGate Company, I've shipped 7+ apps serving over 100,000 active users — from ride-hailing platforms
-          with real-time GPS tracking to e-commerce apps with integrated payment processing.
-        </p>
-        <h2>What I care about</h2>
-        <ul>
-          <li><strong>Clean code</strong> — Clean Architecture, SOLID principles, testable code</li>
-          <li><strong>Performance</strong> — Apps that load fast and feel native</li>
-          <li><strong>User experience</strong> — Smooth animations, intuitive flows</li>
-          <li><strong>Reliability</strong> — Apps that don't crash in production</li>
-        </ul>
-        <h2>When I'm not coding</h2>
-        <p>
-          I write technical articles on <a href="https://bidev.site">bidev.site</a> to share what I learn
-          with the Flutter community, and build free developer tools at the same site.
-        </p>
-      </div>
+          {about.intro.display && (
+            <Column
+              textVariant="body-default-l"
+              fillWidth
+              gap="m"
+              marginBottom="xl"
+            >
+              {about.intro.description}
+            </Column>
+          )}
 
-      <div className="mt-10 flex gap-4">
-        <Link href="/contact" className="px-6 py-2.5 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors">Work together</Link>
-        <Link href="/projects" className="px-6 py-2.5 rounded-lg border border-border bg-bg-card text-sm text-ink hover:border-border-strong transition-colors">See my work</Link>
-      </div>
-    </div>
+          {about.work.display && (
+            <>
+              <Heading
+                as="h2"
+                id={about.work.title}
+                variant="display-strong-s"
+                marginBottom="m"
+              >
+                {about.work.title}
+              </Heading>
+              <Column fillWidth gap="l" marginBottom="40">
+                {about.work.experiences.map((experience, index) => (
+                  <Column
+                    key={`${experience.company}-${experience.role}-${index}`}
+                    fillWidth
+                  >
+                    <Flex
+                      fillWidth
+                      horizontal="space-between"
+                      vertical="end"
+                      marginBottom="4"
+                    >
+                      <Text id={experience.company} variant="heading-strong-l">
+                        {experience.company}
+                      </Text>
+                      <Text
+                        variant="heading-default-xs"
+                        onBackground="neutral-weak"
+                      >
+                        {experience.timeframe}
+                      </Text>
+                    </Flex>
+                    <Text
+                      variant="body-default-s"
+                      onBackground="brand-weak"
+                      marginBottom="m"
+                    >
+                      {experience.role}
+                    </Text>
+                    <Column as="ul" gap="16">
+                      {experience.achievements.map(
+                        (achievement: JSX.Element, index: number) => (
+                          <Text
+                            as="li"
+                            variant="body-default-m"
+                            key={`${experience.company}-${index}`}
+                          >
+                            {achievement}
+                          </Text>
+                        ),
+                      )}
+                    </Column>
+                    {experience.images.length > 0 && (
+                      <Flex fillWidth paddingTop="m" paddingLeft="40" wrap>
+                        {experience.images.map((image, index) => (
+                          <Flex
+                            key={index}
+                            border="neutral-medium"
+                            radius="m"
+                            //@ts-ignore
+                            minWidth={image.width}
+                            //@ts-ignore
+                            height={image.height}
+                          >
+                            <SmartImage
+                              enlarge
+                              radius="m"
+                              //@ts-ignore
+                              sizes={image.width.toString()}
+                              //@ts-ignore
+                              alt={image.alt}
+                              //@ts-ignore
+                              src={image.src}
+                            />
+                          </Flex>
+                        ))}
+                      </Flex>
+                    )}
+                  </Column>
+                ))}
+              </Column>
+            </>
+          )}
+
+          {about.studies.display && (
+            <>
+              <Heading
+                as="h2"
+                id={about.studies.title}
+                variant="display-strong-s"
+                marginBottom="m"
+              >
+                {about.studies.title}
+              </Heading>
+              <Column fillWidth gap="l" marginBottom="40">
+                {about.studies.institutions.map((institution, index) => (
+                  <Column
+                    key={`${institution.name}-${index}`}
+                    fillWidth
+                    gap="4"
+                  >
+                    <Text id={institution.name} variant="heading-strong-l">
+                      {institution.name}
+                    </Text>
+                    <Text
+                      variant="heading-default-xs"
+                      onBackground="neutral-weak"
+                    >
+                      {institution.description}
+                    </Text>
+                  </Column>
+                ))}
+              </Column>
+            </>
+          )}
+
+          {about.technical.display && (
+            <>
+              <Heading
+                as="h2"
+                id={about.technical.title}
+                variant="display-strong-s"
+                marginBottom="40"
+              >
+                {about.technical.title}
+              </Heading>
+              <Column fillWidth gap="l">
+                {about.technical.skills.map((skill, index) => (
+                  <Column key={`${skill}-${index}`} fillWidth gap="4">
+                    <Text variant="heading-strong-l">{skill.title}</Text>
+                    <Text variant="body-default-m" onBackground="neutral-weak">
+                      {skill.description}
+                    </Text>
+                    {skill.images && skill.images.length > 0 && (
+                      <Flex fillWidth paddingTop="m" gap="12" wrap>
+                        {skill.images.map((image, index) => (
+                          <Flex
+                            key={index}
+                            border="neutral-medium"
+                            radius="m"
+                            //@ts-ignore
+                            minWidth={image.width}
+                            //@ts-ignore
+                            height={image.height}
+                          >
+                            <SmartImage
+                              enlarge
+                              radius="m"
+                              //@ts-ignore
+                              sizes={image.width.toString()}
+                              //@ts-ignore
+                              alt={image.alt}
+                              //@ts-ignore
+                              src={image.src}
+                            />
+                          </Flex>
+                        ))}
+                      </Flex>
+                    )}
+                  </Column>
+                ))}
+              </Column>
+            </>
+          )}
+        </Column>
+      </Flex>
+    </Column>
   );
 }

@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
 
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Block public access" ON public.site_settings;
 CREATE POLICY "Block public access" ON public.site_settings
   FOR ALL TO anon USING (false);
 

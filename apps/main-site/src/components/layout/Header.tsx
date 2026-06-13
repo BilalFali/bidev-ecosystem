@@ -1,63 +1,83 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Search, X, Menu } from "lucide-react";
 
 const NAV = [
-  { label: "Blog",      href: "/blog" },
-  { label: "Snippets",  href: "/snippets" },
-  { label: "Tools",     href: "/tools" },
-  { label: "Resources", href: "/resources" },
-  { label: "Flutter",   href: "/flutter" },
-  { label: "About",     href: "/about" },
+  { label: "Articles",    href: "/blog" },
+  { label: "Tools",       href: "/tools" },
+  { label: "Resources",   href: "/resources" },
+  { label: "Snippets",    href: "/snippets" },
+  { label: "Community",   href: "/flutter" },
 ];
 
 export function Header() {
-  const [open,      setOpen]      = useState(false);
-  const [scrolled,  setScrolled]  = useState(false);
-  const [mounted,   setMounted]   = useState(false);
-  const pathname = usePathname();
+  const [open,       setOpen]       = useState(false);
+  const [scrolled,   setScrolled]   = useState(false);
+  const [searching,  setSearching]  = useState(false);
+  const [query,      setQuery]      = useState("");
+  const [mounted,    setMounted]    = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const pathname  = usePathname();
+  const router    = useRouter();
 
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 12);
+    const handler = () => setScrolled(window.scrollY > 8);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => { setOpen(false); setSearching(false); }, [pathname]);
+
+  useEffect(() => {
+    if (searching) searchRef.current?.focus();
+  }, [searching]);
 
   const isActive = (href: string) => {
     if (!mounted) return false;
     return href === "/" ? pathname === "/" : pathname.startsWith(href);
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/blog?q=${encodeURIComponent(query.trim())}`);
+      setSearching(false);
+      setQuery("");
+    }
+  };
+
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled ? "glass border-b border-border" : "border-b border-transparent"
+      className={`sticky top-0 z-50 w-full transition-all duration-200 ${
+        scrolled
+          ? "glass border-b border-border"
+          : "border-b border-border/30"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-xl font-bold text-ink">
-              bi<span className="text-accent">dev</span>.site
+        <div className="flex h-14 items-center gap-6">
+
+          {/* ── Logo ──────────────────────────────────────────── */}
+          <Link href="/" className="flex items-center gap-1.5 shrink-0">
+            <span className="text-base font-semibold tracking-tight text-ink">
+              Bi<span className="text-accent-light">dev</span>
             </span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* ── Desktop nav ───────────────────────────────────── */}
+          <nav className="hidden md:flex items-center gap-0.5 flex-1">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
                   isActive(item.href)
-                    ? "text-accent bg-accent/10"
+                    ? "text-ink bg-bg-elevated font-medium"
                     : "text-ink-muted hover:text-ink hover:bg-bg-elevated"
                 }`}
               >
@@ -66,51 +86,114 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Right CTA + Mobile toggle */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/tools"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors"
-            >
-              Free Tools
-            </Link>
+          {/* ── Search (desktop) ──────────────────────────────── */}
+          <div className="hidden md:flex items-center gap-3 ml-auto">
+            {searching ? (
+              <form onSubmit={handleSearch} className="flex items-center">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-elevated border border-border focus-within:border-accent transition-colors w-56">
+                  <Search className="w-3.5 h-3.5 text-ink-faint shrink-0" />
+                  <input
+                    ref={searchRef}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search articles…"
+                    className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-faint outline-none"
+                  />
+                  <button type="button" onClick={() => { setSearching(false); setQuery(""); }}>
+                    <X className="w-3.5 h-3.5 text-ink-faint hover:text-ink transition-colors" />
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <button
+                onClick={() => setSearching(true)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-elevated border border-border text-ink-faint text-sm hover:text-ink hover:border-border-strong transition-all"
+                aria-label="Search"
+              >
+                <Search className="w-3.5 h-3.5" />
+                <span className="hidden lg:block text-xs">Search articles, topics…</span>
+                <kbd className="hidden lg:block text-[10px] px-1.5 py-0.5 rounded bg-bg-card border border-border font-mono">⌘K</kbd>
+              </button>
+            )}
 
+            {/* Auth */}
+            <Link
+              href="/about"
+              className="text-sm text-ink-muted hover:text-ink transition-colors"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/newsletter"
+              className="px-4 py-1.5 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors"
+            >
+              Sign in
+            </Link>
+          </div>
+
+          {/* ── Mobile: search icon + hamburger ───────────────── */}
+          <div className="flex items-center gap-2 md:hidden ml-auto">
             <button
-              className="md:hidden p-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-elevated transition-colors"
+              onClick={() => setSearching(!searching)}
+              className="p-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-elevated transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+            <button
               onClick={() => setOpen(!open)}
+              className="p-2 rounded-lg text-ink-muted hover:text-ink hover:bg-bg-elevated transition-colors"
               aria-label="Toggle menu"
             >
-              <span className="block w-5 h-0.5 bg-current mb-1.5 transition-transform" />
-              <span className={`block w-5 h-0.5 bg-current mb-1.5 transition-opacity ${open ? "opacity-0" : ""}`} />
-              <span className="block w-5 h-0.5 bg-current transition-transform" />
+              {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
+
+        {/* Mobile search bar */}
+        {searching && (
+          <div className="md:hidden pb-3">
+            <form onSubmit={handleSearch}>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-bg-elevated border border-border focus-within:border-accent transition-colors">
+                <Search className="w-4 h-4 text-ink-faint shrink-0" />
+                <input
+                  ref={searchRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search articles, topics…"
+                  className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-faint outline-none"
+                />
+              </div>
+            </form>
+          </div>
+        )}
       </div>
 
-      {/* Mobile menu */}
+      {/* ── Mobile menu ───────────────────────────────────────── */}
       {open && (
-        <div className="md:hidden border-t border-border bg-bg-secondary">
-          <nav className="flex flex-col p-4 gap-1">
+        <div className="md:hidden border-t border-border bg-bg-card">
+          <nav className="flex flex-col p-3 gap-0.5">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2.5 rounded-lg text-sm transition-colors ${
                   isActive(item.href)
-                    ? "text-accent bg-accent/10"
+                    ? "text-ink bg-bg-elevated font-medium"
                     : "text-ink-muted hover:text-ink hover:bg-bg-elevated"
                 }`}
               >
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/tools"
-              className="mt-2 px-4 py-3 rounded-lg bg-accent text-bg text-sm font-semibold text-center hover:bg-accent-hover transition-colors"
-            >
-              Explore Free Tools
-            </Link>
+            <div className="flex gap-2 pt-3 mt-1 border-t border-border">
+              <Link href="/about" className="flex-1 py-2 rounded-lg text-center text-sm text-ink-muted border border-border hover:border-border-strong hover:text-ink transition-colors">
+                Log in
+              </Link>
+              <Link href="/newsletter" className="flex-1 py-2 rounded-lg text-center text-sm text-white bg-accent hover:bg-accent-hover transition-colors font-medium">
+                Sign in
+              </Link>
+            </div>
           </nav>
         </div>
       )}

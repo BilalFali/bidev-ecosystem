@@ -9,6 +9,8 @@
     "build:main": "npm run build --workspace=apps/main-site",
     "build:portfolio": "npm run build --workspace=apps/portfolio",
     "build:admin": "npm run build --workspace=apps/admin",
+    "dev:worker": "npm run dev --workspace=apps/ai-worker",
+    "worker:once": "npm run run-once --workspace=apps/ai-worker",
     "build": "npm run build:main && npm run build:portfolio && npm run build:admin"
   }
 }
