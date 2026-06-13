@@ -48,6 +48,7 @@ export default async function HomePage() {
                     sizes="(max-width: 1024px) 100vw, 65vw"
                     className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                     priority
+                    fetchPriority="high"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-bg-elevated to-bg-card" />

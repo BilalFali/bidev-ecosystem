@@ -13,14 +13,14 @@ const GA_ID      = "G-C04YP7HRR0";
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
-  display: "swap",
+  display: "optional",  // no layout shift — falls back to system font if not cached
   preload: true,
 });
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  display: "swap",
+  display: "optional",
   preload: false,
 });
 
@@ -95,29 +95,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geist.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
-        {/* Preconnect to speed up external resources */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* next/font self-hosts fonts — no external font connections needed */}
+        {/* Only prefetch third-party origins we'll need after load */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         {ADSENSE_ID && (
-          <>
-            <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-            <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
-          </>
+          <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
         )}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
 
         {/* Structured data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       </head>
 
-      {/* AdSense Auto Ads */}
+      {/* AdSense Auto Ads — lazyOnload so ads never block LCP/FID */}
       {ADSENSE_ID && (
         <Script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       )}
 
@@ -128,17 +125,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {GA_ID && <WebVitals />}
       </body>
 
-      {/* Google Analytics 4 — exact tag from analytics.google.com */}
+      {/* Google Analytics 4 — lazyOnload keeps it off the critical path */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
-      <Script id="gtag-init" strategy="afterInteractive">
+      <Script id="gtag-init" strategy="lazyOnload">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${GA_ID}');
+          gtag('config', '${GA_ID}', { send_page_view: true });
         `}
       </Script>
     </html>
