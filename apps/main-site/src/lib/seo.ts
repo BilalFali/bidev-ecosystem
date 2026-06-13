@@ -5,21 +5,27 @@ const SITE_URL  = "https://bidev.site";
 const SITE_NAME = "bidev.site";
 const AUTHOR    = "Bilal Fali";
 
+function truncateDesc(text: string, max = 155): string {
+  if (!text || text.length <= max) return text;
+  return text.slice(0, max - 1).replace(/[,.:;!?\s]+$/, "") + "…";
+}
+
 export function postMetadata(post: Post): Metadata {
-  const image = post.image ?? `${SITE_URL}/api/og?title=${encodeURIComponent(post.title)}`;
+  const image       = post.image ?? `${SITE_URL}/og.png`;
+  const description = truncateDesc(post.summary);
   return {
     title: post.title,
-    description: post.summary,
+    description,
     alternates: { canonical: `${SITE_URL}/blog/${post.slug}` },
     keywords: post.tags,
-    authors: [{ name: post.author ?? AUTHOR }],
+    authors: [{ name: post.author ?? AUTHOR, url: `${SITE_URL}/about` }],
     openGraph: {
       type: "article",
       url: `${SITE_URL}/blog/${post.slug}`,
       title: post.title,
-      description: post.summary,
+      description,
       publishedTime: post.publishedAt,
-      modifiedTime: post.updatedAt ?? post.publishedAt,
+      modifiedTime:  post.updatedAt ?? post.publishedAt,
       authors: [post.author ?? AUTHOR],
       tags: post.tags,
       siteName: SITE_NAME,
@@ -28,8 +34,10 @@ export function postMetadata(post: Post): Metadata {
     twitter: {
       card: "summary_large_image",
       title: post.title,
-      description: post.summary,
+      description,
       images: [image],
+      creator: "@bidev97",
+      site: "@bidev97",
     },
   };
 }
@@ -40,20 +48,28 @@ export function pageMetadata(opts: {
   path: string;
   image?: string;
 }): Metadata {
-  const url   = `${SITE_URL}${opts.path}`;
-  const image = opts.image ?? `${SITE_URL}/api/og?title=${encodeURIComponent(opts.title)}`;
+  const url         = `${SITE_URL}${opts.path}`;
+  const image       = opts.image ?? `${SITE_URL}/og.png`;
+  const description = truncateDesc(opts.description);
   return {
     title: opts.title,
-    description: opts.description,
+    description,
     alternates: { canonical: url },
     openGraph: {
       url,
       title: opts.title,
-      description: opts.description,
+      description,
       siteName: SITE_NAME,
       images: [{ url: image, width: 1200, height: 630 }],
     },
-    twitter: { card: "summary_large_image", title: opts.title, description: opts.description, images: [image] },
+    twitter: {
+      card: "summary_large_image",
+      title: opts.title,
+      description,
+      images: [image],
+      creator: "@bidev97",
+      site: "@bidev97",
+    },
   };
 }
 

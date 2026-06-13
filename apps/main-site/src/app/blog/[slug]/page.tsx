@@ -66,15 +66,22 @@ export default async function BlogPostPage({
   const related   = getRelatedPosts(post, 3);
   const postUrl   = `${SITE_URL}/blog/${post.slug}`;
 
+  const wordCount = post.content
+    ? Math.round(post.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length)
+    : undefined;
+
   const articleSchema = articleJsonLd({
     url:         postUrl,
+    siteUrl:     SITE_URL,
     title:       post.title,
     description: post.summary,
     publishedAt: post.publishedAt,
     updatedAt:   post.updatedAt,
     authorName:  post.author ?? "Bilal Fali",
+    authorUrl:   `${SITE_URL}/about`,
     siteName:    SITE_NAME,
     image:       post.image,
+    wordCount,
   });
 
   const breadcrumbSchema = {

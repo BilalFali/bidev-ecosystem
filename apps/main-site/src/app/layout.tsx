@@ -5,7 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WebVitals } from "@/components/analytics/WebVitals";
-import { websiteJsonLd } from "@bidev/shared";
+import { websiteJsonLd, personJsonLd } from "@bidev/shared";
 
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 const GA_ID      = "G-C04YP7HRR0";
@@ -89,7 +89,8 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = websiteJsonLd(SITE_URL, SITE_NAME, metadata.description as string);
+  const jsonLd       = websiteJsonLd(SITE_URL, SITE_NAME, metadata.description as string);
+  const personSchema = personJsonLd(SITE_URL);
 
   return (
     <html lang="en" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
@@ -106,10 +107,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://www.googletagmanager.com" />
 
         {/* Structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
       </head>
 
       {/* AdSense Auto Ads */}
