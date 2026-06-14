@@ -9,7 +9,6 @@ const LINKS = {
     { label: "Flutter",    href: "/flutter" },
   ],
   Community: [
-    { label: "Newsletter",     href: "/newsletter" },
     { label: "About",          href: "/about" },
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms",          href: "/terms" },

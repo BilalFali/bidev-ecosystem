@@ -6,19 +6,19 @@ import { usePathname, useRouter } from "next/navigation";
 import { Search, X, Menu } from "lucide-react";
 
 const NAV = [
-  { label: "Articles",    href: "/blog" },
-  { label: "Tools",       href: "/tools" },
-  { label: "Resources",   href: "/resources" },
-  { label: "Snippets",    href: "/snippets" },
-  { label: "Community",   href: "/flutter" },
+  { label: "Articles",  href: "/blog" },
+  { label: "Tools",     href: "/tools" },
+  { label: "Resources", href: "/resources" },
+  { label: "Snippets",  href: "/snippets" },
+  { label: "Community", href: "/flutter" },
 ];
 
 export function Header() {
-  const [open,       setOpen]       = useState(false);
-  const [scrolled,   setScrolled]   = useState(false);
-  const [searching,  setSearching]  = useState(false);
-  const [query,      setQuery]      = useState("");
-  const [mounted,    setMounted]    = useState(false);
+  const [open,      setOpen]      = useState(false);
+  const [scrolled,  setScrolled]  = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [query,     setQuery]     = useState("");
+  const [mounted,   setMounted]   = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const pathname  = usePathname();
   const router    = useRouter();
@@ -54,22 +54,20 @@ export function Header() {
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        scrolled
-          ? "glass border-b border-border"
-          : "border-b border-border/30"
+        scrolled ? "glass border-b border-border" : "border-b border-border/30"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center gap-6">
 
-          {/* ── Logo ──────────────────────────────────────────── */}
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-1.5 shrink-0">
             <span className="text-base font-semibold tracking-tight text-ink">
               Bi<span className="text-accent-light">dev</span>
             </span>
           </Link>
 
-          {/* ── Desktop nav ───────────────────────────────────── */}
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-0.5 flex-1">
             {NAV.map((item) => (
               <Link
@@ -86,10 +84,10 @@ export function Header() {
             ))}
           </nav>
 
-          {/* ── Search (desktop) ──────────────────────────────── */}
-          <div className="hidden md:flex items-center gap-3 ml-auto">
+          {/* Search (desktop) */}
+          <div className="hidden md:flex items-center ml-auto">
             {searching ? (
-              <form onSubmit={handleSearch} className="flex items-center">
+              <form onSubmit={handleSearch}>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-bg-elevated border border-border focus-within:border-accent transition-colors w-56">
                   <Search className="w-3.5 h-3.5 text-ink-faint shrink-0" />
                   <input
@@ -115,23 +113,9 @@ export function Header() {
                 <kbd className="hidden lg:block text-[10px] px-1.5 py-0.5 rounded bg-bg-card border border-border font-mono">⌘K</kbd>
               </button>
             )}
-
-            {/* Auth */}
-            <Link
-              href="/about"
-              className="text-sm text-ink-muted hover:text-ink transition-colors"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/newsletter"
-              className="px-4 py-1.5 rounded-lg bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors"
-            >
-              Sign in
-            </Link>
           </div>
 
-          {/* ── Mobile: search icon + hamburger ───────────────── */}
+          {/* Mobile: search + hamburger */}
           <div className="flex items-center gap-2 md:hidden ml-auto">
             <button
               onClick={() => setSearching(!searching)}
@@ -169,7 +153,7 @@ export function Header() {
         )}
       </div>
 
-      {/* ── Mobile menu ───────────────────────────────────────── */}
+      {/* Mobile menu */}
       {open && (
         <div className="md:hidden border-t border-border bg-bg-card">
           <nav className="flex flex-col p-3 gap-0.5">
@@ -186,14 +170,6 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <div className="flex gap-2 pt-3 mt-1 border-t border-border">
-              <Link href="/about" className="flex-1 py-2 rounded-lg text-center text-sm text-ink-muted border border-border hover:border-border-strong hover:text-ink transition-colors">
-                Log in
-              </Link>
-              <Link href="/newsletter" className="flex-1 py-2 rounded-lg text-center text-sm text-white bg-accent hover:bg-accent-hover transition-colors font-medium">
-                Sign in
-              </Link>
-            </div>
           </nav>
         </div>
       )}

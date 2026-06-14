@@ -3,7 +3,6 @@ import Image from "next/image";
 import { getAllArticles } from "@/lib/articles";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
-import { NewsletterForm } from "@/components/ui/NewsletterForm";
 
 export const revalidate = 60;
 
@@ -30,15 +29,14 @@ export default async function HomePage() {
           </span>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_320px] gap-6">
+        <div className="grid lg:grid-cols-[1fr_300px] gap-6">
 
-          {/* ── Featured article ──────────────────────────────── */}
+          {/* Featured article */}
           {featured ? (
             <Link
               href={`/blog/${featured.slug}`}
               className="group relative rounded-2xl border border-border bg-bg-card overflow-hidden hover:border-border-strong transition-all duration-300 flex flex-col"
             >
-              {/* Cover */}
               <div className="relative h-56 sm:h-72 lg:h-80 bg-bg-elevated shrink-0 overflow-hidden">
                 {featured.image ? (
                   <Image
@@ -53,10 +51,7 @@ export default async function HomePage() {
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-accent/15 via-bg-elevated to-bg-card" />
                 )}
-                {/* Gradient overlay at bottom */}
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-card via-transparent to-transparent" />
-
-                {/* Tags over image */}
                 <div className="absolute top-4 left-4 flex gap-2">
                   {featured.tags.slice(0, 2).map((t) => (
                     <span
@@ -69,7 +64,6 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="flex flex-col gap-3 p-6">
                 <h1 className="text-xl sm:text-2xl font-semibold text-ink group-hover:text-accent-light transition-colors leading-snug">
                   {featured.title}
@@ -92,64 +86,38 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* ── Right sidebar ─────────────────────────────────── */}
-          <div className="flex flex-col gap-4">
-
-            {/* Build smarter CTA */}
-            <div className="rounded-xl border border-accent/20 bg-gradient-to-br from-accent/8 to-bg-card p-5">
-              <p className="text-xs font-mono text-accent-light mb-2 uppercase tracking-widest">Build smarter</p>
-              <p className="text-sm font-semibold text-ink leading-snug mb-3">
-                Top Flutter packages, articles, and tools — all in one place.
-              </p>
-              <p className="text-xs text-ink-muted mb-4 leading-relaxed">
-                Stay ahead with curated Flutter dev content, weekly.
-              </p>
-              <Link
-                href="/newsletter"
-                className="block w-full py-2 rounded-lg bg-accent text-white text-xs font-semibold text-center hover:bg-accent-hover transition-colors"
-              >
-                Subscribe free →
-              </Link>
-            </div>
-
-            {/* Popular this week */}
-            <div className="rounded-xl border border-border bg-bg-card p-5 flex-1">
-              <p className="text-xs font-semibold text-ink-faint uppercase tracking-widest mb-4">
-                Popular This Week
-              </p>
-              <ol className="flex flex-col gap-4">
-                {popular.map((post, i) => (
-                  <li key={post.slug}>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="group flex items-start gap-3"
-                    >
-                      <span className="text-2xl font-bold text-border-strong leading-none shrink-0 w-6 text-right">
-                        {i + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-ink-muted group-hover:text-ink transition-colors leading-snug line-clamp-2">
-                          {post.title}
-                        </p>
-                        <p className="text-xs text-ink-faint mt-1">
-                          {post.readingTime} min read
-                        </p>
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </div>
+          {/* Popular this week */}
+          <div className="rounded-xl border border-border bg-bg-card p-5">
+            <p className="text-xs font-semibold text-ink-faint uppercase tracking-widest mb-4">
+              Popular This Week
+            </p>
+            <ol className="flex flex-col gap-4">
+              {popular.map((post, i) => (
+                <li key={post.slug}>
+                  <Link href={`/blog/${post.slug}`} className="group flex items-start gap-3">
+                    <span className="text-2xl font-bold text-border-strong leading-none shrink-0 w-6 text-right">
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-ink-muted group-hover:text-ink transition-colors leading-snug line-clamp-2">
+                        {post.title}
+                      </p>
+                      <p className="text-xs text-ink-faint mt-1">{post.readingTime} min read</p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* ── AD ──────────────────────────────────────────────────── */}
+      {/* Ad */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <AdSlot type="banner" />
       </div>
 
-      {/* ── LATEST ARTICLES ─────────────────────────────────────── */}
+      {/* Latest Articles */}
       {latest.length > 1 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
           <div className="flex items-center justify-between mb-8">
@@ -166,7 +134,6 @@ export default async function HomePage() {
                 href={`/blog/${post.slug}`}
                 className="group flex gap-5 py-5 hover:bg-bg-card/40 -mx-3 px-3 rounded-xl transition-colors"
               >
-                {/* Thumbnail */}
                 <div className="relative w-24 h-16 sm:w-32 sm:h-20 rounded-lg overflow-hidden bg-bg-elevated shrink-0">
                   {post.image ? (
                     <Image
@@ -181,34 +148,24 @@ export default async function HomePage() {
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="flex flex-col justify-between min-w-0 flex-1">
                   <div>
-                    {/* Category + date */}
                     <div className="flex items-center gap-2 mb-1.5">
                       {post.tags[0] && (
-                        <span className="text-[11px] font-mono text-accent-light">
-                          {post.tags[0]}
-                        </span>
+                        <span className="text-[11px] font-mono text-accent-light">{post.tags[0]}</span>
                       )}
                       <span className="text-[11px] text-border-strong">·</span>
                       <time className="text-[11px] text-ink-faint" dateTime={post.publishedAt}>
                         {formatDate(post.publishedAt)}
                       </time>
                     </div>
-
-                    {/* Title */}
                     <h3 className="text-sm font-semibold text-ink group-hover:text-accent-light transition-colors leading-snug line-clamp-2 mb-1">
                       {post.title}
                     </h3>
-
-                    {/* Summary */}
                     <p className="text-xs text-ink-faint leading-relaxed line-clamp-2 hidden sm:block">
                       {post.summary}
                     </p>
                   </div>
-
-                  {/* Author + read time */}
                   <div className="flex items-center gap-2 mt-2 text-[11px] text-ink-faint">
                     <span>{post.author ?? "Bilal Fali"}</span>
                     <span>·</span>
@@ -219,7 +176,6 @@ export default async function HomePage() {
             ))}
           </div>
 
-          {/* Load more */}
           <div className="flex justify-center mt-10">
             <Link
               href="/blog"
@@ -231,27 +187,9 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── IN-ARTICLE AD ───────────────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full pb-10">
         <AdSlot type="in-article" />
       </div>
-
-      {/* ── NEWSLETTER ──────────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10" id="newsletter">
-        <div className="relative overflow-hidden rounded-2xl border border-accent/20 p-10 text-center">
-          <div className="absolute inset-0 -z-10 bg-gradient-to-br from-accent/6 via-bg-card to-bg-card" />
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(1,117,194,0.08),transparent_70%)]" />
-
-          <p className="text-xs font-mono text-accent-light uppercase tracking-widest mb-3">Weekly dev digest</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-ink mb-3">Stay ahead of the curve</h2>
-          <p className="text-sm text-ink-muted mb-8 max-w-md mx-auto leading-relaxed">
-            Flutter tutorials, Dart tips, and the best developer tools —
-            delivered every week. No spam, ever.
-          </p>
-          <NewsletterForm />
-          <p className="text-xs text-ink-faint mt-4">Join developers building with Flutter. Unsubscribe anytime.</p>
-        </div>
-      </section>
 
     </div>
   );
