@@ -81,19 +81,76 @@
 }
 
 .ProseMirror pre {
-  background: #111;
-  border: 1px solid #242424;
-  border-radius: 10px;
   padding: 1rem 1.25rem;
   overflow-x: auto;
-  margin: 1rem 0;
+  margin: 0;
 }
 .ProseMirror pre code {
   background: none;
   color: #d4d4d8;
   padding: 0;
   font-size: 0.875rem;
+  font-family: var(--font-mono), monospace;
 }
+
+/* Code block wrapper (language select + copy button) */
+.code-block-wrapper {
+  position: relative;
+  margin: 1rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #242424;
+  background: #111;
+}
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.75rem;
+  background: #161616;
+  border-bottom: 1px solid #242424;
+}
+.code-block-lang-select {
+  background: transparent;
+  color: #a1a1aa;
+  font-size: 0.7rem;
+  font-family: var(--font-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.code-block-lang-select option {
+  background: #161616;
+  color: #d4d4d8;
+}
+.code-block-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: #71717a;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.code-block-copy-btn:hover { color: #22d3ee; }
+
+/* highlight.js token colors */
+.hljs-comment, .hljs-quote { color: #6b7280; font-style: italic; }
+.hljs-doctag, .hljs-keyword, .hljs-formula { color: #c792ea; }
+.hljs-section, .hljs-name, .hljs-selector-tag, .hljs-deletion, .hljs-subst { color: #f07178; }
+.hljs-literal { color: #22d3ee; }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-attribute, .hljs-meta .hljs-string { color: #c3e88d; }
+.hljs-attr, .hljs-variable, .hljs-template-variable, .hljs-type,
+.hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number { color: #f78c6c; }
+.hljs-symbol, .hljs-bullet, .hljs-link, .hljs-meta, .hljs-selector-id, .hljs-title { color: #82aaff; }
+.hljs-built_in, .hljs-title.class_, .hljs-class .hljs-title { color: #ffcb6b; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+.hljs-link { text-decoration: underline; }
 
 .ProseMirror blockquote {
   border-left: 3px solid #22d3ee;

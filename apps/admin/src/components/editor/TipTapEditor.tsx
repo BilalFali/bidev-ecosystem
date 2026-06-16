@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
+import { useEditor, EditorContent, BubbleMenu, ReactNodeViewRenderer } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -22,10 +22,17 @@ import { common, createLowlight } from "lowlight";
 import dart from "highlight.js/lib/languages/dart";
 import { Bold, Italic, Underline as UnderlineIcon, Link as LinkIcon, Code } from "lucide-react";
 import { MenuBar } from "./MenuBar";
+import { CodeBlockComponent } from "./CodeBlockComponent";
 import { cn } from "@/lib/utils";
 
 const lowlight = createLowlight(common);
 lowlight.register("dart", dart);
+
+const CodeBlock = CodeBlockLowlight.extend({
+  addNodeView() {
+    return ReactNodeViewRenderer(CodeBlockComponent);
+  },
+});
 
 interface TipTapEditorProps {
   content: string;
@@ -42,7 +49,7 @@ export function TipTapEditor({ content, onChange, placeholder = "Start writingâ€
       Link.configure({ openOnClick: false, HTMLAttributes: { rel: "noopener noreferrer" } }),
       Placeholder.configure({ placeholder }),
       CharacterCount,
-      CodeBlockLowlight.configure({ lowlight }),
+      CodeBlock.configure({ lowlight }),
       Highlight.configure({ multicolor: false }),
       Typography,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
