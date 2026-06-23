@@ -2,6 +2,8 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/mdx";
 import { getSupabaseClient } from "@/lib/supabase";
 import { SNIPPETS } from "@/lib/snippets";
+import { TOOLS } from "@/lib/tools";
+import { INTERVIEW_QUESTIONS, getAllFilterKeys } from "@/lib/interview-questions";
 
 export const revalidate = 3600;
 
@@ -22,13 +24,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/contact`,                     lastModified: now, changeFrequency: "yearly",  priority: 0.4 },
     { url: `${BASE}/privacy-policy`,              lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,                       lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
-    { url: `${BASE}/tools/json-to-dart`,          lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE}/tools/qr-generator`,          lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/tools/json-formatter`,        lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/tools/password-generator`,    lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/tools/base64`,                lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/tools/uuid-generator`,        lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/flutter-interview-questions`, lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
   ];
+
+  const toolPages: MetadataRoute.Sitemap = TOOLS.map((t) => ({
+    url:             `${BASE}${t.href}`,
+    lastModified:    now,
+    changeFrequency: "monthly" as const,
+    priority:        t.popular ? 0.9 : 0.7,
+  }));
+
+  const interviewFilterPages: MetadataRoute.Sitemap = getAllFilterKeys().map((key) => ({
+    url:             `${BASE}/flutter-interview-questions/${key}`,
+    lastModified:    now,
+    changeFrequency: "weekly" as const,
+    priority:        0.7,
+  }));
+
+  const interviewQuestionPages: MetadataRoute.Sitemap = INTERVIEW_QUESTIONS.map((q) => ({
+    url:             `${BASE}/flutter-interview-questions/${q.slug}`,
+    lastModified:    now,
+    changeFrequency: "monthly" as const,
+    priority:        0.6,
+  }));
 
   // MDX posts
   const mdxPosts: MetadataRoute.Sitemap = getAllPosts().map((p) => ({
@@ -70,5 +88,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }));
 
-  return [...staticPages, ...snippetPages, ...mdxPosts, ...dbPosts];
+  return [
+    ...staticPages,
+    ...toolPages,
+    ...interviewFilterPages,
+    ...interviewQuestionPages,
+    ...snippetPages,
+    ...mdxPosts,
+    ...dbPosts,
+  ];
 }

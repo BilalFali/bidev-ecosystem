@@ -6,11 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { Search, X, Menu } from "lucide-react";
 
 const NAV = [
-  { label: "Articles",  href: "/blog" },
-  { label: "Tools",     href: "/tools" },
-  { label: "Resources", href: "/resources" },
-  { label: "Snippets",  href: "/snippets" },
-  { label: "Community", href: "/flutter" },
+  { label: "Articles",      href: "/blog" },
+  { label: "Tools",         href: "/tools" },
+  { label: "Resources",     href: "/resources" },
+  { label: "Snippets",      href: "/snippets" },
+  { label: "Interview Prep", href: "/flutter-interview-questions" },
+  { label: "Community",     href: "/flutter" },
 ];
 
 export function Header() {

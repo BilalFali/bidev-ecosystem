@@ -2,11 +2,12 @@ import Link from "next/link";
 
 const LINKS = {
   Platform: [
-    { label: "Articles",   href: "/blog" },
-    { label: "Snippets",   href: "/snippets" },
-    { label: "Tools",      href: "/tools" },
-    { label: "Resources",  href: "/resources" },
-    { label: "Flutter",    href: "/flutter" },
+    { label: "Articles",       href: "/blog" },
+    { label: "Snippets",       href: "/snippets" },
+    { label: "Tools",          href: "/tools" },
+    { label: "Resources",      href: "/resources" },
+    { label: "Interview Prep", href: "/flutter-interview-questions" },
+    { label: "Flutter",        href: "/flutter" },
   ],
   Community: [
     { label: "About",          href: "/about" },
