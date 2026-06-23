@@ -108,6 +108,26 @@ export function personJsonLd(siteUrl: string) {
   };
 }
 
+export function softwareApplicationJsonLd(opts: {
+  url: string;
+  siteUrl: string;
+  name: string;
+  description: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    applicationCategory: opts.applicationCategory ?? "DeveloperApplication",
+    operatingSystem: opts.operatingSystem ?? "Any (runs in browser)",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  };
+}
+
 export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
   return {
     "@context": "https://schema.org",

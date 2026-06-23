@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { TOOLS, resolveRelatedTools } from "@/lib/tools";
-import { JSONFormatter } from "@/components/tools/JSONFormatter";
+import { RegexTester } from "@/components/tools/RegexTester";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 
-const tool = TOOLS.find((t) => t.slug === "json-formatter")!;
+const tool = TOOLS.find((t) => t.slug === "regex-tester")!;
 
 export const metadata: Metadata = pageMetadata({
-  title: "JSON Formatter & Validator – Free Online Tool",
-  description: "Format, validate, and minify JSON instantly. Real-time syntax error detection. Free, client-side, no data stored.",
-  path: "/tools/json-formatter",
+  title: "Regex Tester – Free Online Tool",
+  description: "Test regular expressions live against sample text with match highlighting, groups, and flags. Free, client-side.",
+  path: "/tools/regex-tester",
 });
 
 export default function Page() {
   return (
     <>
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
-      <JSONFormatter />
-      <RelatedTools tools={resolveRelatedTools("json-formatter")} maxWidth="max-w-7xl" />
+      <RegexTester />
+      <RelatedTools tools={resolveRelatedTools("regex-tester")} maxWidth="max-w-5xl" />
     </>
   );
 }

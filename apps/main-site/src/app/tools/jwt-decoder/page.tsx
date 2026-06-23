@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { TOOLS, resolveRelatedTools } from "@/lib/tools";
-import { JSONFormatter } from "@/components/tools/JSONFormatter";
+import { JWTDecoder } from "@/components/tools/JWTDecoder";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 
-const tool = TOOLS.find((t) => t.slug === "json-formatter")!;
+const tool = TOOLS.find((t) => t.slug === "jwt-decoder")!;
 
 export const metadata: Metadata = pageMetadata({
-  title: "JSON Formatter & Validator – Free Online Tool",
-  description: "Format, validate, and minify JSON instantly. Real-time syntax error detection. Free, client-side, no data stored.",
-  path: "/tools/json-formatter",
+  title: "JWT Decoder – Free Online Tool",
+  description: "Decode JSON Web Tokens instantly. Inspect header, payload, algorithm, and expiry. Free, client-side — does not verify the signature.",
+  path: "/tools/jwt-decoder",
 });
 
 export default function Page() {
   return (
     <>
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
-      <JSONFormatter />
-      <RelatedTools tools={resolveRelatedTools("json-formatter")} maxWidth="max-w-7xl" />
+      <JWTDecoder />
+      <RelatedTools tools={resolveRelatedTools("jwt-decoder")} maxWidth="max-w-5xl" />
     </>
   );
 }

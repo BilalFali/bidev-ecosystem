@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
+    "build:cpanel": "next build && node scripts/prepare-deploy.mjs",
     "start": "next start",
     "lint": "next lint"
   },

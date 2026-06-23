@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { RESOURCES, RESOURCE_CATEGORIES } from "@/lib/resources";
 import { pageMetadata } from "@/lib/seo";
+import { slugify } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
 
 export const metadata: Metadata = pageMetadata({
@@ -48,7 +49,7 @@ export default function ResourcesPage() {
           const items = byCategory[cat];
           if (!items?.length) return null;
           return (
-            <section key={cat}>
+            <section key={cat} id={slugify(cat)} className="scroll-mt-20">
               <h2 className="text-xl font-bold text-ink mb-5 flex items-center gap-3">
                 {CATEGORY_ICONS[cat] ?? "📁"} {cat}
                 <span className="text-xs font-normal px-2 py-0.5 rounded bg-bg-elevated border border-border text-ink-faint">

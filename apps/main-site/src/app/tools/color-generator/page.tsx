@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { TOOLS, resolveRelatedTools } from "@/lib/tools";
-import { JSONFormatter } from "@/components/tools/JSONFormatter";
+import { ColorGenerator } from "@/components/tools/ColorGenerator";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 
-const tool = TOOLS.find((t) => t.slug === "json-formatter")!;
+const tool = TOOLS.find((t) => t.slug === "color-generator")!;
 
 export const metadata: Metadata = pageMetadata({
-  title: "JSON Formatter & Validator – Free Online Tool",
-  description: "Format, validate, and minify JSON instantly. Real-time syntax error detection. Free, client-side, no data stored.",
-  path: "/tools/json-formatter",
+  title: "Color Generator – Free Flutter ColorScheme Tool",
+  description: "Pick a seed color, preview tints and shades, and copy a ready-to-use Flutter ColorScheme.fromSeed() snippet. Free, client-side.",
+  path: "/tools/color-generator",
 });
 
 export default function Page() {
   return (
     <>
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
-      <JSONFormatter />
-      <RelatedTools tools={resolveRelatedTools("json-formatter")} maxWidth="max-w-7xl" />
+      <ColorGenerator />
+      <RelatedTools tools={resolveRelatedTools("color-generator")} />
     </>
   );
 }
