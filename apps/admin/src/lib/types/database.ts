@@ -74,6 +74,52 @@ export interface ArticleFormData {
   featured: boolean;
 }
 
+export type JobRemoteType = "remote" | "hybrid" | "onsite";
+export type JobEmploymentType = "full-time" | "part-time" | "contract" | "internship";
+export type JobStatus = "draft" | "published" | "closed";
+
+export interface Job {
+  id: string;
+  title: string;
+  slug: string;
+  company: string;
+  company_logo_url: string | null;
+  location: string | null;
+  remote: JobRemoteType;
+  employment_type: JobEmploymentType;
+  category: string;
+  salary_min: number | null;
+  salary_max: number | null;
+  salary_currency: string | null;
+  description: string;
+  apply_url: string | null;
+  apply_email: string | null;
+  status: JobStatus;
+  posted_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JobFormData {
+  title: string;
+  slug: string;
+  company: string;
+  company_logo_url: string;
+  location: string;
+  remote: JobRemoteType;
+  employment_type: JobEmploymentType;
+  category: string;
+  salary_min: string;
+  salary_max: string;
+  salary_currency: string;
+  description: string;
+  apply_url: string;
+  apply_email: string;
+  status: JobStatus;
+  expires_at: string;
+}
+
 export interface DashboardStats {
   totalArticles: number;
   publishedArticles: number;

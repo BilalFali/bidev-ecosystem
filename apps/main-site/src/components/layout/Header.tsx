@@ -6,23 +6,23 @@ import { usePathname, useRouter } from "next/navigation";
 import { Search, X, Menu } from "lucide-react";
 
 const NAV = [
-  { label: "Articles",      href: "/blog" },
-  { label: "Tools",         href: "/tools" },
-  { label: "Resources",     href: "/resources" },
-  { label: "Snippets",      href: "/snippets" },
+  { label: "Articles", href: "/blog" },
+  { label: "Tools", href: "/tools" },
+  { label: "Resources", href: "/resources" },
+  { label: "Snippets", href: "/snippets" },
   { label: "Interview Prep", href: "/flutter-interview-questions" },
-  { label: "Community",     href: "/flutter" },
+  { label: "Jobs", href: "/jobs" },
 ];
 
 export function Header() {
-  const [open,      setOpen]      = useState(false);
-  const [scrolled,  setScrolled]  = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [searching, setSearching] = useState(false);
-  const [query,     setQuery]     = useState("");
-  const [mounted,   setMounted]   = useState(false);
+  const [query, setQuery] = useState("");
+  const [mounted, setMounted] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
-  const pathname  = usePathname();
-  const router    = useRouter();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -54,9 +54,8 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-200 ${
-        scrolled ? "glass border-b border-border" : "border-b border-border/30"
-      }`}
+      className={`sticky top-0 z-50 w-full transition-all duration-200 ${scrolled ? "glass border-b border-border" : "border-b border-border/30"
+        }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center gap-6">
@@ -74,11 +73,10 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                  isActive(item.href)
-                    ? "text-ink bg-bg-elevated font-medium"
-                    : "text-ink-muted hover:text-ink hover:bg-bg-elevated"
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${isActive(item.href)
+                  ? "text-ink bg-bg-elevated font-medium"
+                  : "text-ink-muted hover:text-ink hover:bg-bg-elevated"
+                  }`}
               >
                 {item.label}
               </Link>
@@ -162,11 +160,10 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-4 py-2.5 rounded-lg text-sm transition-colors ${
-                  isActive(item.href)
-                    ? "text-ink bg-bg-elevated font-medium"
-                    : "text-ink-muted hover:text-ink hover:bg-bg-elevated"
-                }`}
+                className={`px-4 py-2.5 rounded-lg text-sm transition-colors ${isActive(item.href)
+                  ? "text-ink bg-bg-elevated font-medium"
+                  : "text-ink-muted hover:text-ink hover:bg-bg-elevated"
+                  }`}
               >
                 {item.label}
               </Link>

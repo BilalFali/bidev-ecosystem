@@ -4,6 +4,7 @@ import { getSupabaseClient } from "@/lib/supabase";
 import { SNIPPETS } from "@/lib/snippets";
 import { TOOLS } from "@/lib/tools";
 import { INTERVIEW_QUESTIONS, getAllFilterKeys } from "@/lib/interview-questions";
+import { getAllJobs } from "@/lib/jobs";
 
 export const revalidate = 3600;
 
@@ -25,7 +26,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/privacy-policy`,              lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/terms`,                       lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/flutter-interview-questions`, lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/jobs`,                        lastModified: now, changeFrequency: "daily",   priority: 0.8 },
   ];
+
+  const jobs = await getAllJobs();
+  const jobPages: MetadataRoute.Sitemap = jobs.map((j) => ({
+    url:             `${BASE}/jobs/${j.slug}`,
+    lastModified:    j.updated_at,
+    changeFrequency: "daily" as const,
+    priority:        0.6,
+  }));
 
   const toolPages: MetadataRoute.Sitemap = TOOLS.map((t) => ({
     url:             `${BASE}${t.href}`,
@@ -93,6 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...toolPages,
     ...interviewFilterPages,
     ...interviewQuestionPages,
+    ...jobPages,
     ...snippetPages,
     ...mdxPosts,
     ...dbPosts,

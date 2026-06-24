@@ -140,6 +140,58 @@ export function faqJsonLd(items: { question: string; answer: string }[]) {
   };
 }
 
+export function jobPostingJsonLd(opts: {
+  url: string;
+  title: string;
+  description: string;
+  datePosted: string;
+  validThrough?: string;
+  employmentType: string;
+  companyName: string;
+  companyLogo?: string;
+  location?: string;
+  remote: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    title: opts.title,
+    description: opts.description,
+    url: opts.url,
+    datePosted: opts.datePosted,
+    ...(opts.validThrough ? { validThrough: opts.validThrough } : {}),
+    employmentType: opts.employmentType.toUpperCase().replace("-", "_"),
+    hiringOrganization: {
+      "@type": "Organization",
+      name: opts.companyName,
+      ...(opts.companyLogo ? { logo: opts.companyLogo } : {}),
+    },
+    ...(opts.remote
+      ? { jobLocationType: "TELECOMMUTE", applicantLocationRequirements: { "@type": "Country", name: "Anywhere" } }
+      : {}),
+    ...(opts.location
+      ? { jobLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressLocality: opts.location } } }
+      : {}),
+    ...(opts.salaryMin || opts.salaryMax
+      ? {
+          baseSalary: {
+            "@type": "MonetaryAmount",
+            currency: opts.salaryCurrency ?? "USD",
+            value: {
+              "@type": "QuantitativeValue",
+              ...(opts.salaryMin ? { minValue: opts.salaryMin } : {}),
+              ...(opts.salaryMax ? { maxValue: opts.salaryMax } : {}),
+              unitText: "YEAR",
+            },
+          },
+        }
+      : {}),
+  };
+}
+
 export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
   return {
     "@context": "https://schema.org",
