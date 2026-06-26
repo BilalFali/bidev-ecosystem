@@ -5,6 +5,7 @@ import { SNIPPETS } from "@/lib/snippets";
 import { TOOLS } from "@/lib/tools";
 import { INTERVIEW_QUESTIONS, getAllFilterKeys } from "@/lib/interview-questions";
 import { getAllJobs } from "@/lib/jobs";
+import { getAllProducts } from "@/lib/products";
 
 export const revalidate = 3600;
 
@@ -27,9 +28,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/terms`,                       lastModified: now, changeFrequency: "yearly",  priority: 0.3 },
     { url: `${BASE}/flutter-interview-questions`, lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/jobs`,                        lastModified: now, changeFrequency: "daily",   priority: 0.8 },
+    { url: `${BASE}/products`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/products?category=flutter-starter-kit`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE}/products?category=ui-kit`,    lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
+    { url: `${BASE}/products?category=ebook`,     lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
   ];
 
-  const jobs = await getAllJobs();
+  const [jobs, products] = await Promise.all([getAllJobs(), getAllProducts()]);
+  const productPages: MetadataRoute.Sitemap = products.map((p) => ({
+    url:             `${BASE}/products/${p.slug}`,
+    lastModified:    p.updated_at,
+    changeFrequency: "weekly" as const,
+    priority:        0.8,
+  }));
+
   const jobPages: MetadataRoute.Sitemap = jobs.map((j) => ({
     url:             `${BASE}/jobs/${j.slug}`,
     lastModified:    j.updated_at,
@@ -100,6 +112,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...productPages,
     ...toolPages,
     ...interviewFilterPages,
     ...interviewQuestionPages,

@@ -192,6 +192,39 @@ export function jobPostingJsonLd(opts: {
   };
 }
 
+export function productJsonLd(opts: {
+  url: string;
+  name: string;
+  description: string;
+  image?: string;
+  price: number;
+  currency?: string;
+  category: string;
+  availability?: "InStock" | "OutOfStock" | "PreOrder";
+  sellerName?: string;
+  sellerUrl?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    ...(opts.image ? { image: { "@type": "ImageObject", url: opts.image, width: 1200, height: 630 } } : {}),
+    category: opts.category,
+    offers: {
+      "@type": "Offer",
+      price: opts.price.toFixed(2),
+      priceCurrency: opts.currency ?? "USD",
+      availability: `https://schema.org/${opts.availability ?? "InStock"}`,
+      url: opts.url,
+      ...(opts.sellerName
+        ? { seller: { "@type": "Organization", name: opts.sellerName, ...(opts.sellerUrl ? { url: opts.sellerUrl } : {}) } }
+        : {}),
+    },
+  };
+}
+
 export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
   return {
     "@context": "https://schema.org",

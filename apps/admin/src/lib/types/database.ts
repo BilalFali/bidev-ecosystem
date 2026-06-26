@@ -120,6 +120,98 @@ export interface JobFormData {
   expires_at: string;
 }
 
+// ─── Products ────────────────────────────────────────────────────────────────
+
+export type ProductCategory = "flutter-starter-kit" | "ui-kit" | "ebook";
+export type ProductBadge = "new" | "bestseller" | "updated" | null;
+export type ProductStatus = "draft" | "published";
+
+export interface Product {
+  id: string;
+  title: string;
+  slug: string;
+  short_description: string;
+  description: string;
+  category: ProductCategory;
+  cover_url: string | null;
+  price: number;
+  original_price: number | null;
+  price_github: number | null;
+  purchase_url: string | null;
+  badge: ProductBadge;
+  tags: string[];
+  features: string[];
+  whats_included: string[];
+  requirements: string[];
+  status: ProductStatus;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductFormData {
+  title: string;
+  slug: string;
+  short_description: string;
+  description: string;
+  category: ProductCategory;
+  cover_url: string;
+  price: string;
+  original_price: string;
+  price_github: string;
+  purchase_url: string;
+  badge: string;
+  tags: string;
+  features: string;
+  whats_included: string;
+  requirements: string;
+  status: ProductStatus;
+  sort_order: string;
+}
+
+// ─── Orders ──────────────────────────────────────────────────────────────────
+
+export type DeliveryType = "zip" | "github" | "pdf";
+export type OrderStatus = "pending" | "completed" | "refunded";
+
+export interface Order {
+  id: string;
+  customer_email: string;
+  customer_name: string | null;
+  product_id: string;
+  delivery_type: DeliveryType;
+  amount: number;
+  status: OrderStatus;
+  github_username: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrderWithProduct extends Order {
+  product_title?: string;
+  product_category?: string;
+}
+
+// ─── GitHub Access Requests ───────────────────────────────────────────────────
+
+export type GithubAccessStatus = "pending" | "invited" | "granted";
+
+export interface GithubAccessRequest {
+  id: string;
+  order_id: string;
+  customer_email: string;
+  product_id: string;
+  product_title: string;
+  github_username: string;
+  status: GithubAccessStatus;
+  invited_at: string | null;
+  granted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// ─── Dashboard ───────────────────────────────────────────────────────────────
+
 export interface DashboardStats {
   totalArticles: number;
   publishedArticles: number;

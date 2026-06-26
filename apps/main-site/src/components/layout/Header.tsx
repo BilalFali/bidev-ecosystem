@@ -11,7 +11,8 @@ const NAV = [
   { label: "Resources", href: "/resources" },
   { label: "Snippets", href: "/snippets" },
   { label: "Interview Prep", href: "/flutter-interview-questions" },
-  { label: "Jobs", href: "/jobs" },
+  { label: "Jobs",      href: "/jobs"      },
+  { label: "Products",  href: "/products"  },
 ];
 
 export function Header() {
