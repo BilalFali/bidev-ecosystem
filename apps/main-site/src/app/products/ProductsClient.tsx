@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import type { Product, ProductCategory } from "@/lib/products";
-import { CATEGORY_LABELS, formatPrice } from "@/lib/products";
+import type { Product, ProductCategory } from "@/lib/products-config";
+import { CATEGORY_LABELS, formatPrice } from "@/lib/products-config";
 
 const BADGE_STYLES: Record<string, string> = {
   new:        "bg-accent/10 text-accent border border-accent/20",

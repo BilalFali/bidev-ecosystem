@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import type { ProductFaq } from "@/lib/products";
+import type { ProductFaq } from "@/lib/products-config";
 
 export function FaqAccordion({ faqs }: { faqs: ProductFaq[] }) {
   const [open, setOpen] = useState<string | null>(null);

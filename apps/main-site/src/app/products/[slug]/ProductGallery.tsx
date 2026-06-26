@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { ProductImage } from "@/lib/products";
+import type { ProductImage } from "@/lib/products-config";
 
 interface GalleryImage {
   id: string;

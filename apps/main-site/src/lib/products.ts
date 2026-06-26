@@ -1,60 +1,16 @@
+import "server-only";
 import { getSupabaseClient } from "./supabase";
+export type {
+  ProductCategory,
+  ProductBadge,
+  ProductStatus,
+  Product,
+  ProductImage,
+  ProductFaq,
+} from "./products-config";
+export { CATEGORY_LABELS, CATEGORY_EMOJI, formatPrice } from "./products-config";
 
-export type ProductCategory = "flutter-starter-kit" | "ui-kit" | "ebook";
-export type ProductBadge = "new" | "bestseller" | "updated" | null;
-export type ProductStatus = "draft" | "published";
-
-export interface Product {
-  id: string;
-  title: string;
-  slug: string;
-  short_description: string;
-  description: string;
-  category: ProductCategory;
-  cover_url: string | null;
-  price: number;
-  original_price: number | null;
-  price_github: number | null;
-  purchase_url: string | null;
-  badge: ProductBadge;
-  tags: string[];
-  features: string[];
-  whats_included: string[];
-  requirements: string[];
-  status: ProductStatus;
-  sort_order: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ProductImage {
-  id: string;
-  product_id: string;
-  url: string;
-  alt: string | null;
-  sort_order: number;
-  created_at: string;
-}
-
-export interface ProductFaq {
-  id: string;
-  product_id: string;
-  question: string;
-  answer: string;
-  sort_order: number;
-}
-
-export const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  "flutter-starter-kit": "Flutter Starter Kits",
-  "ui-kit": "UI Kits",
-  "ebook": "Ebooks",
-};
-
-export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
-  "flutter-starter-kit": "🚀",
-  "ui-kit": "🎨",
-  "ebook": "📚",
-};
+import type { Product, ProductCategory, ProductImage, ProductFaq } from "./products-config";
 
 export async function getAllProducts(): Promise<Product[]> {
   const supabase = getSupabaseClient();
@@ -138,8 +94,4 @@ export async function getRelatedProducts(
     .limit(limit);
 
   return (data ?? []) as Product[];
-}
-
-export function formatPrice(price: number): string {
-  return price % 1 === 0 ? `$${price}` : `$${price.toFixed(2)}`;
 }
