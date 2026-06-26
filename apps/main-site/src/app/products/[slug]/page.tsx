@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check, Download, Github, BookOpen } from "lucide-react";
-import { pageMetadata, SITE_CONFIG, breadcrumbJsonLd, productJsonLd, faqJsonLd } from "@bidev/shared";
+import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { breadcrumbJsonLd, productJsonLd, faqJsonLd } from "@bidev/shared";
 import {
   getAllProducts,
   getProductBySlug,
