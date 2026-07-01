@@ -7,65 +7,59 @@ import { Textarea } from "@/components/ui/Textarea";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { CoverImageUpload } from "@/components/ui/CoverImageUpload";
+import { TipTapEditor } from "@/components/editor/TipTapEditor";
+import { ListEditor } from "@/components/editor/ListEditor";
 import { slugify } from "@/lib/utils";
 import type { Product, ProductFormData } from "@/lib/types/database";
 
 const EMPTY: ProductFormData = {
-  title: "",
-  slug: "",
+  title:             "",
+  slug:              "",
   short_description: "",
-  description: "",
-  category: "flutter-starter-kit",
-  cover_url: "",
-  price: "",
-  original_price: "",
-  price_github: "",
-  purchase_url: "",
-  badge: "",
-  tags: "",
-  features: "",
-  whats_included: "",
-  requirements: "",
-  status: "draft",
-  sort_order: "0",
+  description:       "",
+  category:          "flutter-starter-kit",
+  cover_url:         "",
+  price:             "",
+  original_price:    "",
+  price_github:      "",
+  purchase_url:      "",
+  badge:             "",
+  tags:              "",
+  features:          [],
+  whats_included:    [],
+  requirements:      "",
+  status:            "draft",
+  sort_order:        "0",
 };
 
 function toFormData(p: Product): ProductFormData {
   return {
-    title: p.title,
-    slug: p.slug,
+    title:             p.title,
+    slug:              p.slug,
     short_description: p.short_description,
-    description: p.description,
-    category: p.category,
-    cover_url: p.cover_url ?? "",
-    price: p.price.toString(),
-    original_price: p.original_price?.toString() ?? "",
-    price_github: p.price_github?.toString() ?? "",
-    purchase_url: p.purchase_url ?? "",
-    badge: p.badge ?? "",
-    tags: p.tags.join(", "),
-    features: p.features.join("\n"),
-    whats_included: p.whats_included.join("\n"),
-    requirements: p.requirements.join("\n"),
-    status: p.status,
-    sort_order: p.sort_order.toString(),
+    description:       p.description,
+    category:          p.category,
+    cover_url:         p.cover_url ?? "",
+    price:             p.price.toString(),
+    original_price:    p.original_price?.toString() ?? "",
+    price_github:      p.price_github?.toString() ?? "",
+    purchase_url:      p.purchase_url ?? "",
+    badge:             p.badge ?? "",
+    tags:              p.tags.join(", "),
+    features:          p.features,
+    whats_included:    p.whats_included,
+    requirements:      p.requirements.join("\n"),
+    status:            p.status,
+    sort_order:        p.sort_order.toString(),
   };
-}
-
-function splitLines(value: string): string[] {
-  return value.split("\n").map((l) => l.trim()).filter(Boolean);
-}
-
-function splitTags(value: string): string[] {
-  return value.split(",").map((t) => t.trim()).filter(Boolean);
 }
 
 export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
-  const isNew = !product;
-  const [form, setForm] = useState<ProductFormData>(product ? toFormData(product) : EMPTY);
+  const isNew  = !product;
+  const [form, setForm]   = useState<ProductFormData>(product ? toFormData(product) : EMPTY);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError]   = useState<string | null>(null);
 
   function update<K extends keyof ProductFormData>(key: K, value: ProductFormData[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -85,26 +79,25 @@ export function ProductForm({ product }: { product?: Product }) {
 
     const payload = {
       ...form,
-      slug: form.slug.trim() || slugify(form.title),
-      price: parseFloat(form.price) || 0,
-      original_price: form.original_price ? parseFloat(form.original_price) : null,
-      price_github: form.price_github ? parseFloat(form.price_github) : null,
-      purchase_url: form.purchase_url.trim() || null,
-      badge: form.badge || null,
-      cover_url: form.cover_url.trim() || null,
-      tags: splitTags(form.tags),
-      features: splitLines(form.features),
-      whats_included: splitLines(form.whats_included),
-      requirements: splitLines(form.requirements),
-      sort_order: parseInt(form.sort_order) || 0,
+      slug:           form.slug.trim() || slugify(form.title),
+      price:          parseFloat(form.price) || 0,
+      original_price: form.original_price  ? parseFloat(form.original_price)  : null,
+      price_github:   form.price_github    ? parseFloat(form.price_github)    : null,
+      purchase_url:   form.purchase_url.trim()  || null,
+      badge:          form.badge           || null,
+      cover_url:      form.cover_url.trim() || null,
+      tags:           form.tags.split(",").map((t) => t.trim()).filter(Boolean),
+      // features & whats_included are already string[]
+      requirements:   form.requirements.split("\n").map((l) => l.trim()).filter(Boolean),
+      sort_order:     parseInt(form.sort_order) || 0,
     };
 
     const res = await fetch(
       isNew ? "/api/products" : `/api/products/${product!.id}`,
       {
-        method: isNew ? "POST" : "PUT",
+        method:  isNew ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body:    JSON.stringify(payload),
       }
     );
 
@@ -122,32 +115,31 @@ export function ProductForm({ product }: { product?: Product }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl space-y-5">
+    <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
       {error && (
         <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
           {error}
         </p>
       )}
 
-      {/* Title + Slug */}
+      {/* ── Identity ──────────────────────────────────────────────────── */}
       <div className="grid sm:grid-cols-2 gap-4">
         <Input
           label="Title"
           value={form.title}
           onChange={(e) => handleTitleChange(e.target.value)}
-          placeholder="Flutter E-Commerce Starter Kit"
+          placeholder="Flutter Firebase Kit"
           required
         />
         <Input
           label="Slug"
           value={form.slug}
           onChange={(e) => update("slug", slugify(e.target.value))}
-          placeholder="flutter-ecommerce-starter-kit"
+          placeholder="flutter-firebase-kit"
           required
         />
       </div>
 
-      {/* Category + Status + Badge */}
       <div className="grid sm:grid-cols-3 gap-4">
         <Select
           label="Category"
@@ -181,26 +173,7 @@ export function ProductForm({ product }: { product?: Product }) {
         />
       </div>
 
-      {/* Short description */}
-      <Textarea
-        label="Short Description"
-        value={form.short_description}
-        onChange={(e) => update("short_description", e.target.value)}
-        placeholder="One-sentence summary shown on cards and in metadata."
-        rows={2}
-        required
-      />
-
-      {/* Full description */}
-      <Textarea
-        label="Description"
-        value={form.description}
-        onChange={(e) => update("description", e.target.value)}
-        placeholder="Full product description…"
-        rows={6}
-      />
-
-      {/* Cover image upload */}
+      {/* ── Cover image ───────────────────────────────────────────────── */}
       <CoverImageUpload
         value={form.cover_url}
         onChange={(url) => update("cover_url", url)}
@@ -209,7 +182,70 @@ export function ProductForm({ product }: { product?: Product }) {
         productCategory={form.category}
       />
 
-      {/* Pricing */}
+      {/* ── Short description ─────────────────────────────────────────── */}
+      <Textarea
+        label="Short Description"
+        value={form.short_description}
+        onChange={(e) => update("short_description", e.target.value)}
+        placeholder="Production-ready Flutter starter kit with Firebase Auth, Firestore, and Clean Architecture — ship your app in days."
+        rows={2}
+        hint="1 sentence shown on cards and in metadata (~120 chars)"
+        required
+      />
+
+      {/* ── Description (rich text) ───────────────────────────────────── */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-xs font-medium text-ink-muted">Description</label>
+        <TipTapEditor
+          content={form.description}
+          onChange={(html) => update("description", html)}
+          placeholder="Full product overview — supports headings, bold, lists, links…"
+          className="min-h-[280px]"
+        />
+        <p className="text-[11px] text-ink-faint">
+          Full overview shown on the product detail page. Supports rich formatting.
+        </p>
+      </div>
+
+      {/* ── Features (list editor) ────────────────────────────────────── */}
+      <ListEditor
+        label="Features"
+        value={form.features}
+        onChange={(arr) => update("features", arr)}
+        placeholder="Firebase Authentication (Email, Google, Apple)…"
+        hint="Each bullet = one feature. Press Enter to add a new one."
+        minHeight={160}
+      />
+
+      {/* ── What's Included (list editor) ────────────────────────────── */}
+      <ListEditor
+        label="What's Included"
+        value={form.whats_included}
+        onChange={(arr) => update("whats_included", arr)}
+        placeholder="Full Flutter source code…"
+        hint="Each bullet = one included item."
+        minHeight={130}
+      />
+
+      {/* ── Requirements (textarea) ───────────────────────────────────── */}
+      <Textarea
+        label="Requirements"
+        value={form.requirements}
+        onChange={(e) => update("requirements", e.target.value)}
+        placeholder={"Flutter 3.x\nDart 3.x\nFirebase project\nXcode 15+ (iOS)"}
+        rows={4}
+        hint="One requirement per line"
+      />
+
+      {/* ── Tags + pricing ───────────────────────────────────────────── */}
+      <Input
+        label="Tags"
+        value={form.tags}
+        onChange={(e) => update("tags", e.target.value)}
+        placeholder="Flutter, Firebase, Riverpod, Clean Architecture"
+        hint="Comma-separated"
+      />
+
       <div className="grid sm:grid-cols-3 gap-4">
         <Input
           label="Price (USD)"
@@ -224,74 +260,34 @@ export function ProductForm({ product }: { product?: Product }) {
           type="number"
           value={form.original_price}
           onChange={(e) => update("original_price", e.target.value)}
-          placeholder="79 (optional)"
+          placeholder="79"
+          hint="Optional — shows strikethrough"
         />
         <Input
           label="GitHub Access Price"
           type="number"
           value={form.price_github}
           onChange={(e) => update("price_github", e.target.value)}
-          placeholder="99 (optional)"
-          hint="Leave blank to auto-calculate as 1.5× price"
+          placeholder="99"
+          hint="Blank → auto 1.5× price"
         />
       </div>
 
-      {/* Purchase URL */}
       <Input
         label="Purchase URL"
         value={form.purchase_url}
         onChange={(e) => update("purchase_url", e.target.value)}
-        placeholder="https://gumroad.com/… (Gumroad, Stripe, etc.)"
-        hint="External checkout link. Leave blank to show 'Coming soon'."
+        placeholder="https://gumroad.com/…"
+        hint="External checkout link. Blank → shows 'Coming soon'."
       />
 
-      {/* Tags */}
-      <Input
-        label="Tags"
-        value={form.tags}
-        onChange={(e) => update("tags", e.target.value)}
-        placeholder="Flutter, Firebase, Riverpod, Clean Architecture"
-        hint="Comma-separated"
-      />
-
-      {/* Features */}
-      <Textarea
-        label="Features"
-        value={form.features}
-        onChange={(e) => update("features", e.target.value)}
-        placeholder={"Clean Architecture\nRiverpod state management\nFirebase Auth\n…"}
-        rows={5}
-        hint="One feature per line"
-      />
-
-      {/* What's Included */}
-      <Textarea
-        label="What's Included"
-        value={form.whats_included}
-        onChange={(e) => update("whats_included", e.target.value)}
-        placeholder={"Full Flutter source code\nFirebase setup guide\n…"}
-        rows={4}
-        hint="One item per line"
-      />
-
-      {/* Requirements */}
-      <Textarea
-        label="Requirements"
-        value={form.requirements}
-        onChange={(e) => update("requirements", e.target.value)}
-        placeholder={"Flutter 3.x\nDart 3.x\nFirebase project\n…"}
-        rows={3}
-        hint="One requirement per line"
-      />
-
-      {/* Sort order */}
       <Input
         label="Sort Order"
         type="number"
         value={form.sort_order}
         onChange={(e) => update("sort_order", e.target.value)}
         placeholder="0"
-        hint="Lower number = shown first"
+        hint="Lower = shown first"
       />
 
       <div className="flex justify-end gap-2 pt-2">

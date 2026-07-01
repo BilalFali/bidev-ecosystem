@@ -122,9 +122,10 @@ export default async function ProductDetailPage({
           {product.description && (
             <section>
               <h2 className="text-base font-semibold text-ink mb-3">Description</h2>
-              <div className="text-sm text-ink-muted leading-relaxed whitespace-pre-wrap">
-                {product.description}
-              </div>
+              <div
+                className="product-description text-sm text-ink-muted leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
             </section>
           )}
 

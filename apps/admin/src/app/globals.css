@@ -218,6 +218,30 @@
   pointer-events: none;
 }
 
+/* Compact list editor (Features / What's Included) */
+.list-editor .ProseMirror {
+  min-height: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.list-editor .ProseMirror ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+.list-editor .ProseMirror li {
+  margin-bottom: 0.2rem;
+}
+.list-editor .ProseMirror li p {
+  margin: 0;
+}
+.list-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #3f3f46;
+  pointer-events: none;
+  height: 0;
+}
+
 /* Mark highlight */
 .ProseMirror mark {
   background: rgba(34,211,238,0.2);

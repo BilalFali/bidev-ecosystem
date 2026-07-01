@@ -153,7 +153,7 @@ export interface ProductFormData {
   title: string;
   slug: string;
   short_description: string;
-  description: string;
+  description: string;      // HTML from TipTap
   category: ProductCategory;
   cover_url: string;
   price: string;
@@ -161,10 +161,10 @@ export interface ProductFormData {
   price_github: string;
   purchase_url: string;
   badge: string;
-  tags: string;
-  features: string;
-  whats_included: string;
-  requirements: string;
+  tags: string;             // comma-separated
+  features: string[];       // array — edited by ListEditor
+  whats_included: string[]; // array — edited by ListEditor
+  requirements: string;     // newline text — plain textarea
   status: ProductStatus;
   sort_order: string;
 }
