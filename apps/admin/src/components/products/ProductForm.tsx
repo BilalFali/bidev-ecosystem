@@ -205,6 +205,8 @@ export function ProductForm({ product }: { product?: Product }) {
         value={form.cover_url}
         onChange={(url) => update("cover_url", url)}
         bucket="covers"
+        productTitle={form.title}
+        productCategory={form.category}
       />
 
       {/* Pricing */}
