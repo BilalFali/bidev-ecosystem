@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
+import { CoverImageUpload } from "@/components/ui/CoverImageUpload";
 import { slugify } from "@/lib/utils";
 import type { Product, ProductFormData } from "@/lib/types/database";
 
@@ -199,12 +200,11 @@ export function ProductForm({ product }: { product?: Product }) {
         rows={6}
       />
 
-      {/* Cover URL */}
-      <Input
-        label="Cover Image URL"
+      {/* Cover image upload */}
+      <CoverImageUpload
         value={form.cover_url}
-        onChange={(e) => update("cover_url", e.target.value)}
-        placeholder="https://…"
+        onChange={(url) => update("cover_url", url)}
+        bucket="covers"
       />
 
       {/* Pricing */}
