@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { pageMetadata, SITE_CONFIG, breadcrumbJsonLd } from "@bidev/shared";
+import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { breadcrumbJsonLd } from "@bidev/shared";
 import { getAllProducts, CATEGORY_LABELS, type ProductCategory } from "@/lib/products";
 import { ProductsClient } from "./ProductsClient";
 import { AdSlot } from "@bidev/ui";
