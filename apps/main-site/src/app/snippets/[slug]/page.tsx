@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getSnippetBySlug, SNIPPETS } from "@/lib/snippets";
 import { pageMetadata } from "@/lib/seo";
 import { SnippetView } from "@/components/snippets/SnippetView";
+import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 
 interface Props { params: Promise<{ slug: string }> }
 
@@ -33,6 +34,7 @@ export default async function SnippetPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+      <PageViewTracker type="snippet" slug={snippet.slug} title={snippet.title} />
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-xs text-ink-faint mb-8">
         <Link href="/" className="hover:text-accent transition-colors">Home</Link>

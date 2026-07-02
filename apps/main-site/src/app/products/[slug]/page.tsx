@@ -16,6 +16,7 @@ import {
 import { AdSlot } from "@bidev/ui";
 import { ProductGallery } from "./ProductGallery";
 import { FaqAccordion } from "./FaqAccordion";
+import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 
 const { SITE_URL } = SITE_CONFIG;
 
@@ -98,6 +99,7 @@ export default async function ProductDetailPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }} />
       {faqLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />}
+      <PageViewTracker type="product" slug={product.slug} title={product.title} />
 
       {/* Breadcrumb */}
       <nav className="text-xs text-ink-faint mb-6 flex flex-wrap items-center gap-1.5">

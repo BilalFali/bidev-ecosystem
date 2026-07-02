@@ -3,8 +3,13 @@ import { getSupabaseClient } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
-    const { slug } = await req.json() as { slug?: string };
-    if (!slug || typeof slug !== "string") {
+    const { type, slug, title } = await req.json() as {
+      type?: string;
+      slug?: string;
+      title?: string;
+    };
+
+    if (!type || !slug || typeof type !== "string" || typeof slug !== "string") {
       return NextResponse.json({ ok: false }, { status: 400 });
     }
 
@@ -12,9 +17,11 @@ export async function POST(req: NextRequest) {
     if (!supabase) return NextResponse.json({ ok: false }, { status: 503 });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.rpc as any)("increment_article_views", { article_slug: slug });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (supabase.rpc as any)("upsert_page_view", { p_type: "article", p_slug: slug, p_title: "" });
+    await (supabase.rpc as any)("upsert_page_view", {
+      p_type:  type,
+      p_slug:  slug,
+      p_title: title ?? "",
+    });
 
     return NextResponse.json({ ok: true });
   } catch {
