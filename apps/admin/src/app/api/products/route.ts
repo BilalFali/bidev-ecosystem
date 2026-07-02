@@ -39,7 +39,8 @@ export async function POST(req: NextRequest) {
       cover_url: body.cover_url || null,
       original_price: body.original_price ?? null,
       price_github: body.price_github ?? null,
-      purchase_url: body.purchase_url || null,
+      purchase_url_zip:    body.purchase_url_zip    || null,
+      purchase_url_github: body.purchase_url_github || null,
       badge: body.badge || null,
     })
     .select()

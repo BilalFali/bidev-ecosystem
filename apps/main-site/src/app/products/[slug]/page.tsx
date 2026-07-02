@@ -248,9 +248,9 @@ export default async function ProductDetailPage({
                       </li>
                     ))}
                   </ul>
-                  {product.purchase_url ? (
+                  {product.purchase_url_zip ? (
                     <a
-                      href={product.purchase_url}
+                      href={product.purchase_url_zip}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-border text-sm font-medium text-ink hover:bg-bg-elevated transition-colors"
@@ -298,9 +298,9 @@ export default async function ProductDetailPage({
                       </li>
                     ))}
                   </ul>
-                  {product.purchase_url ? (
+                  {product.purchase_url_github ? (
                     <a
-                      href={product.purchase_url}
+                      href={product.purchase_url_github}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors"
@@ -353,9 +353,9 @@ export default async function ProductDetailPage({
                     Commercial redistribution not allowed
                   </li>
                 </ul>
-                {product.purchase_url ? (
+                {product.purchase_url_zip ? (
                   <a
-                    href={product.purchase_url}
+                    href={product.purchase_url_zip}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors"

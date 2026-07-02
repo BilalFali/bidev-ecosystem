@@ -137,7 +137,9 @@ export interface Product {
   price: number;
   original_price: number | null;
   price_github: number | null;
-  purchase_url: string | null;
+  purchase_url: string | null;        // legacy — kept for compatibility
+  purchase_url_zip: string | null;
+  purchase_url_github: string | null;
   badge: ProductBadge;
   tags: string[];
   features: string[];
@@ -159,7 +161,8 @@ export interface ProductFormData {
   price: string;
   original_price: string;
   price_github: string;
-  purchase_url: string;
+  purchase_url_zip: string;
+  purchase_url_github: string;
   badge: string;
   tags: string;             // comma-separated
   features: string[];       // array — edited by ListEditor

@@ -16,7 +16,9 @@ export interface Product {
   price: number;
   original_price: number | null;
   price_github: number | null;
-  purchase_url: string | null;
+  purchase_url: string | null;        // legacy
+  purchase_url_zip: string | null;
+  purchase_url_github: string | null;
   badge: ProductBadge;
   tags: string[];
   features: string[];

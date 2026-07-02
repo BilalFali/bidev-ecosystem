@@ -13,23 +13,24 @@ import { slugify } from "@/lib/utils";
 import type { Product, ProductFormData } from "@/lib/types/database";
 
 const EMPTY: ProductFormData = {
-  title:             "",
-  slug:              "",
-  short_description: "",
-  description:       "",
-  category:          "flutter-starter-kit",
-  cover_url:         "",
-  price:             "",
-  original_price:    "",
-  price_github:      "",
-  purchase_url:      "",
-  badge:             "",
-  tags:              "",
-  features:          [],
-  whats_included:    [],
-  requirements:      "",
-  status:            "draft",
-  sort_order:        "0",
+  title:               "",
+  slug:                "",
+  short_description:   "",
+  description:         "",
+  category:            "flutter-starter-kit",
+  cover_url:           "",
+  price:               "",
+  original_price:      "",
+  price_github:        "",
+  purchase_url_zip:    "",
+  purchase_url_github: "",
+  badge:               "",
+  tags:                "",
+  features:            [],
+  whats_included:      [],
+  requirements:        "",
+  status:              "draft",
+  sort_order:          "0",
 };
 
 function toFormData(p: Product): ProductFormData {
@@ -39,12 +40,13 @@ function toFormData(p: Product): ProductFormData {
     short_description: p.short_description,
     description:       p.description,
     category:          p.category,
-    cover_url:         p.cover_url ?? "",
-    price:             p.price.toString(),
-    original_price:    p.original_price?.toString() ?? "",
-    price_github:      p.price_github?.toString() ?? "",
-    purchase_url:      p.purchase_url ?? "",
-    badge:             p.badge ?? "",
+    cover_url:           p.cover_url ?? "",
+    price:               p.price.toString(),
+    original_price:      p.original_price?.toString() ?? "",
+    price_github:        p.price_github?.toString() ?? "",
+    purchase_url_zip:    p.purchase_url_zip ?? p.purchase_url ?? "",
+    purchase_url_github: p.purchase_url_github ?? "",
+    badge:               p.badge ?? "",
     tags:              p.tags.join(", "),
     features:          p.features,
     whats_included:    p.whats_included,
@@ -83,7 +85,8 @@ export function ProductForm({ product }: { product?: Product }) {
       price:          parseFloat(form.price) || 0,
       original_price: form.original_price  ? parseFloat(form.original_price)  : null,
       price_github:   form.price_github    ? parseFloat(form.price_github)    : null,
-      purchase_url:   form.purchase_url.trim()  || null,
+      purchase_url_zip:    form.purchase_url_zip.trim()    || null,
+      purchase_url_github: form.purchase_url_github.trim() || null,
       badge:          form.badge           || null,
       cover_url:      form.cover_url.trim() || null,
       tags:           form.tags.split(",").map((t) => t.trim()).filter(Boolean),
@@ -273,13 +276,22 @@ export function ProductForm({ product }: { product?: Product }) {
         />
       </div>
 
-      <Input
-        label="Purchase URL"
-        value={form.purchase_url}
-        onChange={(e) => update("purchase_url", e.target.value)}
-        placeholder="https://gumroad.com/…"
-        hint="External checkout link. Blank → shows 'Coming soon'."
-      />
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Input
+          label="📦 ZIP Purchase URL"
+          value={form.purchase_url_zip}
+          onChange={(e) => update("purchase_url_zip", e.target.value)}
+          placeholder="https://payhip.com/b/… (ZIP)"
+          hint="Standard option. Blank → 'Coming soon'."
+        />
+        <Input
+          label="🥈 GitHub Access Purchase URL"
+          value={form.purchase_url_github}
+          onChange={(e) => update("purchase_url_github", e.target.value)}
+          placeholder="https://payhip.com/b/… (GitHub)"
+          hint="Recommended option. Blank → 'Coming soon'."
+        />
+      </div>
 
       <Input
         label="Sort Order"
