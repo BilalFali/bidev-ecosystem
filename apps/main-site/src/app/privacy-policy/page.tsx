@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
-export const metadata: Metadata = pageMetadata({ title: "Privacy Policy", description: "Privacy policy for bidev.site.", path: "/privacy-policy" });
+export const metadata: Metadata = pageMetadata({ title: "Privacy Policy", description: "Privacy policy for bidev.dev.", path: "/privacy-policy" });
 export default function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20">
@@ -8,9 +8,9 @@ export default function PrivacyPage() {
       <p className="text-ink-faint text-sm mb-10">Last updated: May 2026</p>
       <div className="prose prose-invert max-w-none">
         <h2>Data Collection</h2>
-        <p>bidev.site does not collect personal data beyond standard server logs (IP address, browser type, pages visited). These logs are used solely for security and performance monitoring and are deleted after 30 days.</p>
+        <p>bidev.dev does not collect personal data beyond standard server logs (IP address, browser type, pages visited). These logs are used solely for security and performance monitoring and are deleted after 30 days.</p>
         <h2>Developer Tools</h2>
-        <p>All tools on bidev.site (QR generator, JSON formatter, password generator, Base64, UUID) run entirely client-side in your browser. No input data is transmitted to our servers.</p>
+        <p>All tools on bidev.dev (QR generator, JSON formatter, password generator, Base64, UUID) run entirely client-side in your browser. No input data is transmitted to our servers.</p>
         <h2>Cookies</h2>
         <p>We use no tracking cookies. If you subscribe to the newsletter we store your email address to send newsletters. You can unsubscribe at any time.</p>
         <h2>Advertising</h2>

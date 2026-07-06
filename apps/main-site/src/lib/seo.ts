@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import type { Post } from "@bidev/shared";
 
-const SITE_URL  = "https://bidev.site";
-const SITE_NAME = "bidev.site";
+const SITE_URL  = "https://bidev.dev";
+const SITE_NAME = "bidev.dev";
 const AUTHOR    = "Bilal Fali";
 
 function truncateDesc(text: string, max = 155): string {

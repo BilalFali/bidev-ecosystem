@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import * as QRCode from "qrcode";
@@ -7,7 +7,7 @@ import { AdSlot } from "@bidev/ui";
 type QRType = "url" | "text" | "email" | "phone";
 
 const TYPES = [
-  { value: "url"   as QRType, label: "URL",   placeholder: "https://bidev.site" },
+  { value: "url"   as QRType, label: "URL",   placeholder: "https://bidev.dev" },
   { value: "text"  as QRType, label: "Text",  placeholder: "Enter any text…" },
   { value: "email" as QRType, label: "Email", placeholder: "hello@example.com" },
   { value: "phone" as QRType, label: "Phone", placeholder: "+1 234 567 8900" },

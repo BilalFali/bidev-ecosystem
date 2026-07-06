@@ -1,4 +1,4 @@
-import { Column, Heading, Text, Grid, Card, Button, Row, Icon, Badge } from "@/once-ui/components";
+﻿import { Column, Heading, Text, Grid, Card, Button, Row, Icon, Badge } from "@/once-ui/components";
 import { baseURL } from "@/app/resources";
 import { tools, person } from "@/app/resources/content";
 import { Meta, Schema } from "@/once-ui/modules";
@@ -153,7 +153,7 @@ export default function ToolsPage() {
             Read the blog
           </Button>
           <Button href="/about" variant="secondary" size="m">
-            About bidev.site
+            About bidev.dev
           </Button>
         </Row>
       </Column>

@@ -1,20 +1,20 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About – bidev.site",
-  description: "Learn about bidev.site — a platform for Flutter developers, mobile dev tutorials, and free developer tools built by Bilal Fali.",
+  title: "About – bidev.dev",
+  description: "Learn about bidev.dev — a platform for Flutter developers, mobile dev tutorials, and free developer tools built by Bilal Fali.",
   path: "/about",
 });
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20">
-      <h1 className="text-4xl font-bold text-ink mb-6">About <span className="text-accent">bidev.site</span></h1>
+      <h1 className="text-4xl font-bold text-ink mb-6">About <span className="text-accent">bidev.dev</span></h1>
       <div className="prose prose-invert max-w-none">
         <p>
-          <strong>bidev.site</strong> is a developer platform focused on Flutter, mobile development,
+          <strong>bidev.dev</strong> is a developer platform focused on Flutter, mobile development,
           and practical developer tools. Built by <strong>Bilal Fali</strong> — a Flutter developer
           from Algeria with 5+ years building cross-platform apps used by 100K+ users.
         </p>
@@ -41,7 +41,7 @@ export default function AboutPage() {
       </div>
       <div className="mt-10 flex gap-4">
         <Link href="/blog" className="px-6 py-2.5 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors">Read the Blog</Link>
-        <Link href="https://portfolio.bidev.site" className="px-6 py-2.5 rounded-lg border border-border bg-bg-card text-sm text-ink hover:border-border-strong transition-colors">Portfolio →</Link>
+        <Link href="https://portfolio.bidev.dev" className="px-6 py-2.5 rounded-lg border border-border bg-bg-card text-sm text-ink hover:border-border-strong transition-colors">Portfolio →</Link>
       </div>
     </div>
   );

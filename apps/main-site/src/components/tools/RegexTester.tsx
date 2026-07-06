@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { AdSlot } from "@bidev/ui";
@@ -38,7 +38,7 @@ function buildHighlighted(testString: string, matches: MatchInfo[]): { key: stri
 export function RegexTester() {
   const [pattern, setPattern] = useState("");
   const [flags, setFlags] = useState<Set<string>>(new Set(["g"]));
-  const [testString, setTestString] = useState("Contact us at hello@bidev.site or visit https://bidev.site");
+  const [testString, setTestString] = useState("Contact us at hello@bidev.dev or visit https://bidev.dev");
 
   function toggleFlag(flag: string) {
     setFlags((prev) => {

@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { ContactForm } from "@/components/ui/ContactForm";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Contact – bidev.site",
-  description: "Get in touch with bidev.site for collaborations, freelance work, tool suggestions, or just to say hello.",
+  title: "Contact – bidev.dev",
+  description: "Get in touch with bidev.dev for collaborations, freelance work, tool suggestions, or just to say hello.",
   path: "/contact",
 });
 

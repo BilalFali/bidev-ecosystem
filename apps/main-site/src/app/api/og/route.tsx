@@ -1,11 +1,11 @@
-import { ImageResponse } from "next/og";
+﻿import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
 export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const title = searchParams.get("title") ?? "bidev.site";
+  const title = searchParams.get("title") ?? "bidev.dev";
 
   return new ImageResponse(
     (
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
 
         <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxWidth: "800px" }}>
           <span style={{ fontSize: "18px", color: "#22d3ee", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            bidev.site
+            bidev.dev
           </span>
           <h1 style={{ fontSize: title.length > 50 ? "40px" : "52px", fontWeight: 800, color: "#f0f0f0", margin: 0, lineHeight: 1.1 }}>
             {title}

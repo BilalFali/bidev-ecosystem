@@ -1,5 +1,5 @@
-// IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL = "bidev.site";
+﻿// IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
+const baseURL = "bidev.dev";
 
 const routes = {
   "/": true,

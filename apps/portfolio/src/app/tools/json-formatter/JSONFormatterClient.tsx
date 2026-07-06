@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 import {
@@ -66,7 +66,7 @@ const SAMPLE = `{
   "description": "Developer tools for Flutter developers",
   "author": {
     "name": "Bilal Fali",
-    "url": "https://bidev.site"
+    "url": "https://bidev.dev"
   },
   "tools": ["QR Generator", "JSON Formatter", "Password Generator"],
   "active": true

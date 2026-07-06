@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
@@ -6,7 +6,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WebVitals } from "@/components/analytics/WebVitals";
-import { websiteJsonLd, personJsonLd } from "@bidev/shared";
+import { websiteJsonLd, personJsonLd, organizationJsonLd } from "@bidev/shared";
 
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 const GA_ID      = "G-C04YP7HRR0";
@@ -25,14 +25,14 @@ const mono = JetBrains_Mono({
   preload: false,
 });
 
-const SITE_URL  = "https://bidev.site";
-const SITE_NAME = "bidev.site";
+const SITE_URL  = "https://bidev.dev";
+const SITE_NAME = "bidev.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "bidev.site – Flutter, Mobile Dev & Developer Tools",
-    template: "%s | bidev.site",
+    default: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
+    template: "%s | bidev.dev",
   },
   description:
     "Learn Flutter, build mobile apps, and explore free developer tools. In-depth tutorials, guides, and AI tools for developers.",
@@ -49,15 +49,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: "bidev.site – Flutter, Mobile Dev & Developer Tools",
+    title: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
     description: "Learn Flutter, build mobile apps, and explore free developer tools.",
-    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "bidev.site" }],
+    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "bidev.dev" }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@bidev97",
     creator: "@bidev97",
-    title: "bidev.site – Flutter, Mobile Dev & Developer Tools",
+    title: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
     description: "Learn Flutter, build mobile apps, and explore free developer tools.",
     images: [`${SITE_URL}/og.png`],
   },
@@ -92,6 +92,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const jsonLd       = websiteJsonLd(SITE_URL, SITE_NAME, metadata.description as string);
   const personSchema = personJsonLd(SITE_URL);
+  const orgSchema    = organizationJsonLd(SITE_URL);
 
   return (
     <html lang="en" className={`${geist.variable} ${mono.variable}`} suppressHydrationWarning>
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Structured data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       </head>
 
       {/* AdSense Auto Ads — lazyOnload so ads never block LCP/FID */}

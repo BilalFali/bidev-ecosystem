@@ -1,4 +1,4 @@
-export interface Snippet {
+﻿export interface Snippet {
   slug: string;
   title: string;
   description: string;
@@ -744,7 +744,7 @@ extension NullableStringX on String? {
 
 // Usage
 'hello world'.titleCase;          // 'Hello World'
-'bilal@bidev.site'.isValidEmail;  // true
+'bilal@bidev.dev'.isValidEmail;  // true
 'Flutter is awesome!'.truncate(14); // 'Flutter is ...'
 '  '.isBlank;                      // true`,
   },

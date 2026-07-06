@@ -1,4 +1,4 @@
-export interface SeoConfig {
+﻿export interface SeoConfig {
   siteName: string;
   siteUrl: string;
   defaultTitle: string;
@@ -99,12 +99,38 @@ export function personJsonLd(siteUrl: string) {
     url: `${siteUrl}/about`,
     image: `${siteUrl}/profile.png`,
     jobTitle: "Flutter Developer",
-    description: "Flutter developer and mobile app engineer. Author of bidev.site.",
+    description: "Flutter developer and mobile app engineer. Author of bidev.dev.",
     sameAs: [
       "https://twitter.com/bidev97",
       "https://github.com/BilalFali",
     ],
     knowsAbout: ["Flutter", "Dart", "Firebase", "Mobile Development", "Clean Architecture"],
+  };
+}
+
+export function organizationJsonLd(siteUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "BiDev",
+    url: siteUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteUrl}/logo.png`,
+      width: 512,
+      height: 512,
+    },
+    sameAs: [
+      "https://twitter.com/bidev97",
+      "https://github.com/BilalFali",
+      "https://youtube.com/@bidev97",
+      "https://linkedin.com/in/falibilal",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      url: `${siteUrl}/contact`,
+    },
   };
 }
 

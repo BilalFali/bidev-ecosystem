@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 const LINKS = {
   Platform: [
@@ -15,7 +15,7 @@ const LINKS = {
     { label: "About",          href: "/about" },
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms",          href: "/terms" },
-    { label: "Portfolio",      href: "https://portfolio.bidev.site" },
+    { label: "Portfolio",      href: "https://portfolio.bidev.dev" },
   ],
   Social: [
     { label: "GitHub",    href: "https://github.com/BilalFali" },

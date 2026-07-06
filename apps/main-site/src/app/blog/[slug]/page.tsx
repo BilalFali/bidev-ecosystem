@@ -24,8 +24,8 @@ import { articleJsonLd } from "@bidev/shared";
 export const revalidate  = 60;
 export const dynamicParams = true;
 
-const SITE_URL  = "https://bidev.site";
-const SITE_NAME = "bidev.site";
+const SITE_URL  = "https://bidev.dev";
+const SITE_NAME = "bidev.dev";
 
 export async function generateStaticParams() {
   const slugs = await getAllArticleSlugs();

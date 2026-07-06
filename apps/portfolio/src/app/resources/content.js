@@ -1,4 +1,4 @@
-import { Logo } from "@/once-ui/components";
+﻿import { Logo } from "@/once-ui/components";
 
 const person = {
   firstName: "Bilal",
@@ -59,7 +59,7 @@ const home = {
   path: "/",
   image: "/images/og/home.jpg",
   label: "Home",
-  title: "bidev.site – Flutter, Mobile Dev & Developer Tools",
+  title: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
   description: "Learn Flutter, Mobile Development & build real apps. Free developer tools, tutorials, and technical articles by Bilal Fali.",
   headline: <>Learn Flutter, Mobile Dev & Build Real Apps</>,
   featured: {
@@ -290,7 +290,7 @@ const blog = {
 const tools = {
   path: "/tools",
   label: "Tools",
-  title: "Free Developer Tools – bidev.site",
+  title: "Free Developer Tools – bidev.dev",
   description: "Free online tools for developers: QR Code Generator, JSON Formatter & Validator, Password Generator, and more.",
 };
 

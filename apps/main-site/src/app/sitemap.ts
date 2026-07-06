@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+﻿import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/mdx";
 import { getSupabaseClient } from "@/lib/supabase";
 import { SNIPPETS } from "@/lib/snippets";
@@ -9,7 +9,7 @@ import { getAllProducts } from "@/lib/products";
 
 export const revalidate = 3600;
 
-const BASE = "https://bidev.site";
+const BASE = "https://bidev.dev";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date().toISOString();

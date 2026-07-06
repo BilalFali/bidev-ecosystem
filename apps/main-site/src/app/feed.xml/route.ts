@@ -1,7 +1,7 @@
-import { getAllArticles } from "@/lib/articles";
+﻿import { getAllArticles } from "@/lib/articles";
 
-const BASE = "https://bidev.site";
-const SITE = "bidev.site";
+const BASE = "https://bidev.dev";
+const SITE = "bidev.dev";
 
 export const revalidate = 3600;
 

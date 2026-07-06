@@ -1,4 +1,4 @@
-// Client-side canvas cover generator — no external API required.
+﻿// Client-side canvas cover generator — no external API required.
 // Produces a 1200×630 branded PNG matching the Bidev dark design system.
 
 export interface CoverOptions {
@@ -116,7 +116,7 @@ export async function generateCover(opts: CoverOptions): Promise<Blob> {
   ctx.fillStyle = "rgba(138,145,156,0.7)";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("bidev.site", W / 2, H - 36);
+  ctx.fillText("bidev.dev", W / 2, H - 36);
 
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 import { AdSlot } from "@bidev/ui";
@@ -21,7 +21,7 @@ function parse(raw: string): { status: Status; out: string; error: string | null
   }
 }
 
-const SAMPLE = `{"name":"bidev","version":"1.0","tools":["qr","json","password"],"meta":{"author":"Bilal Fali","site":"https://bidev.site"}}`;
+const SAMPLE = `{"name":"bidev","version":"1.0","tools":["qr","json","password"],"meta":{"author":"Bilal Fali","site":"https://bidev.dev"}}`;
 
 export function JSONFormatter() {
   const [input,   setInput]   = useState("");

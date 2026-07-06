@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+﻿import Anthropic from "@anthropic-ai/sdk";
 import type { SheetRow, GeneratedArticle } from "./types.js";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -29,7 +29,7 @@ export async function generateArticle(row: SheetRow): Promise<GeneratedArticle> 
   const titleHint    = row.titleHint ? `\nPreferred title direction: "${row.titleHint}"` : "";
   const categoryHint = row.category  ? `\nCategory: ${row.category}`                    : "";
 
-  const prompt = `You are a senior Flutter developer and technical writer for bidev.site — a blog for Flutter and mobile developers.
+  const prompt = `You are a senior Flutter developer and technical writer for bidev.dev — a blog for Flutter and mobile developers.
 
 Write a comprehensive, SEO-optimised article on this topic: "${row.keyword}"${titleHint}${categoryHint}
 

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -7,7 +7,7 @@ const mono  = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", disp
 
 export const metadata: Metadata = {
   title: { default: "bidev admin", template: "%s | bidev admin" },
-  description: "CMS dashboard for bidev.site",
+  description: "CMS dashboard for bidev.dev",
   robots: { index: false, follow: false },
 };
 

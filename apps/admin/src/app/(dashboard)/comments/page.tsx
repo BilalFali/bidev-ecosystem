@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+﻿import { createClient } from "@/lib/supabase/server";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
 import { CommentActions } from "@/components/ui/CommentActions";
 import { MessageSquare, Clock, CheckCircle } from "lucide-react";
@@ -128,7 +128,7 @@ function CommentRow({ comment: c }: { comment: Comment }) {
             <span className="text-xs text-ink-faint">{formatDate(c.created_at)}</span>
             <span className="text-xs text-ink-faint">·</span>
             <Link
-              href={`https://bidev.site/blog/${c.article_slug}`}
+              href={`https://bidev.dev/blog/${c.article_slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-accent hover:underline"

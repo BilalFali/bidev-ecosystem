@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback } from "react";
 
@@ -310,7 +310,7 @@ function generate(jsonStr: string, opts: GenOpts): string {
 const EXAMPLE_JSON = `{
   "id": 1,
   "name": "Bilal Fali",
-  "email": "bilal@bidev.site",
+  "email": "bilal@bidev.dev",
   "is_active": true,
   "score": 98.5,
   "tags": ["flutter", "dart", "mobile"],

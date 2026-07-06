@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Plus, Search, Pencil, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardHeader } from "@/components/layout/DashboardHeader";
@@ -122,7 +122,7 @@ export default async function ArticlesPage({ searchParams }: { searchParams: Pro
                       </Link>
                       {article.status === "published" && (
                         <a
-                          href={`https://bidev.site/blog/${article.slug}`}
+                          href={`https://bidev.dev/blog/${article.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-1.5 rounded-md hover:bg-bg-elevated text-ink-muted hover:text-ink transition-colors"

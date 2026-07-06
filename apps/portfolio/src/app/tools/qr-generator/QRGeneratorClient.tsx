@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useEffect } from "react";
 import * as QRCode from "qrcode";
@@ -16,7 +16,7 @@ import {
 type QRType = "url" | "text" | "email" | "phone";
 
 const QR_TYPES: { value: QRType; label: string; placeholder: string }[] = [
-  { value: "url",   label: "URL / Link",      placeholder: "https://bidev.site" },
+  { value: "url",   label: "URL / Link",      placeholder: "https://bidev.dev" },
   { value: "text",  label: "Plain Text",       placeholder: "Enter any text..." },
   { value: "email", label: "Email Address",    placeholder: "hello@example.com" },
   { value: "phone", label: "Phone Number",     placeholder: "+1234567890" },
