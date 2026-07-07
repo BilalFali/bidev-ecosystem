@@ -6,6 +6,7 @@ import { TOOLS } from "@/lib/tools";
 import { INTERVIEW_QUESTIONS, getAllFilterKeys } from "@/lib/interview-questions";
 import { getAllJobs } from "@/lib/jobs";
 import { getAllProducts } from "@/lib/products";
+import { PACKAGES } from "@/lib/packages";
 
 export const revalidate = 3600;
 
@@ -29,6 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/flutter-interview-questions`, lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/jobs`,                        lastModified: now, changeFrequency: "daily",   priority: 0.8 },
     { url: `${BASE}/products`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/packages`,                    lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${BASE}/products?category=flutter-starter-kit`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/products?category=ui-kit`,    lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/products?category=ebook`,     lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
@@ -110,9 +112,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }));
 
+  const packagePages: MetadataRoute.Sitemap = PACKAGES.map((p) => ({
+    url:             `${BASE}/packages#${p.name}`,
+    lastModified:    now,
+    changeFrequency: "monthly" as const,
+    priority:        0.7,
+  }));
+
   return [
     ...staticPages,
     ...productPages,
+    ...packagePages,
     ...toolPages,
     ...interviewFilterPages,
     ...interviewQuestionPages,

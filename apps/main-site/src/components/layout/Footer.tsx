@@ -9,6 +9,7 @@ const LINKS = {
     { label: "Interview Prep", href: "/flutter-interview-questions" },
     { label: "Jobs",           href: "/jobs" },
     { label: "Products",       href: "/products" },
+    { label: "Packages",       href: "/packages" },
     { label: "Flutter",        href: "/flutter" },
   ],
   Community: [
