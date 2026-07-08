@@ -19,6 +19,7 @@ import { ProseContent } from "@/components/blog/ProseContent";
 import { ShareButtons } from "@/components/blog/ShareButtons";
 import { Comments } from "@/components/blog/Comments";
 import { ViewTracker } from "@/components/blog/ViewTracker";
+import { BuyMeCoffee } from "@/components/BuyMeCoffee";
 import { articleJsonLd } from "@bidev/shared";
 
 export const revalidate  = 60;
@@ -193,6 +194,9 @@ export default async function BlogPostPage({
 
             {/* Related posts */}
             {related.length > 0 && <RelatedPosts posts={related} />}
+
+            {/* Support */}
+            <BuyMeCoffee variant="banner" />
 
             {/* Comments */}
             <div className="mt-12 pt-8 border-t border-border">

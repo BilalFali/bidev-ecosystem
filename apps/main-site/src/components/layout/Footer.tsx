@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { BuyMeCoffee } from "@/components/BuyMeCoffee";
 
 const LINKS = {
   Platform: [
@@ -41,6 +42,7 @@ export function Footer() {
             <p className="text-sm text-ink-faint leading-relaxed max-w-[200px]">
               Empowering the next generation of Flutter developers with high-performance tools and developer-first content.
             </p>
+            <BuyMeCoffee variant="footer" />
           </div>
 
           {/* Link columns */}
