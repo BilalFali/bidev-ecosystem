@@ -4,7 +4,6 @@ import { BuyMeCoffee } from "@/components/BuyMeCoffee";
 const LINKS = {
   Platform: [
     { label: "Articles",       href: "/blog" },
-    { label: "Topics",         href: "/topics" },
     { label: "Snippets",       href: "/snippets" },
     { label: "Tools",          href: "/tools" },
     { label: "Resources",      href: "/resources" },
