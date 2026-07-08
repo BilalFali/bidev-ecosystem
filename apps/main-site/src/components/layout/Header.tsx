@@ -7,6 +7,7 @@ import { Search, X, Menu } from "lucide-react";
 
 const NAV = [
   { label: "Articles", href: "/blog" },
+  { label: "Topics",   href: "/topics"  },
   { label: "Tools", href: "/tools" },
   { label: "Resources", href: "/resources" },
   { label: "Snippets", href: "/snippets" },
