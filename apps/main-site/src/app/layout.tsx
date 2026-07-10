@@ -27,17 +27,17 @@ const mono = JetBrains_Mono({
 });
 
 const SITE_URL  = "https://bidev.dev";
-const SITE_NAME = "bidev.dev";
+const SITE_NAME = "BiDev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
-    template: "%s | bidev.dev",
+    default: "BiDev: Flutter, Dart & Firebase Tutorials for Developers",
+    template: "%s | BiDev",
   },
   description:
-    "Learn Flutter, build mobile apps, and explore free developer tools. In-depth tutorials, guides, and AI tools for developers.",
-  keywords: ["Flutter", "mobile development", "developer tools", "Firebase", "Dart", "Next.js"],
+    "Learn Flutter, Dart, and Firebase through in-depth tutorials, production-ready code examples, and free developer tools — written by Bilal Fali.",
+  keywords: ["Flutter", "Dart", "Firebase", "mobile development", "developer tools", "Clean Architecture"],
   authors: [{ name: "Bilal Fali", url: SITE_URL }],
   creator: "Bilal Fali",
   icons: {
@@ -50,16 +50,16 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
-    description: "Learn Flutter, build mobile apps, and explore free developer tools.",
-    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "bidev.dev" }],
+    title: "BiDev: Flutter, Dart & Firebase Tutorials for Developers",
+    description: "Learn Flutter, Dart, and Firebase through in-depth tutorials, production-ready code examples, and free developer tools — written by Bilal Fali.",
+    images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: "BiDev – Flutter & Dart Tutorials" }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@bidev97",
     creator: "@bidev97",
-    title: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
-    description: "Learn Flutter, build mobile apps, and explore free developer tools.",
+    title: "BiDev: Flutter, Dart & Firebase Tutorials for Developers",
+    description: "Learn Flutter, Dart, and Firebase through in-depth tutorials, production-ready code examples, and free developer tools — written by Bilal Fali.",
     images: [`${SITE_URL}/og.png`],
   },
   robots: {

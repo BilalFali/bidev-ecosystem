@@ -99,7 +99,7 @@ export function personJsonLd(siteUrl: string) {
     url: `${siteUrl}/about`,
     image: `${siteUrl}/profile.png`,
     jobTitle: "Flutter Developer",
-    description: "Flutter developer and mobile app engineer. Author of bidev.dev.",
+    description: "Flutter developer and mobile app engineer. Creator of BiDev — tutorials, tools, and resources for Flutter developers.",
     sameAs: [
       "https://twitter.com/bidev97",
       "https://github.com/BilalFali",
@@ -116,7 +116,7 @@ export function organizationJsonLd(siteUrl: string) {
     url: siteUrl,
     logo: {
       "@type": "ImageObject",
-      url: `${siteUrl}/logo.png`,
+      url: `${siteUrl}/profile.png`,  // replace with /logo.png once a dedicated square logo is added to /public
       width: 512,
       height: 512,
     },

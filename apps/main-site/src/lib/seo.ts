@@ -2,7 +2,7 @@
 import type { Post } from "@bidev/shared";
 
 const SITE_URL  = "https://bidev.dev";
-const SITE_NAME = "bidev.dev";
+const SITE_NAME = "BiDev";
 const AUTHOR    = "Bilal Fali";
 
 function truncateDesc(text: string, max = 155): string {
