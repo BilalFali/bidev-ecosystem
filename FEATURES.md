@@ -5,6 +5,22 @@ Mark items `[x]` when done, move them to the Done section at the bottom.
 
 ---
 
+## 🚨 URGENT — Must Do First
+
+These are **blockers** — the site has broken or missing functionality until these are done.
+
+| # | Task | Why Urgent |
+|---|------|-----------|
+| 1 | **Run migration `006_products.sql`** in Supabase SQL Editor | Products page is live but the DB table doesn't exist yet — every visit errors |
+| 2 | **Run migration `007_products_purchase_urls.sql`** in Supabase SQL Editor | ZIP + GitHub Access purchase URLs won't save without this column |
+| 3 | **Run migration `008_page_views.sql`** in Supabase SQL Editor | Analytics page shows nothing — the `page_views` table and `upsert_page_view` function don't exist yet |
+| 4 | **Add `logo.png` (512×512 square PNG) to `/apps/main-site/public/`** | Organization schema points to `/logo.png` — Google shows no icon for your site in search results |
+| 5 | **Replace AdSense slot ID `1838201594`** with real slot IDs from your AdSense dashboard | All ad units on the site are using a placeholder — no revenue being earned |
+| 6 | **Request re-indexing in Google Search Console** for `https://bidev.dev` and key pages | Domain was migrated from bidev.site — Google still shows old URLs until recrawled |
+| 7 | **Add `pub.dev` publisher verification** (`publisher: bidev.dev`) to `flutter_timer_button` | Package shows no verified publisher — hurts credibility and pub points score |
+
+---
+
 ## 🌐 Main Site
 
 ### Blog & Content
