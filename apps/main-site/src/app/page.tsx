@@ -1,11 +1,11 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getAllArticles } from "@/lib/articles";
-import { formatDate, slugify } from "@/lib/utils";
-import { TOOLS } from "@/lib/tools";
+import { slugify } from "@/lib/utils";
+import { TOOLS, type Tool } from "@/lib/tools";
 import { SNIPPETS } from "@/lib/snippets";
 import { RESOURCES, RESOURCE_CATEGORIES } from "@/lib/resources";
 import { ToolCard } from "@/components/tools/ToolCard";
+import { ArticleCard } from "@/components/blog/ArticleCard";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
 import { AdSlot } from "@bidev/ui";
 
@@ -15,33 +15,45 @@ const CATEGORY_ICONS: Record<string, string> = {
   "Official Docs":     "📚",
   "Packages":          "📦",
   "State Management":  "⚡",
-  "YouTube & Courses":  "🎥",
+  "YouTube & Courses": "🎥",
   "Communities":       "💬",
   "Tools":             "🛠️",
   "Books":             "📖",
 };
 
 export default async function HomePage() {
-  const allArticles = await getAllArticles();
-  const latest       = allArticles.slice(0, 8);
+  const allArticles  = await getAllArticles();
+  const latest       = allArticles.slice(0, 6);
   const resourceCats = RESOURCE_CATEGORIES.slice(1);
+  const popularTools = TOOLS.filter((t) => t.popular);
+  const otherTools   = TOOLS.filter((t) => !t.popular);
 
   return (
     <div className="flex flex-col">
 
-      {/* ── HERO ─────────────────────────────────────────────────── */}
-      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-4">
-          Learn · Practice · Build · Ship
+      {/* ── HERO ────────────────────────────────────────────────── */}
+      <section className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-20 text-center overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-full"
+          style={{ background: "radial-gradient(ellipse 80% 55% at 50% 0%, rgba(1,117,194,0.13) 0%, transparent 70%)" }}
+        />
+
+        <p className="relative animate-fade-in text-xs font-semibold uppercase tracking-widest text-accent mb-5">
+          Flutter · Dart · Firebase
         </p>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-ink mb-5 leading-tight">
-          The Flutter <span className="text-gradient-accent">Developer Ecosystem</span>
+        <h1 className="relative animate-slide-up text-4xl sm:text-5xl lg:text-6xl font-bold text-ink mb-5 leading-tight">
+          Your Flutter{" "}
+          <span className="text-gradient-accent">Development Hub</span>
         </h1>
-        <p className="text-ink-muted max-w-2xl mx-auto mb-8 text-lg">
-          Everything Flutter developers need in one place — tools, articles, snippets, and resources.
-          No sign-up, no fluff, built by a developer who ships.
+        <p className="relative animate-slide-up text-ink-muted max-w-xl mx-auto mb-8 text-lg leading-relaxed"
+          style={{ animationDelay: "60ms" }}>
+          Tools, code snippets, tutorials, and resources — everything you need to
+          build and ship Flutter apps, in one place.
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+
+        <div className="relative animate-slide-up flex flex-wrap items-center justify-center gap-3 mb-12"
+          style={{ animationDelay: "120ms" }}>
           <Link
             href="/tools"
             className="px-6 py-3 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors"
@@ -55,27 +67,54 @@ export default async function HomePage() {
             Read Articles
           </Link>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-faint">
-          <span>{TOOLS.length}+ Tools</span>
-          <span className="text-border-strong">·</span>
-          <span>{SNIPPETS.length}+ Snippets</span>
-          <span className="text-border-strong">·</span>
-          <span>{RESOURCES.length}+ Resources</span>
-          <span className="text-border-strong">·</span>
-          <span>{allArticles.length}+ Articles</span>
+
+        <div className="relative animate-fade-in flex flex-wrap items-center justify-center gap-3"
+          style={{ animationDelay: "180ms" }}>
+          {[
+            { value: `${TOOLS.length}+`,       label: "Free Tools" },
+            { value: `${SNIPPETS.length}+`,    label: "Snippets" },
+            { value: `${RESOURCES.length}+`,   label: "Resources" },
+            { value: `${allArticles.length}+`, label: "Articles" },
+          ].map(({ value, label }) => (
+            <div
+              key={label}
+              className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-bg-card text-sm"
+            >
+              <span className="font-bold text-ink">{value}</span>
+              <span className="text-ink-faint">{label}</span>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── FEATURED TOOLS ──────────────────────────────────────── */}
+      {/* ── FEATURED TOOLS (bento grid) ─────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-lg font-semibold text-ink">Featured Developer Tools</h2>
-          <Link href="/tools" className="text-xs text-ink-faint hover:text-ink transition-colors">
-            View all tools →
+        <div className="flex items-end justify-between mb-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Developer Tools</p>
+            <h2 className="text-xl font-bold text-ink">Most-Used Tools</h2>
+            <p className="text-sm text-ink-muted mt-1">Free, instant, runs in your browser.</p>
+          </div>
+          <Link href="/tools" className="text-xs text-ink-faint hover:text-ink transition-colors whitespace-nowrap mb-1">
+            All {TOOLS.length} tools →
           </Link>
         </div>
+
+        {/*
+          Bento layout (sm: 3 cols):
+          Row 1 → [popularTools[0]: col-span-2] [popularTools[1]: col-span-1]
+          Row 2 → [popularTools[2]: col-span-1] [popularTools[3]: col-span-2]
+        */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-7 mb-5">
+          {popularTools[0] && <BentoCard tool={popularTools[0]} />}
+          {popularTools[1] && <ToolCard tool={popularTools[1]} />}
+          {popularTools[2] && <ToolCard tool={popularTools[2]} />}
+          {popularTools[3] && <BentoCard tool={popularTools[3]} />}
+        </div>
+
+        {/* Secondary tools — uniform grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {TOOLS.map((tool) => (
+          {otherTools.map((tool) => (
             <ToolCard key={tool.slug} tool={tool} />
           ))}
         </div>
@@ -111,62 +150,22 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURED ARTICLES ────────────────────────────────────── */}
+      {/* ── LATEST ARTICLES (card grid) ──────────────────────────── */}
       {latest.length > 0 && (
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-lg font-semibold text-ink">Featured Articles</h2>
-            <Link href="/blog" className="text-xs text-ink-faint hover:text-ink transition-colors">
+          <div className="flex items-end justify-between mb-7">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Tutorials & Guides</p>
+              <h2 className="text-xl font-bold text-ink">Latest Articles</h2>
+            </div>
+            <Link href="/blog" className="text-xs text-ink-faint hover:text-ink transition-colors mb-1">
               View all →
             </Link>
           </div>
 
-          <div className="flex flex-col divide-y divide-border">
-            {latest.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="group flex gap-5 py-5 hover:bg-bg-card/40 -mx-3 px-3 rounded-xl transition-colors"
-              >
-                <div className="relative w-24 h-16 sm:w-32 sm:h-20 rounded-lg overflow-hidden bg-bg-elevated shrink-0">
-                  {post.image ? (
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      sizes="128px"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-accent/10 to-bg-elevated" />
-                  )}
-                </div>
-
-                <div className="flex flex-col justify-between min-w-0 flex-1">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      {post.tags[0] && (
-                        <span className="text-[11px] font-mono text-accent-light">{post.tags[0]}</span>
-                      )}
-                      <span className="text-[11px] text-border-strong">·</span>
-                      <time className="text-[11px] text-ink-faint" dateTime={post.publishedAt}>
-                        {formatDate(post.publishedAt)}
-                      </time>
-                    </div>
-                    <h3 className="text-sm font-semibold text-ink group-hover:text-accent-light transition-colors leading-snug line-clamp-2 mb-1">
-                      {post.title}
-                    </h3>
-                    <p className="text-xs text-ink-faint leading-relaxed line-clamp-2 hidden sm:block">
-                      {post.summary}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 mt-2 text-[11px] text-ink-faint">
-                    <span>{post.author ?? "Bilal Fali"}</span>
-                    <span>·</span>
-                    <span>{post.readingTime} min read</span>
-                  </div>
-                </div>
-              </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {latest.map((article, i) => (
+              <ArticleCard key={article.slug} article={article} priority={i < 3} />
             ))}
           </div>
 
@@ -175,7 +174,7 @@ export default async function HomePage() {
               href="/blog"
               className="px-6 py-2.5 rounded-lg border border-border text-sm text-ink-muted hover:border-border-strong hover:text-ink transition-all"
             >
-              Load more articles
+              Browse all articles
             </Link>
           </div>
         </section>
@@ -195,5 +194,38 @@ export default async function HomePage() {
       </section>
 
     </div>
+  );
+}
+
+/* ── Bento wide card (col-span-2 on sm+) ───────────────────────────────── */
+function BentoCard({ tool }: { tool: Tool }) {
+  return (
+    <Link
+      href={tool.href}
+      className="group relative flex flex-col gap-4 p-7 rounded-xl border border-accent/20 bg-bg-card hover:border-accent/50 hover:bg-bg-elevated transition-all duration-200 sm:col-span-2"
+    >
+      <span className="absolute top-5 right-5 text-xs px-2.5 py-1 rounded-full bg-accent/15 text-accent border border-accent/25">
+        Popular
+      </span>
+      <span className="text-4xl">{tool.icon}</span>
+      <div className="flex flex-col gap-2 flex-1">
+        <h3 className="font-bold text-ink text-base group-hover:text-accent transition-colors">
+          {tool.title}
+        </h3>
+        <p className="text-sm text-ink-muted leading-relaxed">{tool.description}</p>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex gap-1.5">
+          {tool.tags.map((t) => (
+            <span key={t} className="text-xs px-2 py-0.5 rounded bg-bg-elevated border border-border text-ink-faint">
+              {t}
+            </span>
+          ))}
+        </div>
+        <span className="text-xs text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+          Open →
+        </span>
+      </div>
+    </Link>
   );
 }
