@@ -87,6 +87,40 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── LATEST ARTICLES (card grid) ──────────────────────────── */}
+      {latest.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
+          <div className="flex items-end justify-between mb-7">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Tutorials & Guides</p>
+              <h2 className="text-xl font-bold text-ink">Latest Articles</h2>
+            </div>
+            <Link href="/blog" className="text-xs text-ink-faint hover:text-ink transition-colors mb-1">
+              View all →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {latest.map((article, i) => (
+              <ArticleCard key={article.slug} article={article} priority={i < 3} />
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-10">
+            <Link
+              href="/blog"
+              className="px-6 py-2.5 rounded-lg border border-border text-sm text-ink-muted hover:border-border-strong hover:text-ink transition-all"
+            >
+              Browse all articles
+            </Link>
+          </div>
+        </section>
+      )}
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+        <AdSlot type="banner" />
+      </div>
+
       {/* ── FEATURED TOOLS (bento grid) ─────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
         <div className="flex items-end justify-between mb-2">
@@ -120,10 +154,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <AdSlot type="banner" />
-      </div>
-
       {/* ── RESOURCE HUB ─────────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
         <div className="flex items-center justify-between mb-8">
@@ -149,36 +179,6 @@ export default async function HomePage() {
           })}
         </div>
       </section>
-
-      {/* ── LATEST ARTICLES (card grid) ──────────────────────────── */}
-      {latest.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
-          <div className="flex items-end justify-between mb-7">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Tutorials & Guides</p>
-              <h2 className="text-xl font-bold text-ink">Latest Articles</h2>
-            </div>
-            <Link href="/blog" className="text-xs text-ink-faint hover:text-ink transition-colors mb-1">
-              View all →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {latest.map((article, i) => (
-              <ArticleCard key={article.slug} article={article} priority={i < 3} />
-            ))}
-          </div>
-
-          <div className="flex justify-center mt-10">
-            <Link
-              href="/blog"
-              className="px-6 py-2.5 rounded-lg border border-border text-sm text-ink-muted hover:border-border-strong hover:text-ink transition-all"
-            >
-              Browse all articles
-            </Link>
-          </div>
-        </section>
-      )}
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
         <AdSlot type="in-article" />
