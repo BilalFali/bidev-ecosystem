@@ -113,6 +113,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       </head>
 
+      {/* Consent Mode v2 default — denies ad/analytics storage until the CMP below records a choice */}
+      {ADSENSE_ID && (
+        <Script id="consent-default" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'analytics_storage': 'denied',
+              'wait_for_update': 500
+            });
+          `}
+        </Script>
+      )}
+
+      {/* Google-certified CMP (Funding Choices) — required for EEA/UK consent under AdSense policy */}
+      {ADSENSE_ID && (
+        <>
+          <Script
+            async
+            src={`https://fundingchoicesmessages.google.com/i/${ADSENSE_ID}?ers=1`}
+            strategy="beforeInteractive"
+          />
+          <Script id="googlefc-present" strategy="beforeInteractive">
+            {`
+              (function() {
+                function signalGooglefcPresent() {
+                  if (!window.frames['googlefcPresent']) {
+                    if (document.body) {
+                      const iframe = document.createElement('iframe');
+                      iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;';
+                      iframe.style.display = 'none';
+                      iframe.name = 'googlefcPresent';
+                      document.body.appendChild(iframe);
+                    } else {
+                      setTimeout(signalGooglefcPresent, 0);
+                    }
+                  }
+                }
+                signalGooglefcPresent();
+              })();
+            `}
+          </Script>
+        </>
+      )}
+
       {/* AdSense Auto Ads — lazyOnload so ads never block LCP/FID */}
       {ADSENSE_ID && (
         <Script

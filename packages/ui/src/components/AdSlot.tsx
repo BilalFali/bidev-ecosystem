@@ -53,6 +53,9 @@ export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
 
   return (
     <div className={className} aria-label="Advertisement">
+      <span className="block text-center text-[10px] uppercase tracking-wider text-ink-faint mb-1 select-none">
+        Advertisement
+      </span>
       <ins
         ref={ref}
         className="adsbygoogle"
