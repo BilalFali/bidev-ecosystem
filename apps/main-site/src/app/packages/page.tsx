@@ -66,7 +66,7 @@ function PackageCard({
 
       {/* Header */}
       <div className="flex items-start gap-4">
-        <span className="text-3xl leading-none">{pkg.icon}</span>
+        <pkg.icon className="w-7 h-7 text-accent shrink-0" strokeWidth={1.75} />
         <div className="flex-1 min-w-0">
           <h2 className="text-base font-semibold text-ink font-mono leading-tight">
             {pkg.name}

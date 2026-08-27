@@ -12,7 +12,7 @@ export function ToolCard({ tool }: { tool: Tool }) {
           Popular
         </span>
       )}
-      <span className="text-3xl">{tool.icon}</span>
+      <tool.icon className="w-7 h-7 text-accent" strokeWidth={1.75} />
       <div className="flex flex-col gap-2 flex-1">
         <h2 className="font-bold text-ink group-hover:text-accent transition-colors">{tool.title}</h2>
         <p className="text-sm text-ink-muted leading-relaxed">{tool.description}</p>

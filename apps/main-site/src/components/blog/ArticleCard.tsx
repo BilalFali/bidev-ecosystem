@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Sparkles } from "lucide-react";
 import type { Article } from "@/lib/articles";
 import { formatDate } from "@/lib/utils";
 
@@ -28,7 +29,7 @@ export function ArticleCard({ article, priority = false }: Props) {
             loading={priority ? "eager" : "lazy"}
           />
         ) : (
-          <span className="text-4xl opacity-10 select-none group-hover:opacity-20 transition-opacity">✦</span>
+          <Sparkles className="w-9 h-9 opacity-10 group-hover:opacity-20 transition-opacity" strokeWidth={1.5} />
         )}
       </div>
 

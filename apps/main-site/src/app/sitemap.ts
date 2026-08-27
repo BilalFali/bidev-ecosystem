@@ -3,7 +3,7 @@ import { getAllPosts } from "@/lib/mdx";
 import { getSupabaseClient } from "@/lib/supabase";
 import { SNIPPETS } from "@/lib/snippets";
 import { TOOLS } from "@/lib/tools";
-import { INTERVIEW_QUESTIONS, getAllFilterKeys } from "@/lib/interview-questions";
+import { getAllInterviewQuestions, getAllFilterKeys } from "@/lib/interview-questions";
 import { getAllJobs } from "@/lib/jobs";
 import { getAllProducts } from "@/lib/products";
 import { PACKAGES } from "@/lib/packages";
@@ -68,14 +68,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        t.popular ? 0.9 : 0.7,
   }));
 
-  const interviewFilterPages: MetadataRoute.Sitemap = getAllFilterKeys().map((key) => ({
+  const [filterKeys, interviewQuestions] = await Promise.all([getAllFilterKeys(), getAllInterviewQuestions()]);
+
+  const interviewFilterPages: MetadataRoute.Sitemap = filterKeys.map((key) => ({
     url:             `${BASE}/flutter-interview-questions/${key}`,
     lastModified:    now,
     changeFrequency: "weekly" as const,
     priority:        0.7,
   }));
 
-  const interviewQuestionPages: MetadataRoute.Sitemap = INTERVIEW_QUESTIONS.map((q) => ({
+  const interviewQuestionPages: MetadataRoute.Sitemap = interviewQuestions.map((q) => ({
     url:             `${BASE}/flutter-interview-questions/${q.slug}`,
     lastModified:    now,
     changeFrequency: "monthly" as const,

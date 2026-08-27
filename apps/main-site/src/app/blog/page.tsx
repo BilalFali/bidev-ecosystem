@@ -6,6 +6,7 @@ import { getAllTags } from "@/lib/mdx";
 import { formatDate } from "@/lib/utils";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
+import { Sparkles } from "lucide-react";
 
 export const revalidate = 60;
 
@@ -139,7 +140,7 @@ export default async function BlogPage({
                           loading={i < 3 ? "eager" : "lazy"}
                         />
                       ) : (
-                        <span className="text-2xl opacity-20 select-none">✦</span>
+                        <Sparkles className="w-6 h-6 opacity-20" strokeWidth={1.5} />
                       )}
                     </div>
                   </Link>

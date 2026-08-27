@@ -1,6 +1,9 @@
 // Client-safe types and constants for the Products module.
 // No server-only imports — safe to use in "use client" components.
 
+import type { LucideIcon } from "lucide-react";
+import { Rocket, Palette, BookOpen } from "lucide-react";
+
 export type ProductCategory = "flutter-starter-kit" | "ui-kit" | "ebook";
 export type ProductBadge    = "new" | "bestseller" | "updated" | null;
 export type ProductStatus   = "draft" | "published";
@@ -53,10 +56,10 @@ export const CATEGORY_LABELS: Record<ProductCategory, string> = {
   "ebook":               "Ebooks",
 };
 
-export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
-  "flutter-starter-kit": "🚀",
-  "ui-kit":              "🎨",
-  "ebook":               "📚",
+export const CATEGORY_ICONS: Record<ProductCategory, LucideIcon> = {
+  "flutter-starter-kit": Rocket,
+  "ui-kit":              Palette,
+  "ebook":               BookOpen,
 };
 
 export function formatPrice(price: number): string {

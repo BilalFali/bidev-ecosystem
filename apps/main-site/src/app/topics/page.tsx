@@ -5,6 +5,7 @@ import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { breadcrumbJsonLd } from "@bidev/shared";
 import { ArticleCard } from "@/components/blog/ArticleCard";
 import { slugify } from "@/lib/utils";
+import { Sparkles } from "lucide-react";
 
 export const revalidate = 60;
 
@@ -69,9 +70,10 @@ export default async function TopicsPage() {
         <div className="flex gap-2 overflow-x-auto scrollbar-none pb-0.5">
           <a
             href="#recent"
-            className="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border border-border bg-bg-card text-ink-muted hover:border-accent/50 hover:text-accent transition-colors"
+            className="inline-flex items-center gap-1 shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border border-border bg-bg-card text-ink-muted hover:border-accent/50 hover:text-accent transition-colors"
           >
-            ✦ Recent
+            <Sparkles className="w-3 h-3" strokeWidth={1.75} />
+            Recent
           </a>
           {tags.map(({ tag, count }) => (
             <a

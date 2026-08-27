@@ -46,7 +46,7 @@ export default function LearnHub() {
               href={`/learn/${cat.slug}`}
               className="group flex flex-col gap-3 p-6 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
             >
-              <span className="text-3xl">{cat.icon}</span>
+              <cat.icon className="w-7 h-7 text-accent" strokeWidth={1.75} />
               <h2 className="font-semibold text-ink group-hover:text-accent transition-colors">{cat.name}</h2>
               <p className="text-sm text-ink-muted leading-relaxed line-clamp-3">{cat.intro}</p>
             </Link>

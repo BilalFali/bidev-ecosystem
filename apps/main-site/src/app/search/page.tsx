@@ -4,9 +4,11 @@ import { pageMetadata } from "@/lib/seo";
 import { getAllArticles } from "@/lib/articles";
 import { TOOLS } from "@/lib/tools";
 import { SNIPPETS } from "@/lib/snippets";
-import { INTERVIEW_QUESTIONS } from "@/lib/interview-questions";
+import { getAllInterviewQuestions } from "@/lib/interview-questions";
 import { RESOURCES } from "@/lib/resources";
 import { SearchClient, type SearchItem } from "@/components/search/SearchClient";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SearchPage() {
-  const articles = await getAllArticles();
+  const [articles, interviewQuestions] = await Promise.all([getAllArticles(), getAllInterviewQuestions()]);
 
   const items: SearchItem[] = [
     ...articles.map((a) => ({
@@ -42,7 +44,7 @@ export default async function SearchPage() {
       category: s.category,
       href: `/snippets/${s.slug}`,
     })),
-    ...INTERVIEW_QUESTIONS.map((q) => ({
+    ...interviewQuestions.map((q) => ({
       type: "Question" as const,
       title: q.question,
       description: q.shortAnswer,

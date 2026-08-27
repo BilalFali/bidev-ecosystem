@@ -6,13 +6,15 @@ import { breadcrumbJsonLd } from "@bidev/shared";
 import { LEARN_CATEGORIES, getLearnCategoryBySlug } from "@/lib/learn";
 import { getArticlesByCategorySlug } from "@/lib/articles";
 import { TOOLS } from "@/lib/tools";
-import { INTERVIEW_QUESTIONS } from "@/lib/interview-questions";
+import { getAllInterviewQuestions } from "@/lib/interview-questions";
 import { ArticleCard } from "@/components/blog/ArticleCard";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 import { QuestionCard } from "@/components/interview/QuestionCard";
 import { AdSlot } from "@bidev/ui";
 
 const { SITE_URL } = SITE_CONFIG;
+
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return LEARN_CATEGORIES.map((c) => ({ slug: c.slug }));
@@ -35,9 +37,12 @@ export default async function LearnCategoryPage({ params }: { params: Promise<{ 
   const category = getLearnCategoryBySlug(slug);
   if (!category) notFound();
 
-  const articles = await getArticlesByCategorySlug(slug);
+  const [articles, allQuestions] = await Promise.all([
+    getArticlesByCategorySlug(slug),
+    getAllInterviewQuestions(),
+  ]);
   const relatedTools = TOOLS.filter((t) => t.tags.some((tag) => category.toolTags.includes(tag))).slice(0, 6);
-  const relatedQuestions = INTERVIEW_QUESTIONS.filter((q) => category.interviewCategories.includes(q.category)).slice(0, 6);
+  const relatedQuestions = allQuestions.filter((q) => category.interviewCategories.includes(q.category)).slice(0, 6);
 
   const breadcrumb = breadcrumbJsonLd([
     { name: "Home", url: SITE_URL },
@@ -56,7 +61,7 @@ export default async function LearnCategoryPage({ params }: { params: Promise<{ 
       </div>
 
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-10 text-center">
-        <span className="text-3xl block mb-4">{category.icon}</span>
+        <category.icon className="w-9 h-9 text-accent mx-auto mb-4" strokeWidth={1.75} />
         <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-4 leading-tight">{category.name}</h1>
         <p className="text-ink-muted leading-relaxed">{category.intro}</p>
       </section>

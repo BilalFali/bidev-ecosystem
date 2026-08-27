@@ -1,7 +1,21 @@
+import type { LucideIcon } from "lucide-react";
+import {
+  FileJson2,
+  QrCode,
+  Braces,
+  KeyRound,
+  Binary,
+  Fingerprint,
+  ShieldCheck,
+  Regex,
+  Palette,
+  Boxes,
+} from "lucide-react";
+
 export interface Tool {
   slug: string;
   href: string;
-  icon: string;
+  icon: LucideIcon;
   title: string;
   description: string;
   tags: string[];
@@ -13,7 +27,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "json-to-dart",
     href: "/tools/json-to-dart",
-    icon: "🎯",
+    icon: FileJson2,
     title: "JSON to Dart Converter",
     description: "Convert JSON to Dart model classes. Generates fromJson, toJson, copyWith with null safety. Supports Freezed & json_serializable.",
     tags: ["Flutter", "Dart"],
@@ -23,7 +37,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "qr-generator",
     href: "/tools/qr-generator",
-    icon: "⬛",
+    icon: QrCode,
     title: "QR Code Generator",
     description: "Generate QR codes for URLs, text, emails, and phone numbers instantly. Download as PNG.",
     tags: ["Generator", "Free"],
@@ -33,7 +47,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "json-formatter",
     href: "/tools/json-formatter",
-    icon: "{ }",
+    icon: Braces,
     title: "JSON Formatter & Validator",
     description: "Format, validate, and minify JSON. Real-time error detection with line numbers.",
     tags: ["Formatter", "Validator"],
@@ -43,7 +57,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "password-generator",
     href: "/tools/password-generator",
-    icon: "🔐",
+    icon: KeyRound,
     title: "Password Generator",
     description: "Generate cryptographically secure passwords using the Web Crypto API. Strength indicator included.",
     tags: ["Security", "Generator"],
@@ -53,7 +67,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "base64",
     href: "/tools/base64",
-    icon: "🔡",
+    icon: Binary,
     title: "Base64 Encoder / Decoder",
     description: "Encode any text or URL to Base64, or decode Base64 strings — fully client-side.",
     tags: ["Encoding", "Utility"],
@@ -63,7 +77,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "uuid-generator",
     href: "/tools/uuid-generator",
-    icon: "🆔",
+    icon: Fingerprint,
     title: "UUID Generator",
     description: "Generate RFC-4122 compliant v4 UUIDs in bulk. Copy to clipboard in one click.",
     tags: ["Generator", "Utility"],
@@ -73,7 +87,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "jwt-decoder",
     href: "/tools/jwt-decoder",
-    icon: "🔑",
+    icon: ShieldCheck,
     title: "JWT Decoder",
     description: "Decode JSON Web Tokens instantly. Inspect header, payload, and expiry — fully client-side, no signature verification.",
     tags: ["Security", "Decoder"],
@@ -83,7 +97,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "regex-tester",
     href: "/tools/regex-tester",
-    icon: "🧪",
+    icon: Regex,
     title: "Regex Tester",
     description: "Test regular expressions against sample text with live match highlighting, groups, and flags.",
     tags: ["Regex", "Testing"],
@@ -93,7 +107,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "color-generator",
     href: "/tools/color-generator",
-    icon: "🎨",
+    icon: Palette,
     title: "Color Generator",
     description: "Pick a seed color and preview tints/shades. Copy a ready-to-use Flutter ColorScheme.fromSeed() snippet.",
     tags: ["Flutter", "Design"],
@@ -103,7 +117,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "dart-data-class-generator",
     href: "/tools/dart-data-class-generator",
-    icon: "🧱",
+    icon: Boxes,
     title: "Dart Data Class Generator",
     description: "Paste JSON and generate an immutable Dart data class with copyWith, toString, and equality — no JSON (de)serialization boilerplate.",
     tags: ["Flutter", "Dart"],

@@ -4,6 +4,7 @@ import { getAllPosts } from "@/lib/mdx";
 import { formatDate } from "@/lib/utils";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
+import { Building2, Flame, Zap, Palette, Package, Rocket } from "lucide-react";
 
 export const metadata: Metadata = pageMetadata({
   title: "Flutter Tutorials – Build Mobile Apps with Flutter & Dart",
@@ -12,12 +13,12 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const TOPICS = [
-  { icon: "🏗️", title: "Clean Architecture",  desc: "Domain, data & presentation layers" },
-  { icon: "🔥", title: "Firebase",             desc: "Auth, Firestore, FCM, Storage" },
-  { icon: "⚡", title: "State Management",    desc: "GetX, Bloc, Riverpod" },
-  { icon: "🎨", title: "UI & Animations",    desc: "Custom widgets & transitions" },
-  { icon: "📦", title: "Packages & Plugins",  desc: "Best Flutter pub.dev packages" },
-  { icon: "🚀", title: "App Store Deployment",desc: "Play Store & App Store guides" },
+  { icon: Building2, title: "Clean Architecture",  desc: "Domain, data & presentation layers" },
+  { icon: Flame,      title: "Firebase",             desc: "Auth, Firestore, FCM, Storage" },
+  { icon: Zap,        title: "State Management",    desc: "GetX, Bloc, Riverpod" },
+  { icon: Palette,    title: "UI & Animations",    desc: "Custom widgets & transitions" },
+  { icon: Package,    title: "Packages & Plugins",  desc: "Best Flutter pub.dev packages" },
+  { icon: Rocket,     title: "App Store Deployment",desc: "Play Store & App Store guides" },
 ];
 
 export default function FlutterPage() {
@@ -48,7 +49,7 @@ export default function FlutterPage() {
           {TOPICS.map(t => (
             <Link key={t.title} href={`/blog?tag=${encodeURIComponent(t.title)}`}
               className="group flex items-start gap-4 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/30 hover:bg-bg-elevated transition-all">
-              <span className="text-2xl flex-shrink-0">{t.icon}</span>
+              <t.icon className="w-6 h-6 flex-shrink-0 text-accent" strokeWidth={1.75} />
               <div>
                 <h3 className="font-semibold text-ink group-hover:text-accent transition-colors">{t.title}</h3>
                 <p className="text-xs text-ink-muted mt-0.5">{t.desc}</p>

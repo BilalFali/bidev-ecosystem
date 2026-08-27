@@ -8,7 +8,7 @@ export type {
   ProductImage,
   ProductFaq,
 } from "./products-config";
-export { CATEGORY_LABELS, CATEGORY_EMOJI, formatPrice } from "./products-config";
+export { CATEGORY_LABELS, CATEGORY_ICONS, formatPrice } from "./products-config";
 
 import type { Product, ProductCategory, ProductImage, ProductFaq } from "./products-config";
 

@@ -5,7 +5,7 @@ import { breadcrumbJsonLd, faqJsonLd } from "@bidev/shared";
 import {
   INTERVIEW_CATEGORIES,
   DIFFICULTIES,
-  INTERVIEW_QUESTIONS,
+  getAllInterviewQuestions,
   getAllTagSlugs,
 } from "@/lib/interview-questions";
 import { QuestionCard } from "@/components/interview/QuestionCard";
@@ -14,6 +14,8 @@ import { AdSlot } from "@bidev/ui";
 
 const { SITE_URL } = SITE_CONFIG;
 
+export const revalidate = 60;
+
 export const metadata: Metadata = pageMetadata({
   title: "Flutter Interview Questions & Answers (2026)",
   description:
@@ -21,9 +23,10 @@ export const metadata: Metadata = pageMetadata({
   path: "/flutter-interview-questions",
 });
 
-export default function InterviewQuestionsHub() {
-  const featured = INTERVIEW_QUESTIONS.slice(0, 8);
-  const tags = getAllTagSlugs().slice(0, 12);
+export default async function InterviewQuestionsHub() {
+  const allQuestions = await getAllInterviewQuestions();
+  const featured = allQuestions.slice(0, 8);
+  const tags = (await getAllTagSlugs()).slice(0, 12);
 
   const breadcrumb = breadcrumbJsonLd([
     { name: "Home", url: SITE_URL },
@@ -63,7 +66,7 @@ export default function InterviewQuestionsHub() {
           ))}
         </div>
         <p className="text-sm text-ink-faint">
-          {INTERVIEW_QUESTIONS.length}+ questions across {INTERVIEW_CATEGORIES.length} categories
+          {allQuestions.length}+ questions across {INTERVIEW_CATEGORIES.length} categories
         </p>
       </section>
 
@@ -76,14 +79,14 @@ export default function InterviewQuestionsHub() {
         <h2 className="text-lg font-semibold text-ink mb-8">Browse by Category</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {INTERVIEW_CATEGORIES.map((cat) => {
-            const count = INTERVIEW_QUESTIONS.filter((q) => q.category === cat.name).length;
+            const count = allQuestions.filter((q) => q.category === cat.name).length;
             return (
               <Link
                 key={cat.slug}
                 href={`/flutter-interview-questions/${cat.slug}`}
                 className="group flex flex-col gap-2 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
               >
-                <span className="text-2xl">{cat.icon}</span>
+                <cat.icon className="w-6 h-6 text-accent" strokeWidth={1.75} />
                 <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm">{cat.name}</h3>
                 <p className="text-xs text-ink-faint">{count} questions</p>
               </Link>

@@ -1,7 +1,10 @@
+import type { LucideIcon } from "lucide-react";
+import { Puzzle, Zap, Flame, Building2, Database, Globe } from "lucide-react";
+
 export interface LearnCategory {
   slug: string;
   name: string;
-  icon: string;
+  icon: LucideIcon;
   intro: string;
   toolTags: string[];
   interviewCategories: string[];
@@ -14,7 +17,7 @@ export const LEARN_CATEGORIES: LearnCategory[] = [
   {
     slug: "flutter",
     name: "Flutter",
-    icon: "🧩",
+    icon: Puzzle,
     intro:
       "Core Flutter development — widgets, platform APIs, and the day-to-day patterns you'll use building real apps. Start here if you're new to the framework or want to go deeper on the fundamentals.",
     toolTags: ["Flutter"],
@@ -23,7 +26,7 @@ export const LEARN_CATEGORIES: LearnCategory[] = [
   {
     slug: "state-management",
     name: "State Management",
-    icon: "⚡",
+    icon: Zap,
     intro:
       "Provider, Riverpod, BLoC, and GetX compared head-to-head, with guidance on which one actually fits your app instead of which one is trending.",
     toolTags: ["Flutter", "Dart"],
@@ -32,7 +35,7 @@ export const LEARN_CATEGORIES: LearnCategory[] = [
   {
     slug: "firebase",
     name: "Firebase",
-    icon: "🔥",
+    icon: Flame,
     intro:
       "Wiring Firebase into a Flutter app the right way — authentication, push notifications, and the gotchas that don't show up until production.",
     toolTags: ["Flutter"],
@@ -41,7 +44,7 @@ export const LEARN_CATEGORIES: LearnCategory[] = [
   {
     slug: "architecture",
     name: "Architecture",
-    icon: "🏗️",
+    icon: Building2,
     intro:
       "Clean Architecture, folder structure, and dependency injection for Flutter apps that need to survive past the first release — not theory, actual production folder trees.",
     toolTags: ["Flutter", "Dart"],
@@ -50,7 +53,7 @@ export const LEARN_CATEGORIES: LearnCategory[] = [
   {
     slug: "data-storage",
     name: "Data & Storage",
-    icon: "💾",
+    icon: Database,
     intro:
       "Local persistence in Flutter — SharedPreferences, Hive, Isar, Drift — and which one to actually pick in 2026 now that two of the big names have gone quiet.",
     toolTags: ["Flutter", "Dart"],
@@ -59,7 +62,7 @@ export const LEARN_CATEGORIES: LearnCategory[] = [
   {
     slug: "api-networking",
     name: "API & Networking",
-    icon: "🌐",
+    icon: Globe,
     intro:
       "REST APIs, Dio, and JSON in Flutter — building a networking layer that doesn't turn into a pile of try/catch blocks scattered across your screens.",
     toolTags: ["Flutter", "Dart"],

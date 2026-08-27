@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import * as QRCode from "qrcode";
+import { QrCode } from "lucide-react";
 import { AdSlot } from "@bidev/ui";
 
 type QRType = "url" | "text" | "email" | "phone";
@@ -142,7 +143,7 @@ export function QRGenerator() {
               </>
             ) : (
               <div className="text-center">
-                <div className="text-5xl mb-4 opacity-20">⬛</div>
+                <QrCode className="w-12 h-12 mb-4 opacity-20" strokeWidth={1.5} />
                 <p className="text-sm text-ink-faint">Enter content above to generate</p>
               </div>
             )}

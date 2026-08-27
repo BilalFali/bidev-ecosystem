@@ -5,10 +5,10 @@ import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { breadcrumbJsonLd, faqJsonLd } from "@bidev/shared";
 import {
   resolveFilter,
-  getQuestionBySlug,
+  getInterviewQuestionBySlug,
   resolveRelatedQuestions,
   getAllFilterKeys,
-  INTERVIEW_QUESTIONS,
+  getAllInterviewQuestionSlugs,
 } from "@/lib/interview-questions";
 import { getAllArticles } from "@/lib/articles";
 import { TOOLS } from "@/lib/tools";
@@ -18,16 +18,17 @@ import { AdSlot } from "@bidev/ui";
 
 const { SITE_URL } = SITE_CONFIG;
 
-export function generateStaticParams() {
-  const keys = getAllFilterKeys();
-  const questionSlugs = INTERVIEW_QUESTIONS.map((q) => q.slug);
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const [keys, questionSlugs] = await Promise.all([getAllFilterKeys(), getAllInterviewQuestionSlugs()]);
   return [...keys, ...questionSlugs].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
 
-  const filter = resolveFilter(slug);
+  const filter = await resolveFilter(slug);
   if (filter) {
     return pageMetadata({
       title: `${filter.label} Flutter Interview Questions`,
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     });
   }
 
-  const question = getQuestionBySlug(slug);
+  const question = await getInterviewQuestionBySlug(slug);
   if (question) {
     return pageMetadata({
       title: question.question,
@@ -55,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function InterviewFilterOrQuestionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  const filter = resolveFilter(slug);
+  const filter = await resolveFilter(slug);
   if (filter) {
     const breadcrumb = breadcrumbJsonLd([
       { name: "Home", url: SITE_URL },
@@ -95,10 +96,10 @@ export default async function InterviewFilterOrQuestionPage({ params }: { params
     );
   }
 
-  const question = getQuestionBySlug(slug);
+  const question = await getInterviewQuestionBySlug(slug);
   if (!question) notFound();
 
-  const relatedQuestions = resolveRelatedQuestions(slug);
+  const relatedQuestions = await resolveRelatedQuestions(slug);
   const relatedTools = (question.relatedToolSlugs ?? [])
     .map((s) => TOOLS.find((t) => t.slug === s))
     .filter((t): t is (typeof TOOLS)[number] => Boolean(t));

@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useCallback } from "react";
+import { FileJson2, Zap, ShieldCheck, Package, AlertTriangle, Check } from "lucide-react";
 
 // ──────────────────────────────────────────────
 // Types
@@ -466,7 +467,7 @@ export function JsonToDart() {
           />
           {error && (
             <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-              <span className="shrink-0">⚠</span>
+              <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -479,9 +480,10 @@ export function JsonToDart() {
             {output && (
               <button
                 onClick={handleCopy}
-                className={`text-xs transition-colors ${copied ? "text-green-400" : "text-accent hover:text-accent-hover"}`}
+                className={`inline-flex items-center gap-1 text-xs transition-colors ${copied ? "text-green-400" : "text-accent hover:text-accent-hover"}`}
               >
-                {copied ? "✓ Copied!" : "Copy all"}
+                {copied && <Check className="w-3 h-3" strokeWidth={2.5} />}
+                {copied ? "Copied!" : "Copy all"}
               </button>
             )}
           </div>
@@ -491,7 +493,7 @@ export function JsonToDart() {
             </pre>
           ) : (
             <div className="h-[480px] flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-bg-card text-ink-faint gap-3">
-              <span className="text-4xl">🎯</span>
+              <FileJson2 className="w-9 h-9" strokeWidth={1.5} />
               <p className="text-sm">Paste JSON and click Convert</p>
               <button
                 onClick={() => { setInput(EXAMPLE_JSON); setTimeout(run, 0); }}
@@ -507,12 +509,12 @@ export function JsonToDart() {
       {/* Info cards */}
       <div className="mt-12 grid sm:grid-cols-3 gap-4">
         {[
-          { icon: "⚡", title: "Instant conversion", desc: "Handles nested objects, arrays, null values, and multiple classes in one click." },
-          { icon: "🛡️", title: "Null-safe output", desc: "Generated code is fully compatible with Dart's sound null safety introduced in Dart 2.12." },
-          { icon: "📦", title: "Multiple patterns", desc: "Plain Dart, json_serializable for codegen, or Freezed for immutable value types." },
+          { icon: Zap, title: "Instant conversion", desc: "Handles nested objects, arrays, null values, and multiple classes in one click." },
+          { icon: ShieldCheck, title: "Null-safe output", desc: "Generated code is fully compatible with Dart's sound null safety introduced in Dart 2.12." },
+          { icon: Package, title: "Multiple patterns", desc: "Plain Dart, json_serializable for codegen, or Freezed for immutable value types." },
         ].map((c) => (
           <div key={c.title} className="p-5 rounded-xl border border-border bg-bg-card">
-            <div className="text-2xl mb-2">{c.icon}</div>
+            <div className="mb-2"><c.icon className="w-6 h-6 text-accent" strokeWidth={1.75} /></div>
             <h3 className="font-semibold text-ink mb-1">{c.title}</h3>
             <p className="text-sm text-ink-muted">{c.desc}</p>
           </div>

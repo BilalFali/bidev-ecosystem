@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Check } from "lucide-react";
 
 interface Props {
   code: string;
@@ -34,13 +35,14 @@ export function SnippetView({ code, language }: Props) {
         </div>
         <button
           onClick={handleCopy}
-          className={`text-xs px-3 py-1 rounded-md border transition-all ${
+          className={`inline-flex items-center gap-1 text-xs px-3 py-1 rounded-md border transition-all ${
             copied
               ? "bg-green-500/15 border-green-500/30 text-green-400"
               : "bg-bg-card border-border text-ink-muted hover:text-ink hover:border-border-strong"
           }`}
         >
-          {copied ? "✓ Copied!" : "Copy"}
+          {copied && <Check className="w-3 h-3" strokeWidth={2.5} />}
+          {copied ? "Copied!" : "Copy"}
         </button>
       </div>
 

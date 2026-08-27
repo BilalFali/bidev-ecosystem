@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PartyPopper } from "lucide-react";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -37,7 +38,7 @@ export function NewsletterForm() {
   if (status === "success") {
     return (
       <div className="flex flex-col items-center gap-2 py-2">
-        <span className="text-2xl">🎉</span>
+        <PartyPopper className="w-6 h-6 text-accent" strokeWidth={1.75} />
         <p className="text-sm font-medium text-ink">You&apos;re subscribed!</p>
         <p className="text-xs text-ink-faint">We&apos;ll let you know when new content drops.</p>
       </div>

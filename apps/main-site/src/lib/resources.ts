@@ -1,3 +1,6 @@
+import type { LucideIcon } from "lucide-react";
+import { BookOpen, Package, Zap, Video, MessageCircle, Wrench, Book, Folder } from "lucide-react";
+
 export interface Resource {
   title: string;
   description: string;
@@ -18,6 +21,18 @@ export const RESOURCE_CATEGORIES = [
   "Tools",
   "Books",
 ];
+
+export const RESOURCE_CATEGORY_ICONS: Record<string, LucideIcon> = {
+  "Official Docs":     BookOpen,
+  "Packages":          Package,
+  "State Management":  Zap,
+  "YouTube & Courses": Video,
+  "Communities":       MessageCircle,
+  "Tools":             Wrench,
+  "Books":             Book,
+};
+
+export const RESOURCE_CATEGORY_FALLBACK_ICON: LucideIcon = Folder;
 
 export const RESOURCES: Resource[] = [
   // ── Official Docs ──────────────────────────────────────────────────────

@@ -1,11 +1,14 @@
 // Add new packages here — they appear on /packages automatically.
 // Stats (likes, pub_points, popularity) are fetched live from pub.dev at build time.
 
+import type { LucideIcon } from "lucide-react";
+import { Timer } from "lucide-react";
+
 export interface FlutterPackage {
   name: string;           // pub.dev package name (exact)
   description: string;    // shown on card
   githubUrl: string;      // GitHub repo
-  icon: string;           // emoji
+  icon: LucideIcon;
   category: PackageCategory;
   tags: string[];
   featured?: boolean;
@@ -24,7 +27,7 @@ export const PACKAGES: FlutterPackage[] = [
     name: "flutter_timer_button",
     description: "A customizable Flutter button with a built-in countdown timer. Useful for OTP resend, rate-limiting actions, and timed confirmations.",
     githubUrl: "https://github.com/BilalFali/flutter_timer_button",
-    icon: "⏱️",
+    icon: Timer,
     category: "UI Components",
     tags: ["Button", "Timer", "OTP", "UI"],
     featured: true,

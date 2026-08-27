@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { breadcrumbJsonLd } from "@bidev/shared";
-import { getAllProducts, CATEGORY_LABELS, type ProductCategory } from "@/lib/products";
+import { getAllProducts, CATEGORY_LABELS, CATEGORY_ICONS, type ProductCategory } from "@/lib/products";
 import { ProductsClient } from "./ProductsClient";
 import { AdSlot } from "@bidev/ui";
 
@@ -20,14 +20,12 @@ export const metadata: Metadata = pageMetadata({
 
 const CATEGORIES: {
   key: ProductCategory;
-  emoji: string;
   title: string;
   description: string;
   cta: string;
 }[] = [
   {
     key: "flutter-starter-kit",
-    emoji: "🚀",
     title: "Flutter Starter Kits",
     description:
       "Production-ready Flutter projects with Clean Architecture, Riverpod, Firebase, Authentication, Notifications, and best practices baked in.",
@@ -35,7 +33,6 @@ const CATEGORIES: {
   },
   {
     key: "ui-kit",
-    emoji: "🎨",
     title: "UI Kits",
     description:
       "Modern Flutter UI templates including authentication, onboarding, dashboards, profiles, settings, e-commerce, and reusable widgets.",
@@ -43,7 +40,6 @@ const CATEGORIES: {
   },
   {
     key: "ebook",
-    emoji: "📚",
     title: "Ebooks",
     description:
       "Professional ebooks covering Flutter, Firebase, AI integration, Clean Architecture, Riverpod, performance optimization, and developer productivity.",
@@ -94,7 +90,10 @@ export default async function ProductsPage() {
             className="group flex flex-col gap-4 p-6 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
           >
             <div className="flex items-center justify-between">
-              <span className="text-3xl">{cat.emoji}</span>
+              {(() => {
+                const Icon = CATEGORY_ICONS[cat.key];
+                return <Icon className="w-8 h-8 text-accent" strokeWidth={1.75} />;
+              })()}
               {counts[cat.key] ? (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">
                   {counts[cat.key]} {counts[cat.key] === 1 ? "product" : "products"}

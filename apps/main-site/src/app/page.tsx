@@ -3,9 +3,9 @@ import { getAllArticles } from "@/lib/articles";
 import { slugify } from "@/lib/utils";
 import { TOOLS, type Tool } from "@/lib/tools";
 import { SNIPPETS } from "@/lib/snippets";
-import { RESOURCES, RESOURCE_CATEGORIES } from "@/lib/resources";
+import { RESOURCES, RESOURCE_CATEGORIES, RESOURCE_CATEGORY_ICONS, RESOURCE_CATEGORY_FALLBACK_ICON } from "@/lib/resources";
 import { LEARN_CATEGORIES } from "@/lib/learn";
-import { INTERVIEW_QUESTIONS, INTERVIEW_CATEGORIES, DIFFICULTIES } from "@/lib/interview-questions";
+import { getAllInterviewQuestions, INTERVIEW_CATEGORIES, DIFFICULTIES } from "@/lib/interview-questions";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArticleCard } from "@/components/blog/ArticleCard";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
@@ -18,18 +18,8 @@ const PROBLEM_SOLVING_CATEGORY_SLUGS = ["architecture", "data-storage", "api-net
 
 export const revalidate = 60;
 
-const CATEGORY_ICONS: Record<string, string> = {
-  "Official Docs":     "📚",
-  "Packages":          "📦",
-  "State Management":  "⚡",
-  "YouTube & Courses": "🎥",
-  "Communities":       "💬",
-  "Tools":             "🛠️",
-  "Books":             "📖",
-};
-
 export default async function HomePage() {
-  const allArticles  = await getAllArticles();
+  const [allArticles, interviewQuestions] = await Promise.all([getAllArticles(), getAllInterviewQuestions()]);
   const latest       = allArticles.slice(0, 6);
   const resourceCats = RESOURCE_CATEGORIES.slice(1);
   const popularTools = TOOLS.filter((t) => t.popular);
@@ -114,7 +104,7 @@ export default async function HomePage() {
               href={`/learn/${cat.slug}`}
               className="group flex flex-col gap-2 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
             >
-              <span className="text-2xl">{cat.icon}</span>
+              <cat.icon className="w-6 h-6 text-accent" strokeWidth={1.75} />
               <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm">{cat.name}</h3>
               <p className="text-xs text-ink-faint line-clamp-2">{cat.intro}</p>
             </Link>
@@ -214,7 +204,7 @@ export default async function HomePage() {
               <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Interview Prep</p>
               <h2 className="text-xl font-bold text-ink">Flutter Interview Questions &amp; Answers</h2>
               <p className="text-sm text-ink-muted mt-1">
-                {INTERVIEW_QUESTIONS.length}+ questions across {INTERVIEW_CATEGORIES.length} categories, from {DIFFICULTIES[0]} to {DIFFICULTIES[DIFFICULTIES.length - 1]}.
+                {interviewQuestions.length}+ questions across {INTERVIEW_CATEGORIES.length} categories, from {DIFFICULTIES[0]} to {DIFFICULTIES[DIFFICULTIES.length - 1]}.
               </p>
             </div>
             <Link
@@ -255,7 +245,10 @@ export default async function HomePage() {
                 href={`/resources#${slugify(cat)}`}
                 className="group flex flex-col gap-2 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
               >
-                <span className="text-2xl">{CATEGORY_ICONS[cat] ?? "📁"}</span>
+                {(() => {
+                  const Icon = RESOURCE_CATEGORY_ICONS[cat] ?? RESOURCE_CATEGORY_FALLBACK_ICON;
+                  return <Icon className="w-6 h-6 text-accent" strokeWidth={1.75} />;
+                })()}
                 <h3 className="font-semibold text-ink group-hover:text-accent transition-colors text-sm">{cat}</h3>
                 <p className="text-xs text-ink-faint">{count} resources</p>
               </Link>
@@ -291,7 +284,7 @@ function BentoCard({ tool }: { tool: Tool }) {
       <span className="absolute top-5 right-5 text-xs px-2.5 py-1 rounded-full bg-accent/15 text-accent border border-accent/25">
         Popular
       </span>
-      <span className="text-4xl">{tool.icon}</span>
+      <tool.icon className="w-9 h-9 text-accent" strokeWidth={1.75} />
       <div className="flex flex-col gap-2 flex-1">
         <h3 className="font-bold text-ink text-base group-hover:text-accent transition-colors">
           {tool.title}

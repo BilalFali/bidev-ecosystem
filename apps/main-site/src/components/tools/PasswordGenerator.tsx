@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { KeyRound, Check } from "lucide-react";
 import { AdSlot } from "@bidev/ui";
 
 const CHARS = {
@@ -99,7 +100,7 @@ export function PasswordGenerator() {
                 >
                   {labels[k]}
                   <span className={`w-4 h-4 rounded border flex items-center justify-center ${opts[k] ? "bg-accent border-accent" : "border-border"}`}>
-                    {opts[k] && <span className="text-bg text-[10px]">✓</span>}
+                    {opts[k] && <Check className="w-3 h-3 text-bg" strokeWidth={3} />}
                   </span>
                 </button>
               );
@@ -115,7 +116,7 @@ export function PasswordGenerator() {
         <div className="flex flex-col gap-3">
           {pws.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center gap-3 p-8 rounded-xl border border-border bg-bg-card min-h-[300px]">
-              <span className="text-4xl opacity-20">🔐</span>
+              <KeyRound className="w-9 h-9 opacity-20" strokeWidth={1.5} />
               <p className="text-sm text-ink-faint">Click "Generate Passwords"</p>
             </div>
           ) : (

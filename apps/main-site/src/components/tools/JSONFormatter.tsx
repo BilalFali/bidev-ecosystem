@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState, useCallback } from "react";
+import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { AdSlot } from "@bidev/ui";
 
 type Status = "idle" | "valid" | "invalid";
@@ -48,12 +49,14 @@ export function JSONFormatter() {
       {/* Status bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
             result.status === "valid"   ? "bg-green-500/10 text-green-400 border-green-500/25" :
             result.status === "invalid" ? "bg-red-500/10 text-red-400 border-red-500/25" :
             "bg-bg-elevated text-ink-muted border-border"
           }`}>
-            {result.status === "valid" ? "✓ Valid JSON" : result.status === "invalid" ? "✗ Invalid JSON" : "Paste JSON below"}
+            {result.status === "valid" && <CheckCircle2 className="w-3.5 h-3.5" />}
+            {result.status === "invalid" && <XCircle className="w-3.5 h-3.5" />}
+            {result.status === "valid" ? "Valid JSON" : result.status === "invalid" ? "Invalid JSON" : "Paste JSON below"}
           </span>
           {result.status === "valid" && (
             <>
@@ -70,7 +73,7 @@ export function JSONFormatter() {
 
       {result.error && (
         <div className="flex items-start gap-2 p-3 mb-4 rounded-lg border border-red-500/25 bg-red-500/8 text-red-400 text-xs">
-          <span>⚠</span><span className="font-mono">{result.error}</span>
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" /><span className="font-mono">{result.error}</span>
         </div>
       )}
 

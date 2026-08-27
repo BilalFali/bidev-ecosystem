@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, FileText, Package, Rocket, Palette, BookOpen } from "lucide-react";
 import type { Product, ProductCategory } from "@/lib/products-config";
-import { CATEGORY_LABELS, formatPrice } from "@/lib/products-config";
+import { CATEGORY_LABELS, CATEGORY_ICONS, formatPrice } from "@/lib/products-config";
 
 const BADGE_STYLES: Record<string, string> = {
   new:        "bg-accent/10 text-accent border border-accent/20",
@@ -13,9 +13,15 @@ const BADGE_STYLES: Record<string, string> = {
   updated:    "bg-green-500/10 text-green-400 border border-green-500/20",
 };
 
-function deliveryLabel(category: ProductCategory) {
-  if (category === "ebook") return "📄 PDF";
-  return "📦 ZIP + 🥈 GitHub";
+function DeliveryLabel({ category }: { category: ProductCategory }) {
+  const Icon = category === "ebook" ? FileText : Package;
+  const label = category === "ebook" ? "PDF" : "ZIP + GitHub";
+  return (
+    <span className="inline-flex items-center gap-1">
+      <Icon className="w-3 h-3" strokeWidth={1.75} />
+      {label}
+    </span>
+  );
 }
 
 function ProductCard({ product }: { product: Product }) {
@@ -35,8 +41,11 @@ function ProductCard({ product }: { product: Product }) {
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-5xl opacity-20 select-none">
-            {product.category === "flutter-starter-kit" ? "🚀" : product.category === "ui-kit" ? "🎨" : "📚"}
+          <div className="w-full h-full flex items-center justify-center opacity-20 select-none">
+            {(() => {
+              const Icon = CATEGORY_ICONS[product.category];
+              return <Icon className="w-14 h-14" strokeWidth={1.5} />;
+            })()}
           </div>
         )}
         {product.badge && (
@@ -77,7 +86,7 @@ function ProductCard({ product }: { product: Product }) {
               <span className="text-xs text-ink-faint line-through">{formatPrice(product.original_price!)}</span>
             )}
           </div>
-          <span className="text-[11px] text-ink-faint">{deliveryLabel(product.category)}</span>
+          <span className="text-[11px] text-ink-faint"><DeliveryLabel category={product.category} /></span>
         </div>
       </div>
     </Link>
@@ -85,10 +94,10 @@ function ProductCard({ product }: { product: Product }) {
 }
 
 const FILTERS = [
-  { key: "all",                 label: "All" },
-  { key: "flutter-starter-kit", label: "🚀 Starter Kits" },
-  { key: "ui-kit",              label: "🎨 UI Kits" },
-  { key: "ebook",               label: "📚 Ebooks" },
+  { key: "all",                 label: "All",           icon: null },
+  { key: "flutter-starter-kit", label: "Starter Kits",  icon: Rocket },
+  { key: "ui-kit",              label: "UI Kits",       icon: Palette },
+  { key: "ebook",               label: "Ebooks",        icon: BookOpen },
 ] as const;
 
 export function ProductsClient({ products }: { products: Product[] }) {
@@ -125,12 +134,13 @@ export function ProductsClient({ products }: { products: Product[] }) {
             <button
               key={f.key}
               onClick={() => setActiveFilter(f.key)}
-              className={`px-3 py-1.5 rounded-lg text-sm transition-colors whitespace-nowrap ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors whitespace-nowrap ${
                 activeFilter === f.key
                   ? "bg-accent/10 text-accent border border-accent/20 font-medium"
                   : "text-ink-muted hover:text-ink hover:bg-bg-elevated border border-transparent"
               }`}
             >
+              {f.icon && <f.icon className="w-3.5 h-3.5" strokeWidth={1.75} />}
               {f.label}
             </button>
           ))}

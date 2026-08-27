@@ -213,6 +213,66 @@ export interface GithubAccessRequest {
   updated_at: string;
 }
 
+// ─── Interview Questions ───────────────────────────────────────────────────
+
+export type InterviewDifficulty = "Beginner" | "Intermediate" | "Advanced";
+export type InterviewQuestionStatus = "draft" | "published";
+
+// Category taxonomy stays static in code (mirrors apps/main-site/src/lib/interview-questions.ts
+// INTERVIEW_CATEGORIES) — kept in sync manually since it rarely changes.
+export const INTERVIEW_CATEGORIES = [
+  "Flutter Fundamentals",
+  "Flutter Widgets",
+  "Dart Questions",
+  "State Management",
+  "Async Programming",
+  "Navigation & Routing",
+  "Flutter Performance",
+  "Testing",
+  "Firebase Integration",
+  "Architecture",
+  "Advanced Flutter",
+] as const;
+
+export interface InterviewQuestion {
+  id: string;
+  slug: string;
+  question: string;
+  category: string;
+  tags: string[];
+  difficulty: InterviewDifficulty;
+  short_answer: string;
+  explanation: string;
+  code_language: string | null;
+  code_example: string | null;
+  common_mistakes: string[] | null;
+  interview_tips: string[] | null;
+  related_slugs: string[] | null;
+  related_article_slugs: string[] | null;
+  related_tool_slugs: string[] | null;
+  status: InterviewQuestionStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface InterviewQuestionFormData {
+  slug: string;
+  question: string;
+  category: string;
+  tags: string;
+  difficulty: InterviewDifficulty;
+  short_answer: string;
+  explanation: string;
+  code_language: string;
+  code_example: string;
+  common_mistakes: string;
+  interview_tips: string;
+  related_slugs: string;
+  related_article_slugs: string;
+  related_tool_slugs: string;
+  status: InterviewQuestionStatus;
+}
+
 // ─── Dashboard ───────────────────────────────────────────────────────────────
 
 export interface DashboardStats {

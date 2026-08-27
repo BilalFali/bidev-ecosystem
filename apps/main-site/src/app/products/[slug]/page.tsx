@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, Download, Github, BookOpen } from "lucide-react";
+import { Check, Download, Github, BookOpen, X } from "lucide-react";
 import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { breadcrumbJsonLd, productJsonLd, faqJsonLd } from "@bidev/shared";
 import {
@@ -11,6 +11,7 @@ import {
   getProductFaqs,
   getRelatedProducts,
   CATEGORY_LABELS,
+  CATEGORY_ICONS,
   formatPrice,
 } from "@/lib/products";
 import { AdSlot } from "@bidev/ui";
@@ -153,7 +154,7 @@ export default async function ProductDetailPage({
               <ul className="flex flex-col gap-2">
                 {product.whats_included.map((item, i) => (
                   <li key={i} className="flex items-start gap-2.5">
-                    <span className="text-accent text-sm shrink-0">✦</span>
+                    <Check className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                     <span className="text-sm text-ink-muted">{item}</span>
                   </li>
                 ))}
@@ -245,7 +246,7 @@ export default async function ProductDetailPage({
                       "No GitHub access",
                     ].map((item) => (
                       <li key={item} className="flex items-center gap-2 text-xs text-ink-faint">
-                        <span className="w-3 h-3 shrink-0 text-center leading-none">✕</span>
+                        <X className="w-3 h-3 shrink-0" />
                         {item}
                       </li>
                     ))}
@@ -351,7 +352,7 @@ export default async function ProductDetailPage({
                     </li>
                   ))}
                   <li className="flex items-center gap-2 text-xs text-ink-faint">
-                    <span className="w-3 h-3 shrink-0 text-center leading-none">✕</span>
+                    <X className="w-3 h-3 shrink-0" />
                     Commercial redistribution not allowed
                   </li>
                 </ul>
@@ -400,8 +401,11 @@ export default async function ProductDetailPage({
                     className="w-14 h-14 rounded-lg object-cover border border-border shrink-0"
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-lg bg-bg-elevated border border-border flex items-center justify-center text-xl shrink-0">
-                    {rel.category === "flutter-starter-kit" ? "🚀" : rel.category === "ui-kit" ? "🎨" : "📚"}
+                  <div className="w-14 h-14 rounded-lg bg-bg-elevated border border-border flex items-center justify-center shrink-0">
+                    {(() => {
+                      const Icon = CATEGORY_ICONS[rel.category];
+                      return <Icon className="w-6 h-6 text-ink-faint" strokeWidth={1.75} />;
+                    })()}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
