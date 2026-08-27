@@ -76,7 +76,7 @@ export default async function InterviewFilterOrQuestionPage({ params }: { params
           / {filter.label}
         </nav>
         <h1 className="text-3xl font-bold text-ink mb-2">{filter.label} Flutter Interview Questions</h1>
-        <p className="text-ink-muted mb-8">{filter.questions.length} questions</p>
+        <p className="text-ink-muted mb-10 pb-8 border-b border-border">{filter.questions.length} questions</p>
 
         <AdSlot type="banner" className="mb-8" />
 

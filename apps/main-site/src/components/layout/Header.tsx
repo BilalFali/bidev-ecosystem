@@ -6,14 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { Search, X, Menu } from "lucide-react";
 
 const NAV = [
-  { label: "Articles", href: "/blog" },
+  { label: "Home", href: "/" },
+  { label: "Learn", href: "/learn" },
   { label: "Tools", href: "/tools" },
+  { label: "Interview", href: "/flutter-interview-questions" },
   { label: "Resources", href: "/resources" },
-  { label: "Snippets", href: "/snippets" },
-  { label: "Interview Prep", href: "/flutter-interview-questions" },
-  { label: "Jobs",      href: "/jobs"      },
-  { label: "Products",  href: "/products"  },
-  { label: "Packages",  href: "/packages"  },
 ];
 
 export function Header() {
@@ -48,7 +45,7 @@ export function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/blog?q=${encodeURIComponent(query.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
       setSearching(false);
       setQuery("");
     }
@@ -95,7 +92,7 @@ export function Header() {
                     ref={searchRef}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search articles…"
+                    placeholder="Search everything…"
                     className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-faint outline-none"
                   />
                   <button type="button" onClick={() => { setSearching(false); setQuery(""); }}>
@@ -110,7 +107,7 @@ export function Header() {
                 aria-label="Search"
               >
                 <Search className="w-3.5 h-3.5" />
-                <span className="hidden lg:block text-xs">Search articles, topics…</span>
+                <span className="hidden lg:block text-xs">Search guides, tools, questions…</span>
                 <kbd className="hidden lg:block text-[10px] px-1.5 py-0.5 rounded bg-bg-card border border-border font-mono">⌘K</kbd>
               </button>
             )}
@@ -145,7 +142,7 @@ export function Header() {
                   ref={searchRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search articles, topics…"
+                  placeholder="Search guides, tools, questions…"
                   className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-faint outline-none"
                 />
               </div>

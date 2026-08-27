@@ -17,6 +17,8 @@ type DbRow = {
   updated_at: string;
   reading_time: number | null;
   tags: { id: string; name: string; slug: string }[] | null;
+  category_name: string | null;
+  category_slug: string | null;
 };
 
 function dbRowToArticle(a: DbRow): Article {
@@ -24,18 +26,20 @@ function dbRowToArticle(a: DbRow): Article {
   const tags = rawTags.map((t) => t.name);
 
   return {
-    slug:        a.slug,
-    title:       a.title,
-    summary:     a.excerpt ?? "",
-    publishedAt: a.published_at ?? a.created_at,
-    updatedAt:   a.updated_at,
-    image:       a.cover_url ?? undefined,
+    slug:         a.slug,
+    title:        a.title,
+    summary:      a.excerpt ?? "",
+    publishedAt:  a.published_at ?? a.created_at,
+    updatedAt:    a.updated_at,
+    image:        a.cover_url ?? undefined,
     tags,
-    author:      "Bilal Fali",
-    readingTime: a.reading_time ?? 5,
-    draft:       false,
-    content:     a.content,
-    source:      "db",
+    author:       "Bilal Fali",
+    readingTime:  a.reading_time ?? 5,
+    draft:        false,
+    content:      a.content,
+    source:       "db",
+    category:     a.category_name ?? undefined,
+    categorySlug: a.category_slug ?? undefined,
   };
 }
 
@@ -47,7 +51,7 @@ export async function getAllArticles(): Promise<Article[]> {
 
   const { data, error } = await supabase
     .from("articles_with_relations")
-    .select("id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags")
+    .select("id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags,category_name,category_slug")
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
@@ -71,7 +75,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   if (supabase) {
     const { data } = await supabase
       .from("articles_with_relations")
-      .select("id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags")
+      .select("id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags,category_name,category_slug")
       .eq("slug", slug)
       .eq("status", "published")
       .maybeSingle();
@@ -84,6 +88,11 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   if (mdx) return { ...mdx, source: "mdx" };
 
   return null;
+}
+
+export async function getArticlesByCategorySlug(categorySlug: string): Promise<Article[]> {
+  const all = await getAllArticles();
+  return all.filter((a) => a.categorySlug === categorySlug);
 }
 
 export async function getAllArticleSlugs(): Promise<string[]> {

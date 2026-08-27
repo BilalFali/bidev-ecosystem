@@ -7,6 +7,7 @@ import { INTERVIEW_QUESTIONS, getAllFilterKeys } from "@/lib/interview-questions
 import { getAllJobs } from "@/lib/jobs";
 import { getAllProducts } from "@/lib/products";
 import { PACKAGES } from "@/lib/packages";
+import { LEARN_CATEGORIES } from "@/lib/learn";
 
 export const revalidate = 3600;
 
@@ -19,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE,                                  lastModified: now, changeFrequency: "weekly",  priority: 1.0 },
     { url: `${BASE}/blog`,                        lastModified: now, changeFrequency: "daily",   priority: 0.9 },
     { url: `${BASE}/topics`,                      lastModified: now, changeFrequency: "daily",   priority: 0.9 },
+    { url: `${BASE}/learn`,                       lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/tools`,                       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/snippets`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/resources`,                   lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
@@ -36,6 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/products?category=ui-kit`,    lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/products?category=ebook`,     lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
   ];
+
+  const learnPages: MetadataRoute.Sitemap = LEARN_CATEGORIES.map((c) => ({
+    url:             `${BASE}/learn/${c.slug}`,
+    lastModified:    now,
+    changeFrequency: "weekly" as const,
+    priority:        0.7,
+  }));
 
   const [jobs, products] = await Promise.all([getAllJobs(), getAllProducts()]);
   const productPages: MetadataRoute.Sitemap = products.map((p) => ({
@@ -122,6 +131,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...learnPages,
     ...productPages,
     ...packagePages,
     ...toolPages,

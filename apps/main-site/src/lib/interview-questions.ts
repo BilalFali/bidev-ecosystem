@@ -8,7 +8,7 @@ export interface InterviewQuestion {
   difficulty: Difficulty;
   shortAnswer: string;
   explanation: string;
-  codeExample?: { language: "dart" | "yaml"; code: string };
+  codeExample?: { language: "dart" | "yaml" | "bash"; code: string };
   commonMistakes?: string[];
   interviewTips?: string[];
   relatedSlugs?: string[];
@@ -24,9 +24,13 @@ export interface InterviewCategory {
 
 export const INTERVIEW_CATEGORIES: InterviewCategory[] = [
   { name: "Flutter Fundamentals", slug: "fundamentals", icon: "🧩" },
+  { name: "Flutter Widgets", slug: "widgets", icon: "🧱" },
   { name: "Dart Questions", slug: "dart", icon: "🎯" },
   { name: "State Management", slug: "state-management", icon: "⚡" },
+  { name: "Async Programming", slug: "async-programming", icon: "⏱️" },
+  { name: "Navigation & Routing", slug: "navigation", icon: "🧭" },
   { name: "Flutter Performance", slug: "performance", icon: "🚀" },
+  { name: "Testing", slug: "testing", icon: "🧪" },
   { name: "Firebase Integration", slug: "firebase", icon: "🔥" },
   { name: "Architecture", slug: "architecture", icon: "🏗️" },
   { name: "Advanced Flutter", slug: "advanced-flutter", icon: "🧠" },

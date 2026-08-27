@@ -9,6 +9,8 @@ export interface PostMeta {
   author?: string;
   readingTime?: number;
   draft?: boolean;
+  category?: string;
+  categorySlug?: string;
 }
 
 export interface Post extends PostMeta {

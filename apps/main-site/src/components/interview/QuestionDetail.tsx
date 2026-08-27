@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { InterviewQuestion } from "@/lib/interview-questions";
 import { DifficultyBadge } from "./DifficultyBadge";
 import { QuestionCard } from "./QuestionCard";
+import { CodeBlock } from "./CodeBlock";
 import { RelatedTools } from "@/components/tools/RelatedTools";
 import type { Tool } from "@/lib/tools";
 
@@ -46,9 +47,7 @@ export function QuestionDetail({
       {question.codeExample && (
         <div className="mb-8">
           <p className="text-xs font-semibold uppercase tracking-widest text-ink-faint mb-2">Code Example</p>
-          <pre className="px-4 py-3 rounded-xl bg-bg-card border border-border text-xs font-mono text-ink-muted overflow-x-auto whitespace-pre">
-            {question.codeExample.code}
-          </pre>
+          <CodeBlock code={question.codeExample.code} language={question.codeExample.language} />
         </div>
       )}
 
