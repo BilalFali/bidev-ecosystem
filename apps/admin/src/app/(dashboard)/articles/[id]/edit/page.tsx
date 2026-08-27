@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ArticleEditor } from "@/components/articles/ArticleEditor";
-import type { ArticleWithRelations, Category, Tag } from "@/lib/types/database";
+import type { ArticleWithRelations, Category, Tag, TroubleshootingCategory } from "@/lib/types/database";
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -20,10 +20,12 @@ export default async function EditArticlePage({ params }: Props) {
     { data: article },
     { data: categories },
     { data: tags },
+    { data: troubleshootingCategories },
   ] = await Promise.all([
     supabase.from("articles_with_relations").select("*").eq("id", id).single(),
     supabase.from("categories").select("*").order("name"),
     supabase.from("tags").select("*").order("name"),
+    supabase.from("troubleshooting_categories").select("*").order("sort_order"),
   ]);
 
   if (!article) notFound();
@@ -34,6 +36,7 @@ export default async function EditArticlePage({ params }: Props) {
         article={article as ArticleWithRelations}
         categories={(categories ?? []) as Category[]}
         tags={(tags ?? []) as Tag[]}
+        troubleshootingCategories={(troubleshootingCategories ?? []) as TroubleshootingCategory[]}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import { getAllJobs } from "@/lib/jobs";
 import { getAllProducts } from "@/lib/products";
 import { PACKAGES } from "@/lib/packages";
 import { LEARN_CATEGORIES } from "@/lib/learn";
+import { TROUBLESHOOTING_CATEGORIES } from "@/lib/troubleshooting";
 
 export const revalidate = 3600;
 
@@ -21,6 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/blog`,                        lastModified: now, changeFrequency: "daily",   priority: 0.9 },
     { url: `${BASE}/topics`,                      lastModified: now, changeFrequency: "daily",   priority: 0.9 },
     { url: `${BASE}/learn`,                       lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
+    { url: `${BASE}/troubleshooting`,              lastModified: now, changeFrequency: "daily",   priority: 0.9 },
     { url: `${BASE}/tools`,                       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/snippets`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/resources`,                   lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
@@ -44,6 +46,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified:    now,
     changeFrequency: "weekly" as const,
     priority:        0.7,
+  }));
+
+  const troubleshootingPages: MetadataRoute.Sitemap = TROUBLESHOOTING_CATEGORIES.map((c) => ({
+    url:             `${BASE}/troubleshooting/${c.slug}`,
+    lastModified:    now,
+    changeFrequency: "weekly" as const,
+    priority:        0.8,
   }));
 
   const [jobs, products] = await Promise.all([getAllJobs(), getAllProducts()]);
@@ -134,6 +143,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticPages,
     ...learnPages,
+    ...troubleshootingPages,
     ...productPages,
     ...packagePages,
     ...toolPages,

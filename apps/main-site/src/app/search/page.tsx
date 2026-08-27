@@ -23,13 +23,24 @@ export default async function SearchPage() {
   const [articles, interviewQuestions] = await Promise.all([getAllArticles(), getAllInterviewQuestions()]);
 
   const items: SearchItem[] = [
-    ...articles.map((a) => ({
-      type: "Article" as const,
-      title: a.title,
-      description: a.summary,
-      category: a.category ?? "Article",
-      href: `/blog/${a.slug}`,
-    })),
+    ...articles.map((a) =>
+      a.isTroubleshooting
+        ? {
+            type: "Troubleshooting" as const,
+            title: a.title,
+            description: a.summary || a.problem || "",
+            category: a.troubleshootingCategory ?? "Troubleshooting",
+            href: `/blog/${a.slug}`,
+            keywords: [a.errorMessage, a.problem, ...(a.symptoms ?? [])].filter(Boolean).join(" "),
+          }
+        : {
+            type: "Article" as const,
+            title: a.title,
+            description: a.summary,
+            category: a.category ?? "Article",
+            href: `/blog/${a.slug}`,
+          }
+    ),
     ...TOOLS.map((t) => ({
       type: "Tool" as const,
       title: t.title,

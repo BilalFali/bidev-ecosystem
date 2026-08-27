@@ -6,11 +6,12 @@ import { ArrowLeft, Save, Globe, EyeOff, Check } from "lucide-react";
 import Link from "next/link";
 import { TipTapEditor } from "@/components/editor/TipTapEditor";
 import { EditorSidebar } from "./EditorSidebar";
+import { TroubleshootingFields } from "./TroubleshootingFields";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
 import { Modal } from "@/components/ui/Modal";
 import { slugify, estimateReadingTime } from "@/lib/utils";
-import type { ArticleFormData, ArticleWithRelations, Category, Tag } from "@/lib/types/database";
+import type { ArticleFormData, ArticleWithRelations, Category, Tag, TroubleshootingCategory } from "@/lib/types/database";
 
 const EMPTY_FORM: ArticleFormData = {
   title: "",
@@ -26,22 +27,41 @@ const EMPTY_FORM: ArticleFormData = {
   seo_description: "",
   seo_keywords: [],
   featured: false,
+
+  is_troubleshooting: false,
+  troubleshooting_category_id: "",
+  error_message: "",
+  problem: "",
+  symptoms: [],
+  causes: [],
+  quick_fix: "",
+  solutions: [],
+  verification_steps: [],
+  common_mistakes: [],
+  affected_platforms: [],
+  technologies: [],
+  difficulty: "",
+  related_problems: [],
+  related_guides: [],
 };
 
 interface ArticleEditorProps {
   article?: ArticleWithRelations;
   categories: Category[];
   tags: Tag[];
+  troubleshootingCategories: TroubleshootingCategory[];
+  defaultTroubleshooting?: boolean;
 }
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
-export function ArticleEditor({ article, categories, tags }: ArticleEditorProps) {
+export function ArticleEditor({ article, categories, tags, troubleshootingCategories, defaultTroubleshooting }: ArticleEditorProps) {
   const router = useRouter();
   const isNew  = !article;
 
   const [form,       setForm]       = useState<ArticleFormData>(() => ({
     ...EMPTY_FORM,
+    ...(defaultTroubleshooting ? { is_troubleshooting: true } : {}),
     ...(article ? {
       title:           article.title,
       slug:            article.slug,
@@ -56,6 +76,22 @@ export function ArticleEditor({ article, categories, tags }: ArticleEditorProps)
       seo_description: article.seo_description ?? "",
       seo_keywords:    article.seo_keywords ?? [],
       featured:        article.featured,
+
+      is_troubleshooting:          article.is_troubleshooting,
+      troubleshooting_category_id: article.troubleshooting_category_id ?? "",
+      error_message:               article.error_message ?? "",
+      problem:                     article.problem ?? "",
+      symptoms:                    article.symptoms ?? [],
+      causes:                      article.causes ?? [],
+      quick_fix:                   article.quick_fix ?? "",
+      solutions:                   article.solutions ?? [],
+      verification_steps:          article.verification_steps ?? [],
+      common_mistakes:             article.common_mistakes ?? [],
+      affected_platforms:          article.affected_platforms ?? [],
+      technologies:                article.technologies ?? [],
+      difficulty:                  article.difficulty ?? "",
+      related_problems:            article.related_problems ?? [],
+      related_guides:              article.related_guides ?? [],
     } : {}),
   }));
 
@@ -224,6 +260,11 @@ export function ArticleEditor({ article, categories, tags }: ArticleEditorProps)
               onChange={html => setField("content", html)}
               placeholder="Start writing your article…"
             />
+
+            {/* Troubleshooting-specific fields */}
+            {form.is_troubleshooting && (
+              <TroubleshootingFields form={form} onChange={setField} />
+            )}
           </div>
         </div>
 
@@ -231,6 +272,7 @@ export function ArticleEditor({ article, categories, tags }: ArticleEditorProps)
         <EditorSidebar
           form={form}
           onChange={setField}
+          troubleshootingCategories={troubleshootingCategories}
           categories={categories}
           tags={tags}
           isNew={isNew}

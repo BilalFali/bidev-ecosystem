@@ -20,6 +20,7 @@ import { ShareButtons } from "@/components/blog/ShareButtons";
 import { Comments } from "@/components/blog/Comments";
 import { ViewTracker } from "@/components/blog/ViewTracker";
 import { BuyMeCoffee } from "@/components/BuyMeCoffee";
+import { TroubleshootingArticle } from "@/components/blog/TroubleshootingArticle";
 import { articleJsonLd } from "@bidev/shared";
 
 export const revalidate  = 60;
@@ -85,15 +86,58 @@ export default async function BlogPostPage({
     wordCount,
   });
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
-      { "@type": "ListItem", position: 2, name: "Blog",  item: `${SITE_URL}/blog` },
-      { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
-    ],
-  };
+  const breadcrumbSchema = post.isTroubleshooting
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Troubleshooting", item: `${SITE_URL}/troubleshooting` },
+          ...(post.troubleshootingCategorySlug
+            ? [{ "@type": "ListItem", position: 3, name: post.troubleshootingCategory, item: `${SITE_URL}/troubleshooting/${post.troubleshootingCategorySlug}` }]
+            : []),
+          { "@type": "ListItem", position: post.troubleshootingCategorySlug ? 4 : 3, name: post.title, item: postUrl },
+        ],
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home",  item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Blog",  item: `${SITE_URL}/blog` },
+          { "@type": "ListItem", position: 3, name: post.title, item: postUrl },
+        ],
+      };
+
+  if (post.isTroubleshooting) {
+    const resolveLinks = async (slugs?: string[]) => {
+      if (!slugs || slugs.length === 0) return [];
+      const resolved = await Promise.all(slugs.map((s) => getArticleBySlug(s)));
+      return resolved
+        .filter((a): a is NonNullable<typeof a> => Boolean(a))
+        .map((a) => ({ slug: a.slug, title: a.title }));
+    };
+
+    const [relatedProblems, relatedGuides] = await Promise.all([
+      resolveLinks(post.relatedProblems),
+      resolveLinks(post.relatedGuides),
+    ]);
+
+    return (
+      <>
+        <ReadingProgress />
+        <ViewTracker slug={post.slug} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+        <TroubleshootingArticle
+          post={post}
+          postUrl={postUrl}
+          relatedProblems={relatedProblems}
+          relatedGuides={relatedGuides}
+        />
+      </>
+    );
+  }
 
   return (
     <>

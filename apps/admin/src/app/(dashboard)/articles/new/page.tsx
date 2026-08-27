@@ -1,15 +1,21 @@
 import { createClient } from "@/lib/supabase/server";
 import { ArticleEditor } from "@/components/articles/ArticleEditor";
-import type { Category, Tag } from "@/lib/types/database";
+import type { Category, Tag, TroubleshootingCategory } from "@/lib/types/database";
 
 export const metadata = { title: "New Article" };
 
-export default async function NewArticlePage() {
+export default async function NewArticlePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ troubleshooting?: string }>;
+}) {
   const supabase = await createClient();
+  const { troubleshooting } = await searchParams;
 
-  const [{ data: categories }, { data: tags }] = await Promise.all([
+  const [{ data: categories }, { data: tags }, { data: troubleshootingCategories }] = await Promise.all([
     supabase.from("categories").select("*").order("name"),
     supabase.from("tags").select("*").order("name"),
+    supabase.from("troubleshooting_categories").select("*").order("sort_order"),
   ]);
 
   return (
@@ -17,6 +23,8 @@ export default async function NewArticlePage() {
       <ArticleEditor
         categories={(categories ?? []) as Category[]}
         tags={(tags ?? []) as Tag[]}
+        troubleshootingCategories={(troubleshootingCategories ?? []) as TroubleshootingCategory[]}
+        defaultTroubleshooting={troubleshooting === "1"}
       />
     </div>
   );

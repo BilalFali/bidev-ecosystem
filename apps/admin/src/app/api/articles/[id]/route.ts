@@ -38,6 +38,8 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
       excerpt:         articleData.excerpt         || null,
       seo_title:       articleData.seo_title       || null,
       seo_description: articleData.seo_description || null,
+      troubleshooting_category_id: articleData.troubleshooting_category_id || null,
+      difficulty:                  articleData.difficulty                  || null,
     })
     .eq("id", id)
     .select()

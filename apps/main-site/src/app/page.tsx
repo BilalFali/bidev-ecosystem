@@ -5,28 +5,25 @@ import { TOOLS, type Tool } from "@/lib/tools";
 import { SNIPPETS } from "@/lib/snippets";
 import { RESOURCES, RESOURCE_CATEGORIES, RESOURCE_CATEGORY_ICONS, RESOURCE_CATEGORY_FALLBACK_ICON } from "@/lib/resources";
 import { LEARN_CATEGORIES } from "@/lib/learn";
+import { getFeaturedTroubleshooting } from "@/lib/troubleshooting";
 import { getAllInterviewQuestions, INTERVIEW_CATEGORIES, DIFFICULTIES } from "@/lib/interview-questions";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArticleCard } from "@/components/blog/ArticleCard";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
 import { AdSlot } from "@bidev/ui";
 
-// Categories that read as "practical, fix-a-real-problem" guides today —
-// stands in for a dedicated Troubleshooting category until enough of that
-// content exists to justify its own /learn page.
-const PROBLEM_SOLVING_CATEGORY_SLUGS = ["architecture", "data-storage", "api-networking"];
-
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [allArticles, interviewQuestions] = await Promise.all([getAllArticles(), getAllInterviewQuestions()]);
+  const [allArticles, interviewQuestions, problemGuides] = await Promise.all([
+    getAllArticles(),
+    getAllInterviewQuestions(),
+    getFeaturedTroubleshooting(4),
+  ]);
   const latest       = allArticles.slice(0, 6);
   const resourceCats = RESOURCE_CATEGORIES.slice(1);
   const popularTools = TOOLS.filter((t) => t.popular);
   const otherTools   = TOOLS.filter((t) => !t.popular);
-  const problemGuides = allArticles
-    .filter((a) => a.categorySlug && PROBLEM_SOLVING_CATEGORY_SLUGS.includes(a.categorySlug))
-    .slice(0, 4);
 
   return (
     <div className="flex flex-col">
@@ -117,9 +114,13 @@ export default async function HomePage() {
         <section id="solve-a-problem" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10 scroll-mt-20">
           <div className="flex items-end justify-between mb-7">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Practical Guides</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-1.5">Troubleshooting</p>
               <h2 className="text-xl font-bold text-ink">Solve a Flutter Problem</h2>
+              <p className="text-sm text-ink-muted mt-1">Stuck on an error? Find a practical solution.</p>
             </div>
+            <Link href="/troubleshooting" className="text-xs text-ink-faint hover:text-ink transition-colors whitespace-nowrap mb-1">
+              View all troubleshooting →
+            </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {problemGuides.map((article) => (

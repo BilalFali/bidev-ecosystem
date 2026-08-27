@@ -15,6 +15,13 @@ export interface Tag {
   created_at: string;
 }
 
+export interface TroubleshootingSolution {
+  title: string;
+  content: string;
+}
+
+export type TroubleshootingDifficulty = "Beginner" | "Intermediate" | "Advanced";
+
 export interface Article {
   id: string;
   title: string;
@@ -35,12 +42,44 @@ export interface Article {
   created_at: string;
   updated_at: string;
   published_at: string | null;
+
+  // Troubleshooting (all optional — only used when is_troubleshooting is true)
+  is_troubleshooting: boolean;
+  troubleshooting_category_id: string | null;
+  error_message: string | null;
+  problem: string | null;
+  symptoms: string[] | null;
+  causes: string[] | null;
+  quick_fix: string | null;
+  solutions: TroubleshootingSolution[] | null;
+  verification_steps: string[] | null;
+  common_mistakes: string[] | null;
+  affected_platforms: string[] | null;
+  technologies: string[] | null;
+  difficulty: TroubleshootingDifficulty | null;
+  related_problems: string[] | null;
+  related_guides: string[] | null;
 }
 
 export interface ArticleWithRelations extends Article {
   category_name: string | null;
   category_slug: string | null;
+  troubleshooting_category_name: string | null;
+  troubleshooting_category_slug: string | null;
   tags: Pick<Tag, "id" | "name" | "slug">[];
+}
+
+export interface TroubleshootingCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  sort_order: number;
+  seo_title: string | null;
+  meta_description: string | null;
+  active: boolean;
+  created_at: string;
 }
 
 export interface MediaFile {
@@ -72,6 +111,22 @@ export interface ArticleFormData {
   seo_description: string;
   seo_keywords: string[];
   featured: boolean;
+
+  is_troubleshooting: boolean;
+  troubleshooting_category_id: string;
+  error_message: string;
+  problem: string;
+  symptoms: string[];
+  causes: string[];
+  quick_fix: string;
+  solutions: TroubleshootingSolution[];
+  verification_steps: string[];
+  common_mistakes: string[];
+  affected_platforms: string[];
+  technologies: string[];
+  difficulty: TroubleshootingDifficulty | "";
+  related_problems: string[];
+  related_guides: string[];
 }
 
 export type JobRemoteType = "remote" | "hybrid" | "onsite";

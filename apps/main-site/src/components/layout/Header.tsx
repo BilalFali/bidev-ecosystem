@@ -8,6 +8,7 @@ import { Search, X, Menu } from "lucide-react";
 const NAV = [
   { label: "Home", href: "/" },
   { label: "Learn", href: "/learn" },
+  { label: "Troubleshooting", href: "/troubleshooting" },
   { label: "Tools", href: "/tools" },
   { label: "Interview", href: "/flutter-interview-questions" },
   { label: "Resources", href: "/resources" },

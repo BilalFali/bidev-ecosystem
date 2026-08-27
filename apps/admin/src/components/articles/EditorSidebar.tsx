@@ -9,13 +9,14 @@ import { Textarea } from "@/components/ui/Textarea";
 import { TagInput } from "@/components/ui/TagInput";
 import { Toggle } from "@/components/ui/Toggle";
 import { StatusBadge } from "@/components/ui/Badge";
-import type { ArticleFormData, ArticleStatus, Category, Tag } from "@/lib/types/database";
+import type { ArticleFormData, ArticleStatus, Category, Tag, TroubleshootingCategory } from "@/lib/types/database";
 
 interface EditorSidebarProps {
   form: ArticleFormData;
   onChange: <K extends keyof ArticleFormData>(key: K, value: ArticleFormData[K]) => void;
   categories: Category[];
   tags: Tag[];
+  troubleshootingCategories: TroubleshootingCategory[];
   isNew: boolean;
   onDelete?: () => void;
 }
@@ -37,10 +38,12 @@ function SidebarSection({ title, children, defaultOpen = true }: { title: string
   );
 }
 
-export function EditorSidebar({ form, onChange, categories, tags, isNew, onDelete }: EditorSidebarProps) {
+export function EditorSidebar({ form, onChange, categories, tags, troubleshootingCategories, isNew, onDelete }: EditorSidebarProps) {
   const catOptions = [
     ...categories.map(c => ({ value: c.id, label: c.name })),
   ];
+
+  const troubleshootingCatOptions = troubleshootingCategories.map(c => ({ value: c.id, label: c.name }));
 
   const tagSuggestions = tags.map(t => t.name);
 
@@ -78,7 +81,25 @@ export function EditorSidebar({ form, onChange, categories, tags, isNew, onDelet
           label="Featured article"
           description="Pin to featured slots"
         />
+        <Toggle
+          checked={form.is_troubleshooting}
+          onChange={v => onChange("is_troubleshooting", v)}
+          label="Troubleshooting"
+          description="Renders the error/solution template on /blog/[slug]"
+        />
       </SidebarSection>
+
+      {/* Troubleshooting category */}
+      {form.is_troubleshooting && (
+        <SidebarSection title="Troubleshooting Category">
+          <Select
+            value={form.troubleshooting_category_id}
+            onChange={e => onChange("troubleshooting_category_id", e.target.value)}
+            options={troubleshootingCatOptions}
+            placeholder="Uncategorised"
+          />
+        </SidebarSection>
+      )}
 
       {/* Slug */}
       <SidebarSection title="URL Slug">

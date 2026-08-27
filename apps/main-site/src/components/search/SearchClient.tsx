@@ -6,16 +6,19 @@ import Link from "next/link";
 import { Search as SearchIcon } from "lucide-react";
 
 export interface SearchItem {
-  type: "Article" | "Tool" | "Snippet" | "Question" | "Resource";
+  type: "Article" | "Troubleshooting" | "Tool" | "Snippet" | "Question" | "Resource";
   title: string;
   description: string;
   category: string;
   href: string;
   external?: boolean;
+  /** Extra searchable text not shown in the result card (e.g. raw error message) */
+  keywords?: string;
 }
 
 const TYPE_STYLES: Record<SearchItem["type"], string> = {
   Article: "bg-accent/10 text-accent border-accent/20",
+  Troubleshooting: "bg-red-500/10 text-red-400 border-red-500/20",
   Tool: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
   Snippet: "bg-amber-500/10 text-amber-400 border-amber-500/20",
   Question: "bg-violet-500/10 text-violet-400 border-violet-500/20",
@@ -33,7 +36,8 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
       (item) =>
         item.title.toLowerCase().includes(q) ||
         item.description.toLowerCase().includes(q) ||
-        item.category.toLowerCase().includes(q)
+        item.category.toLowerCase().includes(q) ||
+        item.keywords?.toLowerCase().includes(q)
     ).slice(0, 60);
   }, [items, query]);
 
@@ -47,7 +51,7 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
           autoFocus
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search articles, tools, snippets, interview questions, resources…"
+          placeholder="Search articles, errors, tools, snippets, interview questions, resources…"
           className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-faint outline-none"
         />
       </div>

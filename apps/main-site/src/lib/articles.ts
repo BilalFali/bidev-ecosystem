@@ -2,7 +2,37 @@ import { getAllPosts, getPostBySlug } from "./mdx";
 import { getSupabaseClient } from "./supabase";
 import type { Post } from "@bidev/shared";
 
-export type Article = Post & { source: "mdx" | "db" };
+export interface TroubleshootingSolution {
+  title: string;
+  content: string;
+}
+
+export interface TroubleshootingFields {
+  isTroubleshooting: boolean;
+  troubleshootingCategory?: string;
+  troubleshootingCategorySlug?: string;
+  errorMessage?: string;
+  problem?: string;
+  symptoms?: string[];
+  causes?: string[];
+  quickFix?: string;
+  solutions?: TroubleshootingSolution[];
+  verificationSteps?: string[];
+  commonMistakes?: string[];
+  affectedPlatforms?: string[];
+  technologies?: string[];
+  difficulty?: "Beginner" | "Intermediate" | "Advanced";
+  relatedProblems?: string[];
+  relatedGuides?: string[];
+}
+
+export type Article = Post & { source: "mdx" | "db"; featured?: boolean } & TroubleshootingFields;
+
+const ARTICLE_COLUMNS =
+  "id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags,featured," +
+  "category_name,category_slug,is_troubleshooting,troubleshooting_category_name,troubleshooting_category_slug," +
+  "error_message,problem,symptoms,causes,quick_fix,solutions,verification_steps,common_mistakes," +
+  "affected_platforms,technologies,difficulty,related_problems,related_guides";
 
 type DbRow = {
   id: string;
@@ -17,8 +47,25 @@ type DbRow = {
   updated_at: string;
   reading_time: number | null;
   tags: { id: string; name: string; slug: string }[] | null;
+  featured: boolean | null;
   category_name: string | null;
   category_slug: string | null;
+  is_troubleshooting: boolean | null;
+  troubleshooting_category_name: string | null;
+  troubleshooting_category_slug: string | null;
+  error_message: string | null;
+  problem: string | null;
+  symptoms: string[] | null;
+  causes: string[] | null;
+  quick_fix: string | null;
+  solutions: TroubleshootingSolution[] | null;
+  verification_steps: string[] | null;
+  common_mistakes: string[] | null;
+  affected_platforms: string[] | null;
+  technologies: string[] | null;
+  difficulty: "Beginner" | "Intermediate" | "Advanced" | null;
+  related_problems: string[] | null;
+  related_guides: string[] | null;
 };
 
 function dbRowToArticle(a: DbRow): Article {
@@ -40,18 +87,36 @@ function dbRowToArticle(a: DbRow): Article {
     source:       "db",
     category:     a.category_name ?? undefined,
     categorySlug: a.category_slug ?? undefined,
+    featured:     a.featured ?? false,
+
+    isTroubleshooting:           a.is_troubleshooting ?? false,
+    troubleshootingCategory:     a.troubleshooting_category_name ?? undefined,
+    troubleshootingCategorySlug: a.troubleshooting_category_slug ?? undefined,
+    errorMessage:                a.error_message ?? undefined,
+    problem:                     a.problem ?? undefined,
+    symptoms:                    a.symptoms ?? undefined,
+    causes:                      a.causes ?? undefined,
+    quickFix:                    a.quick_fix ?? undefined,
+    solutions:                   a.solutions ?? undefined,
+    verificationSteps:           a.verification_steps ?? undefined,
+    commonMistakes:              a.common_mistakes ?? undefined,
+    affectedPlatforms:           a.affected_platforms ?? undefined,
+    technologies:                a.technologies ?? undefined,
+    difficulty:                  a.difficulty ?? undefined,
+    relatedProblems:             a.related_problems ?? undefined,
+    relatedGuides:               a.related_guides ?? undefined,
   };
 }
 
 export async function getAllArticles(): Promise<Article[]> {
-  const mdxPosts: Article[] = getAllPosts().map((p) => ({ ...p, source: "mdx" as const }));
+  const mdxPosts: Article[] = getAllPosts().map((p) => ({ ...p, source: "mdx" as const, isTroubleshooting: false }));
 
   const supabase = getSupabaseClient();
   if (!supabase) return mdxPosts;
 
   const { data, error } = await supabase
     .from("articles_with_relations")
-    .select("id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags,category_name,category_slug")
+    .select(ARTICLE_COLUMNS)
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
@@ -75,7 +140,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
   if (supabase) {
     const { data } = await supabase
       .from("articles_with_relations")
-      .select("id,title,slug,content,excerpt,cover_url,status,published_at,created_at,updated_at,reading_time,tags,category_name,category_slug")
+      .select(ARTICLE_COLUMNS)
       .eq("slug", slug)
       .eq("status", "published")
       .maybeSingle();
@@ -85,7 +150,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
   // Fall back to MDX
   const mdx = getPostBySlug(slug);
-  if (mdx) return { ...mdx, source: "mdx" };
+  if (mdx) return { ...mdx, source: "mdx", isTroubleshooting: false };
 
   return null;
 }
