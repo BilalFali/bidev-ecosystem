@@ -8,7 +8,7 @@ import {
   getTroubleshootingCategoryBySlug,
   getTroubleshootingArticlesByCategory,
 } from "@/lib/troubleshooting";
-import { ArticleCard } from "@/components/blog/ArticleCard";
+import { TroubleshootingCard } from "@/components/blog/TroubleshootingCard";
 import { AdSlot } from "@bidev/ui";
 
 const { SITE_URL } = SITE_CONFIG;
@@ -75,7 +75,7 @@ export default async function TroubleshootingCategoryPage({ params }: { params: 
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {articles.map((a) => (
-              <ArticleCard key={a.slug} article={a} />
+              <TroubleshootingCard key={a.slug} article={a} />
             ))}
           </div>
         )}

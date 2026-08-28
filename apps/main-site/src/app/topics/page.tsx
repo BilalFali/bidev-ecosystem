@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllArticles } from "@/lib/articles";
+import { getAllBlogArticles } from "@/lib/articles";
 import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { breadcrumbJsonLd } from "@bidev/shared";
 import { ArticleCard } from "@/components/blog/ArticleCard";
@@ -26,8 +26,8 @@ export default async function TopicsPage() {
     { name: "Topics", url: `${SITE_URL}/topics` },
   ]);
 
-  // All published articles, newest first
-  const articles = await getAllArticles();
+  // All published articles, newest first (troubleshooting entries live under /troubleshooting instead)
+  const articles = await getAllBlogArticles();
 
   // Aggregate tags with counts (from merged MDX + DB sources)
   const tagCounts: Record<string, number> = {};

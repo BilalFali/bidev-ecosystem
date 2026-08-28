@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllArticles } from "@/lib/articles";
+import { getAllBlogArticles } from "@/lib/articles";
 import { slugify } from "@/lib/utils";
 import { TOOLS, type Tool } from "@/lib/tools";
 import { SNIPPETS } from "@/lib/snippets";
@@ -9,6 +9,7 @@ import { getFeaturedTroubleshooting } from "@/lib/troubleshooting";
 import { getAllInterviewQuestions, INTERVIEW_CATEGORIES, DIFFICULTIES } from "@/lib/interview-questions";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArticleCard } from "@/components/blog/ArticleCard";
+import { TroubleshootingCard } from "@/components/blog/TroubleshootingCard";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
 import { AdSlot } from "@bidev/ui";
 
@@ -16,7 +17,7 @@ export const revalidate = 60;
 
 export default async function HomePage() {
   const [allArticles, interviewQuestions, problemGuides] = await Promise.all([
-    getAllArticles(),
+    getAllBlogArticles(),
     getAllInterviewQuestions(),
     getFeaturedTroubleshooting(4),
   ]);
@@ -124,7 +125,7 @@ export default async function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {problemGuides.map((article) => (
-              <ArticleCard key={article.slug} article={article} />
+              <TroubleshootingCard key={article.slug} article={article} />
             ))}
           </div>
         </section>

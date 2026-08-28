@@ -160,6 +160,12 @@ export async function getArticlesByCategorySlug(categorySlug: string): Promise<A
   return all.filter((a) => a.categorySlug === categorySlug);
 }
 
+/** Regular blog articles only — excludes troubleshooting entries, which live under /troubleshooting instead. */
+export async function getAllBlogArticles(): Promise<Article[]> {
+  const all = await getAllArticles();
+  return all.filter((a) => !a.isTroubleshooting);
+}
+
 export async function getAllArticleSlugs(): Promise<string[]> {
   const mdxSlugs = getAllPosts().map((p) => p.slug);
 

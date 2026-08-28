@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllArticles } from "@/lib/articles";
+import { getAllBlogArticles } from "@/lib/articles";
 import { getAllTags } from "@/lib/mdx";
 import { formatDate } from "@/lib/utils";
 import { pageMetadata } from "@/lib/seo";
@@ -22,7 +22,7 @@ export default async function BlogPage({
   searchParams: Promise<{ tag?: string; q?: string }>;
 }) {
   const { tag, q } = await searchParams;
-  const allArticles = await getAllArticles();
+  const allArticles = await getAllBlogArticles();
   const allTags     = getAllTags();
 
   const activeTag = tag ?? "";

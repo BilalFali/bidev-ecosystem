@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { breadcrumbJsonLd } from "@bidev/shared";
 import { TROUBLESHOOTING_CATEGORIES, getAllTroubleshootingArticles, getFeaturedTroubleshooting } from "@/lib/troubleshooting";
-import { ArticleCard } from "@/components/blog/ArticleCard";
+import { TroubleshootingCard } from "@/components/blog/TroubleshootingCard";
 import { AdSlot } from "@bidev/ui";
 
 const { SITE_URL } = SITE_CONFIG;
@@ -113,7 +113,7 @@ export default async function TroubleshootingHub() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {featured.map((a) => (
-              <ArticleCard key={a.slug} article={a} />
+              <TroubleshootingCard key={a.slug} article={a} />
             ))}
           </div>
         )}
@@ -129,7 +129,7 @@ export default async function TroubleshootingHub() {
           <h2 className="text-lg font-semibold text-ink mb-8">Latest Troubleshooting Guides</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {latest.map((a) => (
-              <ArticleCard key={a.slug} article={a} />
+              <TroubleshootingCard key={a.slug} article={a} />
             ))}
           </div>
         </section>
