@@ -113,7 +113,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       </head>
 
-      {/* Consent Mode v2 default — denies ad/analytics storage until the CMP below records a choice */}
+      {/* Consent Mode v2 default — denies ad storage until the CMP below records a choice.
+          analytics_storage is granted by default so GA4 isn't gated behind AdSense's
+          consent flow; ad-related consent (for AdSense) is handled independently. */}
       {ADSENSE_ID && (
         <Script id="consent-default" strategy="beforeInteractive">
           {`
@@ -123,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               'ad_storage': 'denied',
               'ad_user_data': 'denied',
               'ad_personalization': 'denied',
-              'analytics_storage': 'denied',
+              'analytics_storage': 'granted',
               'wait_for_update': 500
             });
           `}
