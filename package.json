@@ -6,11 +6,13 @@
     "dev:main": "npm run dev --workspace=apps/main-site",
     "dev:portfolio": "npm run dev --workspace=apps/portfolio",
     "dev:admin": "npm run dev --workspace=apps/admin",
+    "dev:tech-blog": "npm run dev --workspace=apps/tech-blog",
     "build:main": "npm run build --workspace=apps/main-site",
     "build:portfolio": "npm run build --workspace=apps/portfolio",
     "build:admin": "npm run build --workspace=apps/admin",
+    "build:tech-blog": "npm run build --workspace=apps/tech-blog",
     "dev:worker": "npm run dev --workspace=apps/ai-worker",
     "worker:once": "npm run run-once --workspace=apps/ai-worker",
-    "build": "npm run build:main && npm run build:portfolio && npm run build:admin"
+    "build": "npm run build:main && npm run build:portfolio && npm run build:admin && npm run build:tech-blog"
   }
 }

@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #FAF8F4;
+    color: #17140F;
+    font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: #FBE7DF;
+    color: #D4380D;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #F1EEE7; }
+  ::-webkit-scrollbar-thumb { background: #CFC8B6; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #8A8375; }
+
+  /* Visible focus states everywhere — never suppressed without a replacement */
+  :focus-visible {
+    outline: 2px solid #D4380D;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer base {
+  :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #100E0A;
+    }
+  }
+}
+
+/* ── Code blocks (rehype-pretty-code) ─────────────────────────────────── */
+[data-rehype-pretty-code-figure] pre {
+  @apply rounded-sm border border-border bg-paper-sunken text-sm overflow-x-auto p-5 my-6 font-mono;
+}
+
+[data-rehype-pretty-code-figure] [data-line] {
+  @apply px-4 leading-relaxed;
+}
+
+[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  @apply bg-accent-tint border-l-2 border-accent -mx-4 px-4;
+}
+
+[data-rehype-pretty-code-figure] [data-rehype-pretty-code-title] {
+  @apply bg-paper-sunken text-ink-muted text-xs px-5 py-2 rounded-t-sm border border-b-0 border-border font-mono;
+}
