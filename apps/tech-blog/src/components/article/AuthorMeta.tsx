@@ -12,17 +12,10 @@ export function AuthorMeta({
   readingTime: number;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink-muted">
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted divide-x divide-border [&>*:not(:first-child)]:pl-4">
       <span className="font-medium text-ink">{author}</span>
-      <span aria-hidden="true">·</span>
       <time dateTime={publishedAt}>{formatDate(publishedAt)}</time>
-      {updatedAt && updatedAt !== publishedAt && (
-        <>
-          <span aria-hidden="true">·</span>
-          <span>Updated {formatDate(updatedAt)}</span>
-        </>
-      )}
-      <span aria-hidden="true">·</span>
+      {updatedAt && updatedAt !== publishedAt && <span>Updated {formatDate(updatedAt)}</span>}
       <span>{readingTime} min read</span>
     </div>
   );

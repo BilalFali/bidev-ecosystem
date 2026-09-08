@@ -6,7 +6,7 @@ export function QuestionCard({ question }: { question: InterviewQuestion }) {
   return (
     <Link
       href={`/flutter-interview-questions/${question.slug}`}
-      className="group flex flex-col gap-3 p-5 rounded-xl border border-border bg-bg-card hover:border-accent/40 hover:bg-bg-elevated transition-all duration-200"
+      className="group flex flex-col gap-3 p-5 rounded-lg border-l-2 border-y border-r border-border hover:border-l-accent bg-bg-card transition-colors"
     >
       <div className="flex items-center gap-2">
         <DifficultyBadge difficulty={question.difficulty} />

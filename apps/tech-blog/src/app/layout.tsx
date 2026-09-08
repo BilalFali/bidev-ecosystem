@@ -1,14 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Source_Serif_4, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { getAllCategories } from "@/lib/categories";
 
-const fraunces = Fraunces({
+// Source Serif 4 replaces Fraunces as the display face — Fraunces had become
+// the default "distinctive editorial serif" reach across AI-generated design,
+// which undercut the exact effect it was chosen for. Source Serif 4 gives
+// the same editorial gravitas with a quieter, less-templated silhouette.
+const displaySerif = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  axes: ["opsz", "SOFT"],
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -52,7 +57,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAF8F4",
+  themeColor: "#F0F1EB",
   width: "device-width",
   initialScale: 1,
 };
@@ -61,7 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const categories = await getAllCategories();
 
   return (
-    <html lang="en" className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${displaySerif.variable} ${plexSans.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <body className="bg-paper text-ink min-h-screen flex flex-col antialiased">
         <Header categories={categories} />
         <main className="flex-1">{children}</main>

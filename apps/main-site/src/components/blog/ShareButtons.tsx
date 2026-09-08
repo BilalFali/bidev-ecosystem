@@ -35,7 +35,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
 
   return (
     <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-xs text-ink-faint uppercase tracking-wider">Share</span>
+      <span className="text-xs text-ink-faint">Share this</span>
 
       {links.map(({ label, icon, href }) => (
         <a

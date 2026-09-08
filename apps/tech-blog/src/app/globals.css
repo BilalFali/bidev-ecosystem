@@ -12,7 +12,7 @@
   }
 
   body {
-    background-color: #FAF8F4;
+    background-color: #F0F1EB;
     color: #17140F;
     font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   }
@@ -23,7 +23,7 @@
   }
 
   ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: #F1EEE7; }
+  ::-webkit-scrollbar-track { background: #E7E8DF; }
   ::-webkit-scrollbar-thumb { background: #CFC8B6; border-radius: 2px; }
   ::-webkit-scrollbar-thumb:hover { background: #8A8375; }
 
@@ -46,7 +46,7 @@
 @layer base {
   :root[data-theme="dark"], :root:not([data-theme="light"]) {
     @media (prefers-color-scheme: dark) {
-      --paper: #100E0A;
+      --paper: #14130F;
     }
   }
 }

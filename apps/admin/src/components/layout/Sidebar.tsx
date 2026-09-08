@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, FileText, Image as ImageIcon,
   Tag, FolderOpen, Settings, LogOut, ChevronRight, BarChart2, MessageSquare, Briefcase,
-  Package, ShoppingBag, Github, HelpCircle, Wrench,
+  Package, ShoppingBag, Github, HelpCircle, Wrench, Newspaper, LayoutGrid, Hash,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -14,6 +14,9 @@ const NAV = [
   { label: "Overview",   href: "/",            icon: LayoutDashboard },
   { label: "Articles",   href: "/articles",    icon: FileText        },
   { label: "Troubleshooting", href: "/troubleshooting", icon: Wrench  },
+  { label: "Tech Articles",   href: "/tech-blog/articles",   icon: Newspaper  },
+  { label: "Tech Categories", href: "/tech-blog/categories", icon: LayoutGrid },
+  { label: "Tech Tags",       href: "/tech-blog/tags",       icon: Hash       },
   { label: "Comments",   href: "/comments",    icon: MessageSquare   },
   { label: "Jobs",       href: "/jobs",           icon: Briefcase   },
   { label: "Products",   href: "/products",       icon: Package     },

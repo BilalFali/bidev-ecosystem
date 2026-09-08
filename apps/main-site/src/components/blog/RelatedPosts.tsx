@@ -11,7 +11,7 @@ export function RelatedPosts({ posts }: { posts: Post[] }) {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group p-5 rounded-xl border border-border bg-bg-card hover:border-accent/30 hover:bg-bg-elevated transition-all"
+            className="group p-5 rounded-xl border border-border bg-bg-card transition-all hover:-translate-y-0.5 hover:shadow-terminal"
           >
             <div className="flex flex-wrap gap-1.5 mb-3">
               {post.tags.slice(0, 1).map((t) => (

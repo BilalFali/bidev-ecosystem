@@ -1,12 +1,15 @@
 import Image from "next/image";
 import type { TechArticle } from "@/lib/articles";
 import { AuthorMeta } from "./AuthorMeta";
+import { getCategoryTextClass } from "@/lib/category-colors";
 
 export function ArticleHero({ article }: { article: TechArticle }) {
   return (
     <header className="flex flex-col gap-5 mb-8">
       {article.category && (
-        <span className="text-xs font-semibold uppercase tracking-wider text-accent">{article.category}</span>
+        <span className={`text-sm font-medium ${getCategoryTextClass(article.categorySlug)}`}>
+          {article.category}
+        </span>
       )}
       <h1 className="font-display font-medium text-[clamp(2rem,1.6rem+2vw,3.5rem)] leading-[1.08] text-ink">
         {article.title}

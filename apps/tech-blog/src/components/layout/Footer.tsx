@@ -15,7 +15,7 @@ export function Footer({ categories }: { categories: Category[] }) {
             </p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-ink-faint mb-3">Categories</p>
+            <p className="text-xs font-semibold text-ink-faint mb-3">Categories</p>
             <div className="flex flex-col gap-2">
               {categories.map((c) => (
                 <Link key={c.slug} href={`/${c.slug}`} className="text-sm text-ink-muted hover:text-ink transition-colors">
@@ -25,7 +25,7 @@ export function Footer({ categories }: { categories: Category[] }) {
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-ink-faint mb-3">BiDev</p>
+            <p className="text-xs font-semibold text-ink-faint mb-3">BiDev</p>
             <div className="flex flex-col gap-2">
               <a href="https://bidev.dev" className="text-sm text-ink-muted hover:text-ink transition-colors">bidev.dev</a>
               <Link href="/about" className="text-sm text-ink-muted hover:text-ink transition-colors">About</Link>

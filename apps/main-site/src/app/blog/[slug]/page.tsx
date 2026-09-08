@@ -177,12 +177,10 @@ export default async function BlogPostPage({
               {post.title}
             </h1>
 
-            <div className="flex items-center gap-4 text-sm text-ink-muted mb-8 pb-8 border-b border-border">
-              <span className="font-medium text-ink">{post.author}</span>
-              <span>·</span>
-              <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-              <span>·</span>
-              <span>{post.readingTime} min read</span>
+            <div className="flex items-center divide-x divide-border text-sm text-ink-muted mb-8 pb-8 border-b border-border">
+              <span className="pr-4 font-medium text-ink">{post.author}</span>
+              <time dateTime={post.publishedAt} className="px-4">{formatDate(post.publishedAt)}</time>
+              <span className="pl-4">{post.readingTime} min read</span>
             </div>
 
             {/* Cover image */}
@@ -222,7 +220,7 @@ export default async function BlogPostPage({
 
             {/* Tags footer */}
             <div className="mt-8 pt-8 border-t border-border">
-              <p className="text-xs text-ink-faint uppercase tracking-wider mb-3">Tagged in</p>
+              <p className="text-xs font-mono text-ink-faint mb-3">// tagged in</p>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((t) => (
                   <Link

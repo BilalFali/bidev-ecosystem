@@ -48,7 +48,7 @@ export function Footer() {
           {/* Link columns */}
           {Object.entries(LINKS).map(([section, items]) => (
             <div key={section} className="flex flex-col gap-3">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-ink-faint">
+              <h3 className="text-sm font-semibold text-ink">
                 {section}
               </h3>
               {items.map((item) => (
@@ -66,8 +66,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ink-faint">
-          <p>© {new Date().getFullYear()} Bidev. Built for developers.</p>
-          <p className="font-mono text-[11px]">Flutter Ecosystem · Built with Next.js</p>
+          <p>© {new Date().getFullYear()} Bidev. Built for Flutter developers.</p>
+          <p className="font-mono text-[11px]">next.js</p>
         </div>
       </div>
     </footer>

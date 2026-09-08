@@ -14,7 +14,7 @@ export function ArticleCard({ article, priority = false }: Props) {
   return (
     <Link
       href={`/blog/${article.slug}`}
-      className="group flex flex-col rounded-xl border border-border bg-bg-card hover:border-accent/30 hover:bg-bg-elevated transition-all overflow-hidden"
+      className="group flex flex-col rounded-xl border border-border bg-bg-card overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-terminal"
     >
       {/* Thumbnail */}
       <div className="relative w-full aspect-video bg-bg-elevated flex items-center justify-center overflow-hidden">
@@ -53,10 +53,9 @@ export function ArticleCard({ article, priority = false }: Props) {
         </p>
 
         {/* Meta */}
-        <div className="flex items-center gap-2 text-xs text-ink-faint mt-auto pt-1">
-          <time dateTime={article.publishedAt}>{formatDate(article.publishedAt)}</time>
-          <span>·</span>
-          <span>{article.readingTime} min read</span>
+        <div className="flex items-center divide-x divide-border text-xs text-ink-faint mt-auto pt-1">
+          <time dateTime={article.publishedAt} className="pr-2.5">{formatDate(article.publishedAt)}</time>
+          <span className="pl-2.5">{article.readingTime} min read</span>
         </div>
       </div>
     </Link>

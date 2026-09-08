@@ -29,30 +29,6 @@
 }
 
 @layer utilities {
-  /* Flutter-blue gradient text */
-  .text-gradient {
-    background: linear-gradient(135deg, #e0e2e9 0%, #8a919c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .text-gradient-accent {
-    background: linear-gradient(135deg, #9ecaff 0%, #0175c2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Subtle blue glow for hero moments */
-  .glow-accent {
-    box-shadow: 0 0 40px rgba(1, 117, 194, 0.18);
-  }
-
-  .glow-accent-lg {
-    box-shadow: 0 0 80px rgba(1, 117, 194, 0.12), 0 0 40px rgba(158, 202, 255, 0.08);
-  }
-
   /* Glassmorphism — floating nav, dropdowns */
   .glass {
     background: rgba(16, 20, 24, 0.85);
@@ -65,10 +41,53 @@
     border: 1px solid #404751;
   }
 
-  /* Primary action gradient (button fill) */
-  .bg-primary-gradient {
-    background: linear-gradient(135deg, #0175c2 0%, #02569b 100%);
+  /* ── Terminal window chrome — the hero device ─────────────────────
+     A real dev tool surface (traffic-light dots + monospace body),
+     not an abstract gradient card. Used once, for the hero. */
+  .terminal-window {
+    background: #0b0e13;
+    border: 1px solid #2a323c;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(64, 71, 81, 0.4);
+    overflow: hidden;
   }
+
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #2a323c;
+    background: #0e1217;
+  }
+
+  .terminal-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* Faint widget-tree bracket texture — decoration that traces back to an
+     actual Flutter concept (nested widget composition), used sparingly
+     as a background watermark rather than a generic gradient wash. */
+  .widget-tree-bg {
+    background-image:
+      linear-gradient(rgba(1, 117, 194, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(1, 117, 194, 0.16) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 75%);
+  }
+
+  .caret-blink {
+    animation: caretBlink 1.1s steps(1) infinite;
+  }
+}
+
+@keyframes caretBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
 /* ── Code blocks (rehype-pretty-code) ────────────────────────────── */

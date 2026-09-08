@@ -38,8 +38,8 @@ export function TableOfContents({ content }: { content: string }) {
   if (!headings.length) return null;
 
   return (
-    <div className="p-4 rounded-xl border border-border bg-bg-card">
-      <p className="text-xs font-semibold uppercase tracking-wider text-ink-faint mb-4">On this page</p>
+    <div className="p-4 rounded-lg border border-border bg-bg-card">
+      <p className="text-xs font-mono text-ink-faint mb-4">// contents</p>
       <nav className="flex flex-col gap-1">
         {headings.map((h) => (
           <a
