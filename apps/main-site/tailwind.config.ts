@@ -23,6 +23,15 @@ const config: Config = {
           muted: "rgba(245, 180, 0, 0.10)",
         },
       },
+      fontFamily: {
+        ...base.theme.extend.fontFamily,
+        // Space Grotesk replaces the shared base's Geist mapping for this
+        // app only — Geist reads as the single most common "modern tech
+        // site" default in current AI-generated design; Space Grotesk's
+        // geometric, slightly technical letterforms fit this site's
+        // existing CLI/terminal identity instead.
+        sans: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+      },
       boxShadow: {
         ...base.theme.extend.boxShadow,
         terminal: "0 20px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(64,71,81,0.6)",

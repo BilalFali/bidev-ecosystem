@@ -14,7 +14,7 @@
   body {
     background-color: #101418;
     color: #e0e2e9;
-    font-family: var(--font-geist), system-ui, sans-serif;
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
   }
 
   ::selection {

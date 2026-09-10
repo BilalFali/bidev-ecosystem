@@ -1,5 +1,5 @@
 ﻿import type { Metadata, Viewport } from "next";
-import { Geist, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
@@ -12,9 +12,15 @@ const ADSENSE_ID  = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
 const GA_ID       = "G-C04YP7HRR0";
 const CLARITY_ID  = "xi6mxc4uzo";
 
-const geist = Geist({
+// Space Grotesk replaces Geist — Geist is Vercel's own font and has become
+// one of the most reached-for "modern tech site" defaults in current
+// AI-generated design. Space Grotesk's geometric, slightly technical
+// letterforms echo the CLI/terminal identity already built into this site
+// (the hero terminal, $-prefixed buttons) without being that default.
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-geist",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
   display: "optional",  // no layout shift — falls back to system font if not cached
   preload: true,
 });
@@ -96,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const orgSchema    = organizationJsonLd(SITE_URL);
 
   return (
-    <html lang="en" className={`${geist.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         {/* next/font self-hosts fonts — no external font connections needed */}
         {/* Only prefetch third-party origins we'll need after load */}
