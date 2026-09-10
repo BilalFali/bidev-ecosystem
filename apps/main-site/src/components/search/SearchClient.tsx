@@ -57,9 +57,11 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
       </div>
 
       {query.trim() === "" ? (
-        <p className="text-sm text-ink-faint">Start typing to search across the whole site.</p>
+        <p className="text-sm font-mono text-ink-faint">$ start typing to search articles, tools, snippets…</p>
       ) : results.length === 0 ? (
-        <p className="text-sm text-ink-faint">No results for &ldquo;{query}&rdquo;.</p>
+        <p className="text-sm font-mono text-ink-faint">
+          $ grep -r &quot;{query}&quot; . — 0 matches
+        </p>
       ) : (
         <div className="flex flex-col gap-3">
           <p className="text-xs text-ink-faint">{results.length} result{results.length === 1 ? "" : "s"}</p>

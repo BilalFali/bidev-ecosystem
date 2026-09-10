@@ -38,6 +38,21 @@ export function Header() {
     if (searching) searchRef.current?.focus();
   }, [searching]);
 
+  // The header advertises a ⌘K hint — make it real instead of decorative.
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearching(true);
+      }
+      if (e.key === "Escape") {
+        setSearching(false);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   const isActive = (href: string) => {
     if (!mounted) return false;
     return href === "/" ? pathname === "/" : pathname.startsWith(href);

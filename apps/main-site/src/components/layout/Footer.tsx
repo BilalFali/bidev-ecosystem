@@ -30,7 +30,7 @@ const LINKS = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-border mt-16">
+    <footer className="border-t border-border mt-16 bg-bg-secondary">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
 
@@ -39,17 +39,19 @@ export function Footer() {
             <Link href="/" className="text-base font-semibold tracking-tight">
               Bi<span className="text-accent-light">dev</span>
             </Link>
-            <p className="text-sm text-ink-faint leading-relaxed max-w-[200px]">
+            <p className="text-sm text-ink-faint leading-relaxed max-w-[220px]">
               Empowering the next generation of Flutter developers with high-performance tools and developer-first content.
             </p>
             <BuyMeCoffee variant="footer" />
           </div>
 
-          {/* Link columns */}
+          {/* Link columns — headers read as source comments, the same
+              vocabulary as the table of contents (`// contents`) and the
+              hero's terminal, instead of generic bold column titles. */}
           {Object.entries(LINKS).map(([section, items]) => (
             <div key={section} className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-ink">
-                {section}
+              <h3 className="text-xs font-mono text-ink-faint">
+                {`// ${section.toLowerCase()}`}
               </h3>
               {items.map((item) => (
                 <Link
@@ -65,9 +67,9 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ink-faint">
-          <p>© {new Date().getFullYear()} Bidev. Built for Flutter developers.</p>
-          <p className="font-mono text-[11px]">next.js</p>
+        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ink-faint font-mono">
+          <p>$ echo &quot;© {new Date().getFullYear()} Bidev — built for Flutter developers&quot;</p>
+          <p>next.js</p>
         </div>
       </div>
     </footer>

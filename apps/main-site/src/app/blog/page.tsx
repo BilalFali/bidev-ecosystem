@@ -41,8 +41,16 @@ export default async function BlogPage({
       {/* Header */}
       <div className="mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">Developer Blog</h1>
-        <p className="text-ink-muted max-w-xl">
+        <p className="text-ink-muted max-w-xl mb-4">
           Flutter tutorials, Firebase guides, mobile dev patterns, and AI tools — written for developers who ship.
+        </p>
+        {/* Same inline-command vocabulary as the tools page's "runs
+            client-side" indicator, so the article count reads as a real
+            directory listing rather than a stray stat. */}
+        <p className="inline-flex items-center gap-2 text-xs font-mono text-ink-faint">
+          <span aria-hidden="true">$</span> ls articles/
+          <span className="text-accent-light">{allArticles.length}</span> files,
+          <span className="text-accent-light">{allTags.length}</span> tags
         </p>
       </div>
 
@@ -91,7 +99,11 @@ export default async function BlogPage({
           </div>
 
           {posts.length === 0 ? (
-            <div className="text-center py-20 text-ink-muted">No articles found. Try a different search.</div>
+            <div className="text-center py-20 font-mono text-sm text-ink-faint">
+              $ grep -r {activeTag || query ? `"${activeTag || query}"` : ""} articles/
+              <br />
+              no matches — try a different tag or search term
+            </div>
           ) : (
             <div className="grid gap-5">
               {posts.map((post, i) => (
