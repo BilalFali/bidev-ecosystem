@@ -22,11 +22,17 @@ const FORMAT: Record<SlotType, { adFormat: string }> = {
   "footer":     { adFormat: "auto" },
 };
 
-const ENV_KEY: Record<SlotType, string> = {
-  "banner":     "NEXT_PUBLIC_AD_SLOT_BANNER",
-  "in-article": "NEXT_PUBLIC_AD_SLOT_IN_ARTICLE",
-  "sidebar":    "NEXT_PUBLIC_AD_SLOT_SIDEBAR",
-  "footer":     "NEXT_PUBLIC_AD_SLOT_FOOTER",
+// Next.js only statically inlines `process.env.NEXT_PUBLIC_X` when accessed
+// with literal dot-notation. Dynamic bracket access (`process.env[key]`)
+// never gets replaced in the client bundle, so it silently resolves to
+// undefined in the browser while still working server-side (real Node.js
+// process.env) — a server/client mismatch that breaks hydration. Each slot
+// env var must be referenced literally so the compiler can inline all four.
+const SLOT_ID: Record<SlotType, string | undefined> = {
+  "banner":     process.env.NEXT_PUBLIC_AD_SLOT_BANNER,
+  "in-article": process.env.NEXT_PUBLIC_AD_SLOT_IN_ARTICLE,
+  "sidebar":    process.env.NEXT_PUBLIC_AD_SLOT_SIDEBAR,
+  "footer":     process.env.NEXT_PUBLIC_AD_SLOT_FOOTER,
 };
 
 export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
@@ -34,7 +40,7 @@ export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
   const pushed = useRef(false);
 
   const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
-  const slotId      = process.env[ENV_KEY[type]];
+  const slotId      = SLOT_ID[type];
 
   useEffect(() => {
     if (!publisherId || !slotId || pushed.current || !ref.current) return;
