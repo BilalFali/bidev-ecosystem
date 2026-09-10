@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
 import { TOOLS } from "@/lib/tools";
 import { ToolCard } from "@/components/tools/ToolCard";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = pageMetadata({
   title: "Free Developer Tools – JSON to Dart, QR, UUID & More",
@@ -16,11 +16,17 @@ export default function ToolsPage() {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
 
       <div className="mb-12">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">100% Free · Client-Side · No Sign-Up</p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">Developer Tools</h1>
-        <p className="text-ink-muted max-w-xl">
-          Fast, privacy-friendly tools that run entirely in your browser. No data is ever sent to a server.
+        <p className="text-ink-muted max-w-xl mb-4">
+          Fast, privacy-friendly tools that run entirely in your browser. Free, no sign-up, and nothing you type is ever sent to a server.
         </p>
+        <div className="inline-flex items-center gap-2 text-xs font-mono text-ink-faint">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-signal opacity-75 motion-reduce:animate-none" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-signal" />
+          </span>
+          runs client-side, nothing leaves your browser
+        </div>
       </div>
 
       <AdSlot type="banner" className="mb-10" />
@@ -38,12 +44,7 @@ export default function ToolsPage() {
         <p className="text-sm text-ink-muted mb-6">
           Suggest a tool you need — we build for the developer community.
         </p>
-        <Link
-          href="/contact"
-          className="inline-flex px-6 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors"
-        >
-          Suggest a Tool →
-        </Link>
+        <Button href="/contact" variant="secondary" size="md">Suggest a tool</Button>
       </div>
     </div>
   );

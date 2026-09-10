@@ -6,6 +6,7 @@ import { breadcrumbJsonLd, jobPostingJsonLd } from "@bidev/shared";
 import { getAllJobs, getJobBySlug } from "@/lib/jobs";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 const { SITE_URL } = SITE_CONFIG;
 
@@ -103,21 +104,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
       <div className="p-6 rounded-xl border border-accent/25 bg-accent/5 text-center">
         <p className="text-sm text-ink-muted mb-4">Interested in this role?</p>
         {job.apply_url ? (
-          <a
-            href={job.apply_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex px-6 py-3 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors"
-          >
-            Apply Now →
-          </a>
+          <Button href={job.apply_url} target="_blank" rel="noopener noreferrer">Apply now</Button>
         ) : job.apply_email ? (
-          <a
-            href={`mailto:${job.apply_email}?subject=${encodeURIComponent(`Application: ${job.title}`)}`}
-            className="inline-flex px-6 py-3 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors"
-          >
-            Apply via Email →
-          </a>
+          <Button href={`mailto:${job.apply_email}?subject=${encodeURIComponent(`Application: ${job.title}`)}`}>
+            Apply via email
+          </Button>
         ) : null}
       </div>
 

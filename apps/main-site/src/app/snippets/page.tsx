@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SNIPPETS, SNIPPET_CATEGORIES } from "@/lib/snippets";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = pageMetadata({
   title: "Flutter & Dart Code Snippets – Copy-Ready",
@@ -26,22 +27,15 @@ export default function SnippetsPage() {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
       {/* Header */}
       <div className="mb-12">
-        <span className="inline-block px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/8 text-cyan-400 text-xs font-medium mb-5">
-          Flutter · Dart · Copy-Ready
-        </span>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Code <span className="text-gradient-accent">Snippets</span>
+          Code snippets
         </h1>
         <p className="text-ink-muted max-w-2xl">
-          Production-tested Flutter and Dart patterns. Copy, adapt, and ship faster.
-          Updated regularly with real-world solutions.
+          Production-tested Flutter and Dart patterns, free forever. Copy, adapt, and ship faster.
         </p>
-        <div className="mt-4 flex items-center gap-4 text-sm text-ink-faint">
-          <span>{SNIPPETS.length} snippets</span>
-          <span>·</span>
-          <span>{SNIPPET_CATEGORIES.length - 1} categories</span>
-          <span>·</span>
-          <span>Free forever</span>
+        <div className="mt-4 flex items-center divide-x divide-border text-sm text-ink-faint">
+          <span className="pr-3">{SNIPPETS.length} snippets</span>
+          <span className="pl-3">{SNIPPET_CATEGORIES.length - 1} categories</span>
         </div>
       </div>
 
@@ -96,7 +90,7 @@ export default function SnippetsPage() {
                         ))}
                       </div>
                       <span className="text-xs text-accent opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                        View →
+                        View
                       </span>
                     </div>
                   </Link>
@@ -115,12 +109,7 @@ export default function SnippetsPage() {
         <p className="text-sm text-ink-muted mb-6">
           Missing a pattern? Suggest it and we&apos;ll add it to the library.
         </p>
-        <Link
-          href="/contact"
-          className="inline-flex px-6 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors"
-        >
-          Suggest a Snippet →
-        </Link>
+        <Button href="/contact" variant="secondary" size="md">Suggest a snippet</Button>
       </div>
     </div>
   );

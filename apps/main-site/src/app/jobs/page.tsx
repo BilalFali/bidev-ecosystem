@@ -36,8 +36,7 @@ export default async function JobsPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
 
       <div className="mb-12">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Job Board</p>
-        <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">Flutter &amp; Dart Jobs</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">Flutter &amp; Dart jobs</h1>
         <p className="text-ink-muted max-w-xl">
           Remote, hybrid, and onsite roles for Flutter and Dart developers — curated for the Bidev community.
         </p>

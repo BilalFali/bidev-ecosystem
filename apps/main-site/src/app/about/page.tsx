@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from "next";
-import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = pageMetadata({
   title: "About – bidev.dev",
@@ -11,7 +11,7 @@ export const metadata: Metadata = pageMetadata({
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20">
-      <h1 className="text-4xl font-bold text-ink mb-6">About <span className="text-accent">bidev.dev</span></h1>
+      <h1 className="text-4xl font-bold text-ink mb-6">About bidev.dev</h1>
       <div className="prose prose-invert max-w-none">
         <p>
           <strong>bidev.dev</strong> is a developer platform focused on Flutter, mobile development,
@@ -40,8 +40,8 @@ export default function AboutPage() {
         </p>
       </div>
       <div className="mt-10 flex gap-4">
-        <Link href="/blog" className="px-6 py-2.5 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors">Read the Blog</Link>
-        <Link href="https://portfolio.bidev.dev" className="px-6 py-2.5 rounded-lg border border-border bg-bg-card text-sm text-ink hover:border-border-strong transition-colors">Portfolio →</Link>
+        <Button href="/blog" size="md">Read the blog</Button>
+        <Button href="https://portfolio.bidev.dev" variant="secondary" size="md">Portfolio</Button>
       </div>
     </div>
   );

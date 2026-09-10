@@ -175,11 +175,8 @@ export default async function PackagesPage() {
 
       {/* Header */}
       <div className="mb-12">
-        <span className="inline-block px-3 py-1 rounded-full border border-accent/30 bg-accent/8 text-accent text-xs font-medium mb-5">
-          Open Source · Free to Use
-        </span>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Flutter <span className="text-accent">Packages</span>
+          Flutter packages
         </h1>
         <p className="text-ink-muted max-w-2xl text-lg">
           Open-source Flutter packages built and maintained by Bilal Fali.

@@ -44,23 +44,26 @@ export default async function TroubleshootingHub() {
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-4">Troubleshooting</p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-5 leading-tight">
-          Flutter <span className="text-gradient-accent">Troubleshooting</span>
+          Flutter Troubleshooting
         </h1>
         <p className="text-ink-muted max-w-2xl mx-auto text-lg mb-8">
           Find solutions to common Flutter, Dart, Firebase, Android, and iOS problems.
         </p>
 
+        {/* grep-style search — this hub's whole job is finding a matching
+            error string, so the search bar wears that literally instead of
+            a generic pill input. */}
         <form action="/search" method="GET" className="max-w-xl mx-auto mb-4">
-          <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-bg-card border border-border focus-within:border-accent transition-colors">
-            <Search className="w-4 h-4 text-ink-faint shrink-0" />
+          <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#0b0e13] border border-border focus-within:border-accent transition-colors font-mono text-sm">
+            <span className="text-ink-faint shrink-0" aria-hidden="true">$ grep -r</span>
             <input
               name="q"
-              placeholder="Search Flutter errors and problems…"
-              className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-faint outline-none"
+              placeholder="&quot;RenderFlex overflowed&quot;…"
+              className="flex-1 bg-transparent text-ink placeholder:text-ink-faint/70 outline-none"
               aria-label="Search Flutter errors and problems"
             />
+            <Search className="w-4 h-4 text-ink-faint shrink-0" />
           </div>
         </form>
 

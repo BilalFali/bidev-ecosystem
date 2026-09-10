@@ -10,6 +10,7 @@ import { ToolCard } from "@/components/tools/ToolCard";
 import { ArticleCard } from "@/components/blog/ArticleCard";
 import { TroubleshootingCard } from "@/components/blog/TroubleshootingCard";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
+import { Button } from "@/components/ui/Button";
 import { AdSlot } from "@bidev/ui";
 
 export const revalidate = 60;
@@ -43,18 +44,8 @@ export default async function HomePage() {
               production, and ship apps with code you can copy and trust.
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href="/learn"
-                className="px-6 py-3 rounded-lg bg-accent text-white font-semibold text-sm hover:bg-accent-hover transition-colors"
-              >
-                Start learning
-              </Link>
-              <Link
-                href="#solve-a-problem"
-                className="px-6 py-3 rounded-lg border border-border text-ink text-sm hover:border-border-strong transition-colors"
-              >
-                Fix an error
-              </Link>
+              <Button href="/learn" prompt>Start learning</Button>
+              <Button href="#solve-a-problem" variant="secondary">Fix an error</Button>
             </div>
           </div>
 
@@ -131,12 +122,7 @@ export default async function HomePage() {
           </div>
 
           <div className="flex justify-center mt-10">
-            <Link
-              href="/blog"
-              className="px-6 py-2.5 rounded-lg border border-border text-sm text-ink-muted hover:border-border-strong hover:text-ink transition-all"
-            >
-              Browse all articles
-            </Link>
+            <Button href="/blog" variant="secondary" size="md">Browse all articles</Button>
           </div>
         </section>
       )}
@@ -188,12 +174,7 @@ export default async function HomePage() {
                 {interviewQuestions.length}+ questions across {INTERVIEW_CATEGORIES.length} categories, from {DIFFICULTIES[0]} to {DIFFICULTIES[DIFFICULTIES.length - 1]}.
               </p>
             </div>
-            <Link
-              href="/flutter-interview-questions"
-              className="shrink-0 px-5 py-2.5 rounded-lg bg-accent text-white font-semibold text-sm hover:bg-accent-hover transition-colors"
-            >
-              Start practicing
-            </Link>
+            <Button href="/flutter-interview-questions" size="md" className="shrink-0">Start practicing</Button>
           </div>
           <div className="flex flex-wrap gap-2">
             {DIFFICULTIES.map((d) => (

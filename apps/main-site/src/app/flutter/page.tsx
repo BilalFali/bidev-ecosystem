@@ -32,7 +32,7 @@ export default function FlutterPage() {
           Flutter · Dart · Mobile Development
         </span>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Master Flutter <span className="text-gradient-accent">Development</span>
+          Master Flutter development
         </h1>
         <p className="text-ink-muted max-w-2xl mx-auto">
           Production-ready Flutter tutorials covering clean architecture, Firebase, state management,
@@ -75,10 +75,9 @@ export default function FlutterPage() {
                   <h3 className="font-semibold text-ink group-hover:text-accent transition-colors">{post.title}</h3>
                   <p className="text-sm text-ink-muted mt-1 line-clamp-1">{post.summary}</p>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-ink-faint flex-shrink-0">
-                  <span>{formatDate(post.publishedAt, {month:"short"})}</span>
-                  <span>·</span>
-                  <span>{post.readingTime} min</span>
+                <div className="flex items-center divide-x divide-border text-xs text-ink-faint flex-shrink-0">
+                  <span className="pr-2.5">{formatDate(post.publishedAt, {month:"short"})}</span>
+                  <span className="pl-2.5">{post.readingTime} min</span>
                 </div>
               </Link>
             ))}

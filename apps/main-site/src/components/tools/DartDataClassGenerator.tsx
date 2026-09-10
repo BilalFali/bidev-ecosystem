@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 interface FieldDef {
   dartKey: string;
@@ -173,12 +174,7 @@ export function DartDataClassGenerator() {
             rows={14}
             className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent transition-colors text-sm font-mono resize-y"
           />
-          <button
-            onClick={handleGenerate}
-            className="px-6 py-2.5 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors self-start"
-          >
-            Generate
-          </button>
+          <Button onClick={handleGenerate} size="md" prompt className="self-start">Generate</Button>
           {error && (
             <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">{error}</p>
           )}

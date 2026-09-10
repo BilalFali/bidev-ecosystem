@@ -25,9 +25,8 @@ export default function LearnHub() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
 
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-4">Learn</p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-5 leading-tight">
-          Learn <span className="text-gradient-accent">Flutter</span> by Topic
+          Learn Flutter by topic
         </h1>
         <p className="text-ink-muted max-w-2xl mx-auto text-lg">
           Guides organized around what you're actually trying to build — not a wall of blog posts.

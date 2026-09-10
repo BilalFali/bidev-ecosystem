@@ -34,7 +34,7 @@ export function QuestionDetail({
       <h1 className="text-3xl font-bold text-ink mb-6 leading-snug">{question.question}</h1>
 
       <div className="p-5 rounded-xl border border-accent/25 bg-accent/5 mb-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">Short Answer</p>
+        <p className="font-mono text-xs text-accent mb-2">// short answer</p>
         <p className="text-ink leading-relaxed">{question.shortAnswer}</p>
       </div>
 
@@ -46,14 +46,14 @@ export function QuestionDetail({
 
       {question.codeExample && (
         <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-ink-faint mb-2">Code Example</p>
+          <p className="font-mono text-xs text-ink-faint mb-2">// code example</p>
           <CodeBlock code={question.codeExample.code} language={question.codeExample.language} />
         </div>
       )}
 
       {question.commonMistakes && question.commonMistakes.length > 0 && (
         <div className="mb-8 p-5 rounded-xl border border-red-500/20 bg-red-500/5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-red-400 mb-3">Common Mistakes</p>
+          <p className="font-mono text-xs text-red-400 mb-3">// common mistakes</p>
           <ul className="flex flex-col gap-2">
             {question.commonMistakes.map((m, i) => (
               <li key={i} className="text-sm text-ink-muted leading-relaxed flex gap-2">
@@ -67,7 +67,7 @@ export function QuestionDetail({
 
       {question.interviewTips && question.interviewTips.length > 0 && (
         <div className="mb-8 p-5 rounded-xl border border-accent/20 bg-accent/5">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Interview Tips</p>
+          <p className="font-mono text-xs text-accent mb-3">// interview tips</p>
           <ul className="flex flex-col gap-2">
             {question.interviewTips.map((t, i) => (
               <li key={i} className="text-sm text-ink-muted leading-relaxed flex gap-2">
@@ -87,9 +87,9 @@ export function QuestionDetail({
               <Link
                 key={a.slug}
                 href={`/blog/${a.slug}`}
-                className="text-sm text-accent hover:underline"
+                className="text-sm text-accent hover:underline underline-offset-2"
               >
-                {a.title} →
+                {a.title}
               </Link>
             ))}
           </div>

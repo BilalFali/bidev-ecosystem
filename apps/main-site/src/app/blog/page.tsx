@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
 import { Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 export const revalidate = 60;
 
@@ -39,7 +40,6 @@ export default async function BlogPage({
 
       {/* Header */}
       <div className="mb-12">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">All Articles</p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">Developer Blog</h1>
         <p className="text-ink-muted max-w-xl">
           Flutter tutorials, Firebase guides, mobile dev patterns, and AI tools — written for developers who ship.
@@ -55,12 +55,7 @@ export default async function BlogPage({
             placeholder="Search articles..."
             className="flex-1 px-4 py-2.5 rounded-lg bg-bg-card border border-border text-ink placeholder:text-ink-faint focus:outline-none focus:border-accent text-sm transition-colors"
           />
-          <button
-            type="submit"
-            className="px-5 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors"
-          >
-            Search
-          </button>
+          <Button type="submit" variant="secondary" size="md">Search</Button>
         </div>
       </form>
 
@@ -117,12 +112,10 @@ export default async function BlogPage({
                         {post.title}
                       </h2>
                       <p className="text-sm text-ink-muted leading-relaxed line-clamp-2">{post.summary}</p>
-                      <div className="flex items-center gap-3 text-xs text-ink-faint mt-1">
-                        <span>{post.author}</span>
-                        <span>·</span>
-                        <span>{formatDate(post.publishedAt)}</span>
-                        <span>·</span>
-                        <span>{post.readingTime} min read</span>
+                      <div className="flex items-center divide-x divide-border text-xs text-ink-faint mt-1">
+                        <span className="pr-2.5">{post.author}</span>
+                        <time dateTime={post.publishedAt} className="px-2.5">{formatDate(post.publishedAt)}</time>
+                        <span className="pl-2.5">{post.readingTime} min read</span>
                       </div>
                     </div>
 
@@ -173,9 +166,7 @@ export default async function BlogPage({
             <div className="mt-6 p-5 rounded-xl border border-accent/20 bg-accent/5">
               <h3 className="text-sm font-semibold text-ink mb-2">Newsletter</h3>
               <p className="text-xs text-ink-muted mb-4">Weekly Flutter & dev tips.</p>
-              <Link href="/#newsletter" className="block w-full text-center px-4 py-2 rounded-lg bg-accent text-bg text-xs font-semibold hover:bg-accent-hover transition-colors">
-                Subscribe →
-              </Link>
+              <Button href="/#newsletter" size="sm" className="w-full">Subscribe</Button>
             </div>
           </div>
         </aside>

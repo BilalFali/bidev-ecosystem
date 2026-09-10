@@ -48,16 +48,10 @@ export function TroubleshootingArticle({
 
           <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-5 leading-tight">{post.title}</h1>
 
-          <div className="flex items-center gap-4 text-sm text-ink-muted mb-6">
-            <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-            <span>·</span>
-            <span>{post.readingTime} min read</span>
-            {post.difficulty && (
-              <>
-                <span>·</span>
-                <span>{post.difficulty}</span>
-              </>
-            )}
+          <div className="flex items-center divide-x divide-border text-sm text-ink-muted mb-6">
+            <time dateTime={post.publishedAt} className="pr-3">{formatDate(post.publishedAt)}</time>
+            <span className="px-3">{post.readingTime} min read</span>
+            {post.difficulty && <span className="pl-3">{post.difficulty}</span>}
           </div>
 
           {/* Short direct answer */}
@@ -123,7 +117,7 @@ export function TroubleshootingArticle({
           {/* Quick fix */}
           {post.quickFix && (
             <section className="mb-8 p-5 rounded-xl border border-accent/25 bg-accent/5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">Quick Fix</p>
+              <p className="font-mono text-xs text-accent mb-2">// quick fix</p>
               <p className="text-ink leading-relaxed">{post.quickFix}</p>
             </section>
           )}
@@ -157,7 +151,7 @@ export function TroubleshootingArticle({
           {/* Common mistakes */}
           {post.commonMistakes && post.commonMistakes.length > 0 && (
             <section className="mb-8 p-5 rounded-xl border border-red-500/20 bg-red-500/5">
-              <p className="text-xs font-semibold uppercase tracking-widest text-red-400 mb-3">Common Mistakes</p>
+              <p className="font-mono text-xs text-red-400 mb-3">// common mistakes</p>
               <ul className="flex flex-col gap-2">
                 {post.commonMistakes.map((m, i) => (
                   <li key={i} className="text-sm text-ink-muted leading-relaxed flex gap-2">
@@ -195,8 +189,8 @@ export function TroubleshootingArticle({
               <h2 className="text-xl font-bold text-ink mb-4">Related Problems</h2>
               <div className="flex flex-col gap-2">
                 {relatedProblems.map((r) => (
-                  <Link key={r.slug} href={`/blog/${r.slug}`} className="text-sm text-accent hover:underline">
-                    {r.title} →
+                  <Link key={r.slug} href={`/blog/${r.slug}`} className="text-sm text-accent hover:underline underline-offset-2">
+                    {r.title}
                   </Link>
                 ))}
               </div>
@@ -209,8 +203,8 @@ export function TroubleshootingArticle({
               <h2 className="text-xl font-bold text-ink mb-4">Related Flutter Guides</h2>
               <div className="flex flex-col gap-2">
                 {relatedGuides.map((r) => (
-                  <Link key={r.slug} href={`/blog/${r.slug}`} className="text-sm text-accent hover:underline">
-                    {r.title} →
+                  <Link key={r.slug} href={`/blog/${r.slug}`} className="text-sm text-accent hover:underline underline-offset-2">
+                    {r.title}
                   </Link>
                 ))}
               </div>

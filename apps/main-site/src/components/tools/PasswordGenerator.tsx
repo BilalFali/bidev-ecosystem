@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { KeyRound, Check } from "lucide-react";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 const CHARS = {
   upper:   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -107,9 +108,7 @@ export function PasswordGenerator() {
             })}
           </div>
 
-          <button onClick={generate} className="w-full py-3 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors">
-            Generate Passwords
-          </button>
+          <Button onClick={generate} prompt className="w-full">Generate passwords</Button>
         </div>
 
         {/* Results */}

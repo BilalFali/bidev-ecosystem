@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import * as QRCode from "qrcode";
 import { QrCode } from "lucide-react";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 type QRType = "url" | "text" | "email" | "phone";
 
@@ -95,13 +96,14 @@ export function QRGenerator() {
             {error && <p className="text-xs text-red-400">{error}</p>}
           </div>
 
-          <button
+          <Button
             onClick={() => generate(input, type)}
             disabled={loading || !input.trim()}
-            className="w-full py-3 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            prompt
+            className="w-full"
           >
-            {loading ? "Generating…" : "Generate QR Code"}
-          </button>
+            {loading ? "Generating…" : "Generate QR code"}
+          </Button>
 
           {/* How to use */}
           <div className="p-5 rounded-xl border border-border bg-bg-card">

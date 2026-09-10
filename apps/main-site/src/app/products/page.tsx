@@ -6,6 +6,7 @@ import { breadcrumbJsonLd } from "@bidev/shared";
 import { getAllProducts, CATEGORY_LABELS, CATEGORY_ICONS, type ProductCategory } from "@/lib/products";
 import { ProductsClient } from "./ProductsClient";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 const { SITE_URL } = SITE_CONFIG;
 
@@ -66,19 +67,13 @@ export default async function ProductsPage() {
 
       {/* Hero */}
       <div className="mb-14 max-w-2xl animate-fade-in">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Products</p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-5 leading-tight">
-          Premium Flutter Resources
+          Premium Flutter resources
         </h1>
         <p className="text-ink-muted text-lg leading-relaxed mb-7">
           Production-ready Flutter starter kits, beautiful UI kits, and practical ebooks to help developers build faster.
         </p>
-        <a
-          href="#products"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors"
-        >
-          Browse Products →
-        </a>
+        <Button href="#products">Browse products</Button>
       </div>
 
       {/* Category cards */}
@@ -106,7 +101,7 @@ export default async function ProductsPage() {
               </h2>
               <p className="text-sm text-ink-muted leading-relaxed">{cat.description}</p>
             </div>
-            <span className="text-sm text-accent font-medium mt-auto">{cat.cta} →</span>
+            <span className="text-sm text-accent font-medium mt-auto">{cat.cta}</span>
           </Link>
         ))}
       </div>

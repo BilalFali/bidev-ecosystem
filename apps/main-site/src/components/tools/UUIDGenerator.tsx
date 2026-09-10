@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 function genUUID(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -57,10 +58,7 @@ export function UUIDGenerator() {
             </div>
             <span className="text-sm text-ink-muted">Uppercase</span>
           </label>
-          <button onClick={generate}
-            className="ml-auto px-6 py-2.5 rounded-lg bg-accent text-bg font-semibold text-sm hover:bg-accent-hover transition-colors">
-            Generate
-          </button>
+          <Button onClick={generate} size="md" prompt className="ml-auto">Generate</Button>
         </div>
 
         {uuids.length > 0 && (

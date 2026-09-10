@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = pageMetadata({
   title: "AI Tools for Developers – Best AI Coding Tools 2026",
@@ -26,7 +26,7 @@ export default function AIToolsPage() {
           AI-Powered Development
         </span>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Best <span className="text-gradient-accent">AI Tools</span> for Developers
+          Best AI tools for developers
         </h1>
         <p className="text-ink-muted max-w-2xl mx-auto">
           The AI tools actually worth using in 2026 — reviewed by a developer who uses them daily.
@@ -51,7 +51,7 @@ export default function AIToolsPage() {
             </div>
             <span className="text-xs px-2 py-0.5 rounded bg-bg-elevated border border-border text-ink-faint self-start">{tool.tag}</span>
             <p className="text-sm text-ink-muted leading-relaxed">{tool.desc}</p>
-            <span className="text-xs text-accent opacity-0 group-hover:opacity-100 transition-opacity mt-auto">Visit →</span>
+            <span className="text-xs text-accent opacity-0 group-hover:opacity-100 transition-opacity mt-auto">Visit site</span>
           </a>
         ))}
       </div>
@@ -61,10 +61,7 @@ export default function AIToolsPage() {
       <div className="p-8 rounded-2xl border border-border bg-bg-card">
         <h2 className="text-xl font-bold text-ink mb-4">Read the full guide</h2>
         <p className="text-ink-muted mb-6">Deep-dive article covering Claude Code, Copilot, and when to use each.</p>
-        <Link href="/blog/best-ai-tools-for-developers-2026"
-          className="inline-flex px-6 py-2.5 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors">
-          Read: Best AI Tools for Developers 2026 →
-        </Link>
+        <Button href="/blog/best-ai-tools-for-developers-2026" size="md">Read the full comparison</Button>
       </div>
     </div>
   );

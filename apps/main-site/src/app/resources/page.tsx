@@ -3,6 +3,7 @@ import { RESOURCES, RESOURCE_CATEGORIES, RESOURCE_CATEGORY_ICONS, RESOURCE_CATEG
 import { pageMetadata } from "@/lib/seo";
 import { slugify } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
+import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = pageMetadata({
   title: "Flutter & Dart Resources – Curated for Developers",
@@ -22,22 +23,17 @@ export default function ResourcesPage() {
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
       {/* Header */}
       <div className="mb-12">
-        <span className="inline-block px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/8 text-violet-400 text-xs font-medium mb-5">
-          Curated · Always Updated
-        </span>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Flutter <span className="text-gradient-accent">Resources</span>
+          Flutter resources
         </h1>
         <p className="text-ink-muted max-w-2xl">
-          Every useful Flutter and Dart resource — packages, docs, courses, communities, and tools.
-          Hand-picked by a developer who uses them daily.
+          Every useful Flutter and Dart resource, packages, docs, courses, communities, and tools,
+          hand-picked by a developer who uses them daily and kept current.
         </p>
-        <div className="mt-4 flex items-center gap-4 text-sm text-ink-faint">
-          <span>{RESOURCES.length} resources</span>
-          <span>·</span>
-          <span>{freeCount} free</span>
-          <span>·</span>
-          <span>{RESOURCE_CATEGORIES.length - 1} categories</span>
+        <div className="mt-4 flex items-center divide-x divide-border text-sm text-ink-faint">
+          <span className="pr-3">{RESOURCES.length} resources</span>
+          <span className="px-3">{freeCount} free</span>
+          <span className="pl-3">{RESOURCE_CATEGORIES.length - 1} categories</span>
         </div>
       </div>
 
@@ -100,7 +96,7 @@ export default function ResourcesPage() {
                         ))}
                       </div>
                       <span className="text-xs text-accent opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                        Visit →
+                        Visit
                       </span>
                     </div>
                   </a>
@@ -119,12 +115,7 @@ export default function ResourcesPage() {
         <p className="text-sm text-ink-muted mb-6">
           Found something worth sharing with the Flutter community? Suggest it below.
         </p>
-        <a
-          href="/contact"
-          className="inline-flex px-6 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors"
-        >
-          Suggest a Resource →
-        </a>
+        <Button href="/contact" variant="secondary" size="md">Suggest a resource</Button>
       </div>
     </div>
   );

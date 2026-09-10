@@ -49,19 +49,15 @@ export default async function TopicsPage() {
 
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div className="mb-12">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">
-          All Topics
-        </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Tutorials by <span className="text-accent">Topic</span>
+          Tutorials by topic
         </h1>
         <p className="text-ink-muted max-w-xl text-lg">
           Every tutorial on bidev.dev, organized by topic. Click a tag to jump straight to that section.
         </p>
-        <div className="mt-4 flex items-center gap-4 text-sm text-ink-faint">
-          <span>{articles.length} article{articles.length !== 1 ? "s" : ""}</span>
-          <span>·</span>
-          <span>{tags.length} topic{tags.length !== 1 ? "s" : ""}</span>
+        <div className="mt-4 flex items-center divide-x divide-border text-sm text-ink-faint">
+          <span className="pr-3">{articles.length} article{articles.length !== 1 ? "s" : ""}</span>
+          <span className="pl-3">{tags.length} topic{tags.length !== 1 ? "s" : ""}</span>
         </div>
       </div>
 
@@ -98,7 +94,7 @@ export default async function TopicsPage() {
             href="/blog"
             className="text-xs text-ink-faint hover:text-accent transition-colors"
           >
-            View all articles →
+            View all articles
           </Link>
         </div>
 
@@ -132,7 +128,7 @@ export default async function TopicsPage() {
                     href={`/blog?tag=${encodeURIComponent(tag)}`}
                     className="text-xs text-ink-faint hover:text-accent transition-colors"
                   >
-                    View all {tag} articles →
+                    View all {tag} articles
                   </Link>
                 )}
               </div>
@@ -149,7 +145,7 @@ export default async function TopicsPage() {
                     href={`/blog?tag=${encodeURIComponent(tag)}`}
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-bg-card text-sm text-ink-muted hover:border-accent/40 hover:text-accent transition-colors"
                   >
-                    View all {categoryArticles.length} {tag} articles →
+                    View all {categoryArticles.length} {tag} articles
                   </Link>
                 </div>
               )}

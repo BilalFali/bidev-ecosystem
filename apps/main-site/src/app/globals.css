@@ -90,6 +90,19 @@
   50%, 100% { opacity: 0; }
 }
 
+/* ── Reduced motion ───────────────────────────────────────────────
+   Collapse every animation/transition/scroll-behavior to effectively
+   instant for anyone who has asked the OS for less motion. Simple
+   color/opacity feedback still happens, it just stops moving. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Code blocks (rehype-pretty-code) ────────────────────────────── */
 [data-rehype-pretty-code-figure] pre {
   @apply rounded-xl border border-border bg-bg-card text-sm overflow-x-auto p-5 my-6;

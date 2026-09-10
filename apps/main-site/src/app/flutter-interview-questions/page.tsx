@@ -10,6 +10,7 @@ import {
 } from "@/lib/interview-questions";
 import { QuestionCard } from "@/components/interview/QuestionCard";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
+import { Button } from "@/components/ui/Button";
 import { AdSlot } from "@bidev/ui";
 
 const { SITE_URL } = SITE_CONFIG;
@@ -44,25 +45,26 @@ export default async function InterviewQuestionsHub() {
 
       {/* ── HERO ─────────────────────────────────────────────────── */}
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-4">
-          Interview Preparation
-        </p>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-5 leading-tight">
-          Flutter Interview <span className="text-gradient-accent">Questions & Answers</span> (2026)
+          Flutter Interview Questions & Answers (2026)
         </h1>
         <p className="text-ink-muted max-w-2xl mx-auto mb-8 text-lg">
           Prepare for Flutter developer interviews with curated questions, explanations, code examples,
           and best practices.
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
-          {DIFFICULTIES.map((d) => (
-            <Link
-              key={d}
-              href={`/flutter-interview-questions/${d.toLowerCase()}`}
-              className="text-sm px-4 py-2 rounded-full border border-border bg-bg-card text-ink-muted hover:text-accent hover:border-accent/40 transition-colors"
-            >
-              {d}
-            </Link>
+        {/* Difficulty is a real progression (Beginner → Advanced), so a
+            connected rail earns its place here — unlike a generic 01/02/03. */}
+        <div className="flex items-center justify-center gap-0 mb-4" role="list" aria-label="Browse by difficulty">
+          {DIFFICULTIES.map((d, i) => (
+            <div key={d} className="flex items-center">
+              {i > 0 && <span className="w-6 h-px bg-border" aria-hidden="true" />}
+              <Link
+                href={`/flutter-interview-questions/${d.toLowerCase()}`}
+                className="text-sm px-4 py-2 rounded-full border border-border bg-bg-card text-ink-muted hover:text-accent hover:border-accent/40 transition-colors"
+              >
+                {d}
+              </Link>
+            </div>
           ))}
         </div>
         <p className="text-sm text-ink-faint">
@@ -132,15 +134,9 @@ export default async function InterviewQuestionsHub() {
             Pair these questions with hands-on tools and in-depth articles to actually retain what you study.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link href="/tools" className="px-5 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors">
-              Practice with Tools →
-            </Link>
-            <Link href="/blog" className="px-5 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors">
-              Read In-Depth Articles →
-            </Link>
-            <Link href="/snippets" className="px-5 py-2.5 rounded-lg bg-bg-elevated border border-border text-sm text-ink hover:border-border-strong transition-colors">
-              Browse Code Snippets →
-            </Link>
+            <Button href="/tools" variant="secondary" size="md">Practice with tools</Button>
+            <Button href="/blog" variant="secondary" size="md">Read in-depth articles</Button>
+            <Button href="/snippets" variant="secondary" size="md">Browse code snippets</Button>
           </div>
         </div>
       </section>

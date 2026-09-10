@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { FileJson2, Zap, ShieldCheck, Package, AlertTriangle, Check } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 // ──────────────────────────────────────────────
 // Types
@@ -437,12 +438,7 @@ export function JsonToDart() {
           <span className="text-sm text-ink-muted">Equatable</span>
         </label>
 
-        <button
-          onClick={run}
-          className="ml-auto px-5 py-2 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent-hover transition-colors"
-        >
-          Convert →
-        </button>
+        <Button onClick={run} size="md" prompt className="ml-auto">Convert</Button>
       </div>
 
       {/* Editor split */}
@@ -499,7 +495,7 @@ export function JsonToDart() {
                 onClick={() => { setInput(EXAMPLE_JSON); setTimeout(run, 0); }}
                 className="text-xs text-accent hover:underline"
               >
-                Try the example →
+                Try the example
               </button>
             </div>
           )}
