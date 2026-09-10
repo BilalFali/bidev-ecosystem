@@ -1,0 +1,62 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase-auth/server";
+import { getSupabaseClient } from "@/lib/supabase";
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
+const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
+
+const MIME_TO_EXT: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png":  "png",
+  "image/webp": "webp",
+  "image/gif":  "gif",
+  "image/avif": "avif",
+};
+
+export async function POST(req: NextRequest) {
+  try {
+    // Auth via the session client (same gate as every other /api/admin route).
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
+    if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
+
+    const mimeType = file.type || `image/${file.name.split(".").pop() ?? "jpeg"}`;
+    if (!ALLOWED_TYPES.includes(mimeType)) {
+      return NextResponse.json({ error: "Invalid file type. Accepted: JPEG, PNG, WebP, GIF, AVIF" }, { status: 400 });
+    }
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json({ error: "File too large (max 8 MB)" }, { status: 400 });
+    }
+
+    const ext = MIME_TO_EXT[mimeType] ?? "jpg";
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const bytes = new Uint8Array(await file.arrayBuffer());
+
+    // Storage upload goes through the service-role client — the session
+    // client's RLS-scoped storage grant isn't set up for this project, and
+    // this route is already auth-gated above.
+    const service = getSupabaseClient();
+    if (!service) return NextResponse.json({ error: "Storage not configured" }, { status: 500 });
+
+    const { error: uploadError } = await service.storage
+      .from("covers")
+      .upload(filename, bytes, { contentType: mimeType, upsert: false });
+
+    if (uploadError) {
+      console.error("[upload] storage error:", uploadError.message);
+      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+    }
+
+    const { data: { publicUrl } } = service.storage.from("covers").getPublicUrl(filename);
+
+    return NextResponse.json({ url: publicUrl, filename, size: file.size, mime_type: mimeType });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Upload failed";
+    console.error("[upload] unhandled error:", err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

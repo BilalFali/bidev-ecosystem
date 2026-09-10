@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Source_Serif_4, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { getAllCategories } from "@/lib/categories";
 
 // Source Serif 4 replaces Fraunces as the display face — Fraunces had become
 // the default "distinctive editorial serif" reach across AI-generated design,
@@ -62,15 +59,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const categories = await getAllCategories();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${displaySerif.variable} ${plexSans.variable} ${plexMono.variable}`} suppressHydrationWarning>
-      <body className="bg-paper text-ink min-h-screen flex flex-col antialiased">
-        <Header categories={categories} />
-        <main className="flex-1">{children}</main>
-        <Footer categories={categories} />
+      <body className="bg-paper text-ink antialiased">
+        {children}
       </body>
     </html>
   );
