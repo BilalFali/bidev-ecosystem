@@ -58,8 +58,16 @@ export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
   const { adFormat } = FORMAT[type];
 
   return (
-    <div className={className} aria-label="Advertisement">
-      <span className="block text-center text-[10px] uppercase tracking-wider text-ink-faint mb-1 select-none">
+    // Ad creatives usually render on a white background regardless of the
+    // page's own theme. On a dark-themed app (main-site/admin, via the
+    // bg-card/border tokens from packages/config) that reads as a jarring
+    // floating white box, so the ad sits inside a padded, bordered card
+    // instead — the white creative reads as intentionally framed. These
+    // class names resolve to nothing (harmless no-op) on light-themed apps
+    // like tech-blog that don't define the bg-card token, since a white ad
+    // already blends into a light page there.
+    <div className={`bg-bg-card border border-border rounded-lg p-3 ${className}`} aria-label="Advertisement">
+      <span className="block text-center text-[10px] uppercase tracking-wider text-ink-faint mb-2 select-none">
         Advertisement
       </span>
       <ins
