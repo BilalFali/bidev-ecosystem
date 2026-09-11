@@ -8,7 +8,11 @@ import { Footer } from "@/components/layout/Footer";
 import { WebVitals } from "@/components/analytics/WebVitals";
 import { websiteJsonLd, personJsonLd, organizationJsonLd } from "@bidev/shared";
 
-const ADSENSE_ID  = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
+// Set NEXT_PUBLIC_ADS_ENABLED=false to disable every AdSense script (consent,
+// Funding Choices CMP, Auto Ads) sitewide — e.g. while an AdSense application
+// is still pending review. Flip it back (or remove it) once approved.
+const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED !== "false";
+const ADSENSE_ID  = ADS_ENABLED ? process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID : undefined;
 const GA_ID       = "G-C04YP7HRR0";
 const CLARITY_ID  = "xi6mxc4uzo";
 

@@ -41,19 +41,24 @@ export function AdSlot({ type = "banner", className = "" }: AdSlotProps) {
 
   const publisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
   const slotId      = SLOT_ID[type];
+  // Set NEXT_PUBLIC_ADS_ENABLED=false to hide every ad slot sitewide without
+  // touching the publisher/slot IDs — e.g. while an AdSense application is
+  // still pending review. Flip it back (or remove it) once approved.
+  const adsEnabled  = process.env.NEXT_PUBLIC_ADS_ENABLED !== "false";
 
   useEffect(() => {
-    if (!publisherId || !slotId || pushed.current || !ref.current) return;
+    if (!adsEnabled || !publisherId || !slotId || pushed.current || !ref.current) return;
     try {
       pushed.current = true;
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
       // AdSense not loaded yet — auto ads script handles it
     }
-  }, [publisherId, slotId]);
+  }, [adsEnabled, publisherId, slotId]);
 
-  // Nothing to render if env vars aren't set — Auto Ads fills the page instead
-  if (!publisherId || !slotId) return null;
+  // Nothing to render if ads are disabled or env vars aren't set — Auto Ads
+  // fills the page instead when they are set.
+  if (!adsEnabled || !publisherId || !slotId) return null;
 
   const { adFormat } = FORMAT[type];
 
