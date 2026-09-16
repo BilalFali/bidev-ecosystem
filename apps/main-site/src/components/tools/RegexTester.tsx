@@ -78,7 +78,6 @@ export function RegexTester() {
       <h1 className="text-3xl font-bold text-ink mb-2">Regex Tester</h1>
       <p className="text-ink-muted mb-8">Test regular expressions live against sample text.</p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <div className="flex flex-col gap-5 p-6 rounded-xl border border-border bg-bg-card">
         <div>

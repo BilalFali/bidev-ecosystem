@@ -42,7 +42,7 @@ export default async function JobsPage() {
         </p>
       </div>
 
-      <AdSlot type="banner" className="mb-10" />
+      {jobs.length > 0 && <AdSlot type="banner" className="mb-10" />}
 
       {jobs.length === 0 ? (
         <div className="py-16 text-center rounded-xl border border-dashed border-border">
@@ -88,7 +88,7 @@ export default async function JobsPage() {
         </div>
       )}
 
-      <AdSlot type="in-article" className="mt-12" />
+      {jobs.length > 0 && <AdSlot type="in-article" className="mt-12" />}
     </div>
   );
 }

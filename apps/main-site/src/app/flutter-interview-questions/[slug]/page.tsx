@@ -34,6 +34,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: `${filter.label} Flutter Interview Questions`,
       description: `${filter.questions.length} ${filter.label.toLowerCase()} Flutter interview questions with explanations, code examples, and best practices.`,
       path: `/flutter-interview-questions/${slug}`,
+      // A category/difficulty/tag filter is a re-sliced view of the same
+      // question pool as the main listing — noindex it, but individual
+      // question pages below stay indexed since each has real unique content.
+      noindex: true,
     });
   }
 

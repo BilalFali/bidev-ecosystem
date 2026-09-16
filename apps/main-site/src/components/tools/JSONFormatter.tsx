@@ -44,7 +44,6 @@ export function JSONFormatter() {
       <h1 className="text-3xl font-bold text-ink mb-2">JSON Formatter & Validator</h1>
       <p className="text-ink-muted mb-8">Paste JSON to format, validate, or minify — 100% client-side.</p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       {/* Status bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">

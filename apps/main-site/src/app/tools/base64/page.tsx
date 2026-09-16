@@ -4,6 +4,7 @@ import { TOOLS, resolveRelatedTools } from "@/lib/tools";
 import { Base64Tool } from "@/components/tools/Base64Tool";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import { ToolContent } from "@/components/tools/ToolContent";
 
 const tool = TOOLS.find((t) => t.slug === "base64")!;
 
@@ -19,6 +20,7 @@ export default function Page() {
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
       <Base64Tool />
       <RelatedTools tools={resolveRelatedTools("base64")} maxWidth="max-w-5xl" />
+      <ToolContent slug="base64" />
     </>
   );
 }

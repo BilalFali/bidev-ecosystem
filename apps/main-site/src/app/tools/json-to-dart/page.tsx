@@ -4,6 +4,7 @@ import { TOOLS, resolveRelatedTools } from "@/lib/tools";
 import { JsonToDart } from "@/components/tools/JsonToDart";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import { ToolContent } from "@/components/tools/ToolContent";
 
 const tool = TOOLS.find((t) => t.slug === "json-to-dart")!;
 
@@ -19,6 +20,7 @@ export default function Page() {
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
       <JsonToDart />
       <RelatedTools tools={resolveRelatedTools("json-to-dart")} maxWidth="max-w-7xl" />
+      <ToolContent slug="json-to-dart" />
     </>
   );
 }

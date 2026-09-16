@@ -4,18 +4,30 @@ import Link from "next/link";
 import { getAllBlogArticles } from "@/lib/articles";
 import { getAllTags } from "@/lib/mdx";
 import { formatDate } from "@/lib/utils";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { collectionPageJsonLd } from "@bidev/shared";
 import { AdSlot } from "@bidev/ui";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = pageMetadata({
-  title: "Blog – Flutter, Mobile Dev & Developer Tools",
-  description: "In-depth Flutter tutorials, Firebase guides, mobile development articles, and AI tools for developers.",
-  path: "/blog",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ tag?: string; q?: string }>;
+}): Promise<Metadata> {
+  const { tag, q } = await searchParams;
+  return pageMetadata({
+    title: "Blog – Flutter, Mobile Dev & Developer Tools",
+    description: "In-depth Flutter tutorials, Firebase guides, mobile development articles, and AI tools for developers.",
+    path: "/blog",
+    // A tag filter or search query is a re-sliced view of the same 20-odd
+    // articles as the main listing — noindex it so it doesn't compete with
+    // the canonical /blog page for indexing.
+    noindex: Boolean(tag || q),
+  });
+}
 
 export default async function BlogPage({
   searchParams,
@@ -35,8 +47,21 @@ export default async function BlogPage({
     return matchTag && matchQ;
   });
 
+  const isBaseView = !activeTag && !query;
+  const collectionSchema = isBaseView
+    ? collectionPageJsonLd({
+        name: "Developer Blog",
+        description: "Flutter tutorials, Firebase guides, mobile dev patterns, and AI tools.",
+        url: `${SITE_CONFIG.SITE_URL}/blog`,
+        items: posts.slice(0, 20).map((p) => ({ name: p.title, url: `${SITE_CONFIG.SITE_URL}/blog/${p.slug}` })),
+      })
+    : null;
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      {collectionSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
+      )}
 
       {/* Header */}
       <div className="mb-12">

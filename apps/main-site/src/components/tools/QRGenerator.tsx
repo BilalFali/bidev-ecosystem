@@ -61,7 +61,6 @@ export function QRGenerator() {
         <p className="text-ink-muted">Generate QR codes instantly — fully client-side, no data stored.</p>
       </div>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Settings */}

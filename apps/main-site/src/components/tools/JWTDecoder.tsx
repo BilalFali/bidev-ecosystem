@@ -64,7 +64,6 @@ export function JWTDecoder() {
         This tool only decodes the token — it does not verify the signature.
       </p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <textarea
         value={token}

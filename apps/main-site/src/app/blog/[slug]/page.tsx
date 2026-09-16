@@ -7,8 +7,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import Link from "next/link";
-import { getAllArticleSlugs, getArticleBySlug } from "@/lib/articles";
-import { getRelatedPosts } from "@/lib/mdx";
+import { getAllArticleSlugs, getArticleBySlug, getRelatedArticles } from "@/lib/articles";
 import { postMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
@@ -20,8 +19,9 @@ import { ShareButtons } from "@/components/blog/ShareButtons";
 import { Comments } from "@/components/blog/Comments";
 import { ViewTracker } from "@/components/blog/ViewTracker";
 import { BuyMeCoffee } from "@/components/BuyMeCoffee";
+import { ProductPromoBanner } from "@/components/ProductPromoBanner";
 import { TroubleshootingArticle } from "@/components/blog/TroubleshootingArticle";
-import { articleJsonLd } from "@bidev/shared";
+import { articleJsonLd, howToJsonLd } from "@bidev/shared";
 
 export const revalidate  = 60;
 export const dynamicParams = true;
@@ -65,7 +65,7 @@ export default async function BlogPostPage({
   const post = await getArticleBySlug(slug);
   if (!post) notFound();
 
-  const related   = getRelatedPosts(post, 3);
+  const related   = await getRelatedArticles(post, 3);
   const postUrl   = `${SITE_URL}/blog/${post.slug}`;
 
   const wordCount = post.content
@@ -123,12 +123,26 @@ export default async function BlogPostPage({
       resolveLinks(post.relatedGuides),
     ]);
 
+    // Troubleshooting entries are structurally step-by-step fixes already
+    // (post.solutions) — HowTo schema represents that accurately, unlike
+    // treating them as a plain Article with no real body content.
+    const howToSchema = post.solutions && post.solutions.length > 0
+      ? howToJsonLd({
+          name: post.title,
+          description: post.summary,
+          steps: post.solutions.map((s) => ({ title: s.title, content: s.content })),
+        })
+      : null;
+
     return (
       <>
         <ReadingProgress />
         <ViewTracker slug={post.slug} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+        {howToSchema && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
+        )}
         <TroubleshootingArticle
           post={post}
           postUrl={postUrl}
@@ -236,6 +250,9 @@ export default async function BlogPostPage({
 
             {/* Related posts */}
             {related.length > 0 && <RelatedPosts posts={related} />}
+
+            {/* Product promo */}
+            <ProductPromoBanner />
 
             {/* Support */}
             <BuyMeCoffee variant="banner" />

@@ -39,7 +39,6 @@ export function UUIDGenerator() {
       <h1 className="text-3xl font-bold text-ink mb-2">UUID Generator</h1>
       <p className="text-ink-muted mb-8">Generate RFC-4122 v4 UUIDs using <code className="text-accent bg-accent/10 px-1 rounded text-sm">crypto.randomUUID()</code></p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <div className="flex flex-col gap-5 p-6 rounded-xl border border-border bg-bg-card">
         <div className="flex flex-wrap gap-4 items-end">

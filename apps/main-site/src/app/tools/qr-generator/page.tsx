@@ -4,6 +4,7 @@ import { TOOLS, resolveRelatedTools } from "@/lib/tools";
 import { QRGenerator } from "@/components/tools/QRGenerator";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import { ToolContent } from "@/components/tools/ToolContent";
 
 const tool = TOOLS.find((t) => t.slug === "qr-generator")!;
 
@@ -19,6 +20,7 @@ export default function QRGeneratorPage() {
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
       <QRGenerator />
       <RelatedTools tools={resolveRelatedTools("qr-generator")} maxWidth="max-w-5xl" />
+      <ToolContent slug="qr-generator" />
     </>
   );
 }

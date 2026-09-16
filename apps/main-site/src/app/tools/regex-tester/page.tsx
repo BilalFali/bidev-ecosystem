@@ -4,6 +4,7 @@ import { TOOLS, resolveRelatedTools } from "@/lib/tools";
 import { RegexTester } from "@/components/tools/RegexTester";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import { ToolContent } from "@/components/tools/ToolContent";
 
 const tool = TOOLS.find((t) => t.slug === "regex-tester")!;
 
@@ -19,6 +20,7 @@ export default function Page() {
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
       <RegexTester />
       <RelatedTools tools={resolveRelatedTools("regex-tester")} maxWidth="max-w-5xl" />
+      <ToolContent slug="regex-tester" />
     </>
   );
 }

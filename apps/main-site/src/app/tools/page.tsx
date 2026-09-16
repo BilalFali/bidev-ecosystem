@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { collectionPageJsonLd } from "@bidev/shared";
 import { AdSlot } from "@bidev/ui";
 import { TOOLS } from "@/lib/tools";
 import { ToolCard } from "@/components/tools/ToolCard";
@@ -12,8 +13,16 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function ToolsPage() {
+  const collectionSchema = collectionPageJsonLd({
+    name: "Free Developer Tools",
+    description: "Fast, privacy-friendly developer tools that run entirely in your browser.",
+    url: `${SITE_CONFIG.SITE_URL}/tools`,
+    items: TOOLS.map((t) => ({ name: t.title, url: `${SITE_CONFIG.SITE_URL}${t.href}` })),
+  });
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
 
       <div className="mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">Developer Tools</h1>

@@ -4,6 +4,7 @@ import { TOOLS, resolveRelatedTools } from "@/lib/tools";
 import { UUIDGenerator } from "@/components/tools/UUIDGenerator";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import { ToolContent } from "@/components/tools/ToolContent";
 
 const tool = TOOLS.find((t) => t.slug === "uuid-generator")!;
 
@@ -19,6 +20,7 @@ export default function Page() {
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
       <UUIDGenerator />
       <RelatedTools tools={resolveRelatedTools("uuid-generator")} />
+      <ToolContent slug="uuid-generator" />
     </>
   );
 }

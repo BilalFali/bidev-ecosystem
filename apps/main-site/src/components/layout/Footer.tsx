@@ -4,8 +4,10 @@ import { BuyMeCoffee } from "@/components/BuyMeCoffee";
 const LINKS = {
   Platform: [
     { label: "Articles",       href: "/blog" },
+    { label: "Topics",         href: "/topics" },
     { label: "Snippets",       href: "/snippets" },
     { label: "Tools",          href: "/tools" },
+    { label: "AI Tools",       href: "/ai-tools" },
     { label: "Resources",      href: "/resources" },
     { label: "Interview Prep", href: "/flutter-interview-questions" },
     { label: "Jobs",           href: "/jobs" },

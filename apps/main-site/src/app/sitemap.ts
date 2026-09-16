@@ -36,9 +36,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/jobs`,                        lastModified: now, changeFrequency: "daily",   priority: 0.8 },
     { url: `${BASE}/products`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${BASE}/packages`,                    lastModified: now, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE}/products?category=flutter-starter-kit`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE}/products?category=ui-kit`,    lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
-    { url: `${BASE}/products?category=ebook`,     lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
   ];
 
   const learnPages: MetadataRoute.Sitemap = LEARN_CATEGORIES.map((c) => ({
@@ -59,6 +56,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const productPages: MetadataRoute.Sitemap = products.map((p) => ({
     url:             `${BASE}/products/${p.slug}`,
     lastModified:    p.updated_at,
+    changeFrequency: "weekly" as const,
+    priority:        0.8,
+  }));
+
+  // Only submit category filter URLs for categories that actually have a
+  // published product — a category with zero real products behind it is
+  // exactly the kind of thin/empty page a review shouldn't find.
+  const productCategories = [...new Set(products.map((p) => p.category))];
+  const productCategoryPages: MetadataRoute.Sitemap = productCategories.map((c) => ({
+    url:             `${BASE}/products?category=${c}`,
+    lastModified:    now,
     changeFrequency: "weekly" as const,
     priority:        0.8,
   }));
@@ -145,6 +153,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...learnPages,
     ...troubleshootingPages,
     ...productPages,
+    ...productCategoryPages,
     ...packagePages,
     ...toolPages,
     ...interviewFilterPages,

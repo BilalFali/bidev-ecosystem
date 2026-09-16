@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SNIPPETS, SNIPPET_CATEGORIES } from "@/lib/snippets";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { collectionPageJsonLd } from "@bidev/shared";
 import { AdSlot } from "@bidev/ui";
 import { Button } from "@/components/ui/Button";
 
@@ -23,8 +24,16 @@ export default function SnippetsPage() {
     byCategory[cat] = SNIPPETS.filter((s) => s.category === cat);
   }
 
+  const collectionSchema = collectionPageJsonLd({
+    name: "Flutter & Dart Code Snippets",
+    description: "Free Flutter and Dart code snippets you can copy into your project.",
+    url: `${SITE_CONFIG.SITE_URL}/snippets`,
+    items: SNIPPETS.map((s) => ({ name: s.title, url: `${SITE_CONFIG.SITE_URL}/snippets/${s.slug}` })),
+  });
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
       {/* Header */}
       <div className="mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">

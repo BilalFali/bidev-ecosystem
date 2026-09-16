@@ -66,7 +66,6 @@ export function PasswordGenerator() {
       <h1 className="text-3xl font-bold text-ink mb-2">Password Generator</h1>
       <p className="text-ink-muted mb-8">Cryptographically secure passwords via Web Crypto API — nothing leaves your browser.</p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Settings */}

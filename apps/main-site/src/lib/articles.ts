@@ -166,6 +166,27 @@ export async function getAllBlogArticles(): Promise<Article[]> {
   return all.filter((a) => !a.isTroubleshooting);
 }
 
+/**
+ * Tag-overlap related articles, searched across the FULL article pool (DB +
+ * MDX) — not just the 3 legacy MDX files. The previous implementation
+ * (mdx.ts's getRelatedPosts, still there for pure-MDX contexts) only ever
+ * searched getAllPosts(), so "related articles" silently returned nothing
+ * for virtually every real (DB-backed) article on the site.
+ */
+export async function getRelatedArticles(current: Article, limit = 3): Promise<Article[]> {
+  const all = await getAllArticles();
+  return all
+    .filter((a) => a.slug !== current.slug && !a.isTroubleshooting)
+    .map((a) => ({
+      article: a,
+      score: a.tags.filter((t) => current.tags.includes(t)).length,
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((x) => x.article);
+}
+
 export async function getAllArticleSlugs(): Promise<string[]> {
   const mdxSlugs = getAllPosts().map((p) => p.slug);
 

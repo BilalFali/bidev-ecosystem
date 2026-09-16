@@ -47,6 +47,10 @@ export function pageMetadata(opts: {
   description: string;
   path: string;
   image?: string;
+  /** Set true for filtered/near-duplicate views (a tag filter, a search
+   *  query) that shouldn't compete with the canonical unfiltered page for
+   *  indexing. */
+  noindex?: boolean;
 }): Metadata {
   const url         = `${SITE_URL}${opts.path}`;
   const image       = opts.image ?? `${SITE_URL}/og.png`;
@@ -55,6 +59,7 @@ export function pageMetadata(opts: {
     title: opts.title,
     description,
     alternates: { canonical: url },
+    ...(opts.noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       url,
       title: opts.title,

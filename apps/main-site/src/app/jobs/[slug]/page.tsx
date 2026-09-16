@@ -112,7 +112,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
         ) : null}
       </div>
 
-      <AdSlot type="in-article" className="mt-12" />
+      {/* Ad kept well clear of the Apply CTA above — a divider and generous
+          spacing so it reads as a separate section, not part of the action. */}
+      <div className="mt-14 pt-10 border-t border-border">
+        <AdSlot type="in-article" />
+      </div>
     </div>
   );
 }

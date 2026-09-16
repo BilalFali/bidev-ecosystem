@@ -72,7 +72,6 @@ export function ColorGenerator() {
         Pick a seed color, preview tints &amp; shades, and copy a ready-to-use Flutter snippet.
       </p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <div className="flex flex-col gap-5 p-6 rounded-xl border border-border bg-bg-card">
         <div className="flex items-center gap-4">

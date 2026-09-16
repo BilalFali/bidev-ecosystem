@@ -154,6 +154,30 @@ export function softwareApplicationJsonLd(opts: {
   };
 }
 
+export function collectionPageJsonLd(opts: {
+  name: string;
+  description: string;
+  url: string;
+  items: { name: string; url: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: opts.items.map((item, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: item.name,
+        url: item.url,
+      })),
+    },
+  };
+}
+
 export function faqJsonLd(items: { question: string; answer: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -162,6 +186,24 @@ export function faqJsonLd(items: { question: string; answer: string }[]) {
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
+
+export function howToJsonLd(opts: {
+  name: string;
+  description: string;
+  steps: { title: string; content: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: opts.name,
+    description: opts.description,
+    step: opts.steps.map((s) => ({
+      "@type": "HowToStep",
+      name: s.title,
+      text: s.content,
     })),
   };
 }

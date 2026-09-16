@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { RESOURCES, RESOURCE_CATEGORIES, RESOURCE_CATEGORY_ICONS, RESOURCE_CATEGORY_FALLBACK_ICON } from "@/lib/resources";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { collectionPageJsonLd } from "@bidev/shared";
 import { slugify } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
 import { Button } from "@/components/ui/Button";
@@ -19,8 +20,16 @@ export default function ResourcesPage() {
 
   const freeCount = RESOURCES.filter((r) => r.free).length;
 
+  const collectionSchema = collectionPageJsonLd({
+    name: "Flutter & Dart Resources",
+    description: "Curated Flutter and Dart resources: official docs, packages, courses, communities, and tools.",
+    url: `${SITE_CONFIG.SITE_URL}/resources`,
+    items: RESOURCES.map((r) => ({ name: r.title, url: r.url })),
+  });
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
       {/* Header */}
       <div className="mb-12">
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">

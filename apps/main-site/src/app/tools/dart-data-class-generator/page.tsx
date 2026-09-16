@@ -4,6 +4,7 @@ import { TOOLS, resolveRelatedTools } from "@/lib/tools";
 import { DartDataClassGenerator } from "@/components/tools/DartDataClassGenerator";
 import { ToolPageSeo } from "@/components/tools/ToolPageSeo";
 import { RelatedTools } from "@/components/tools/RelatedTools";
+import { ToolContent } from "@/components/tools/ToolContent";
 
 const tool = TOOLS.find((t) => t.slug === "dart-data-class-generator")!;
 
@@ -19,6 +20,7 @@ export default function Page() {
       <ToolPageSeo name={tool.title} description={tool.description} path={tool.href} />
       <DartDataClassGenerator />
       <RelatedTools tools={resolveRelatedTools("dart-data-class-generator")} maxWidth="max-w-5xl" />
+      <ToolContent slug="dart-data-class-generator" />
     </>
   );
 }

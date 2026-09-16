@@ -155,7 +155,6 @@ export function DartDataClassGenerator() {
         <a href="/tools/json-to-dart" className="text-accent hover:underline">JSON to Dart Converter</a> instead.
       </p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       <div className="grid lg:grid-cols-2 gap-5">
         <div className="flex flex-col gap-3">

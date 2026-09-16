@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllPosts } from "@/lib/mdx";
+import { getAllBlogArticles } from "@/lib/articles";
 import { formatDate } from "@/lib/utils";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
@@ -21,8 +21,9 @@ const TOPICS = [
   { icon: Rocket,     title: "App Store Deployment",desc: "Play Store & App Store guides" },
 ];
 
-export default function FlutterPage() {
-  const posts = getAllPosts().filter(p => p.tags.some(t => /flutter/i.test(t)));
+export default async function FlutterPage() {
+  const all = await getAllBlogArticles();
+  const posts = all.filter(p => p.tags.some(t => /flutter/i.test(t)));
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">

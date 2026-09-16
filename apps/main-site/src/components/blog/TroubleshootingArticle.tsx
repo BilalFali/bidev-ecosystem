@@ -7,6 +7,7 @@ import { ProseContent } from "./ProseContent";
 import { ShareButtons } from "./ShareButtons";
 import { Comments } from "./Comments";
 import { BuyMeCoffee } from "@/components/BuyMeCoffee";
+import { ProductPromoBanner } from "@/components/ProductPromoBanner";
 
 interface RelatedLink {
   slug: string;
@@ -210,6 +211,8 @@ export function TroubleshootingArticle({
               </div>
             </section>
           )}
+
+          <ProductPromoBanner />
 
           <BuyMeCoffee variant="banner" />
 

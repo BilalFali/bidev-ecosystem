@@ -35,7 +35,6 @@ export function Base64Tool() {
       <h1 className="text-3xl font-bold text-ink mb-2">Base64 Encoder / Decoder</h1>
       <p className="text-ink-muted mb-8">Encode or decode Base64 strings — client-side, nothing sent to any server.</p>
 
-      <AdSlot type="banner" className="mb-8" />
 
       {/* Mode toggle */}
       <div className="flex gap-1 p-1 bg-bg-card border border-border rounded-lg max-w-xs mb-6">
