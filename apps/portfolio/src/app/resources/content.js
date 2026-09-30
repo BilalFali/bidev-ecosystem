@@ -59,17 +59,13 @@ const home = {
   path: "/",
   image: "/images/og/home.jpg",
   label: "Home",
-  title: "bidev.dev – Flutter, Mobile Dev & Developer Tools",
-  description: "Learn Flutter, Mobile Development & build real apps. Free developer tools, tutorials, and technical articles by Bilal Fali.",
-  headline: <>Learn Flutter, Mobile Dev & Build Real Apps</>,
-  featured: {
-    title: "New: Free Developer Tools",
-    href: "/tools"
-  },
+  title: `${person.name} – ${person.role}`,
+  description: `${person.name} is a ${person.role} building production apps used by real people. See selected work and get in touch.`,
+  headline: <>Flutter Mobile App Developer</>,
   subline: (
     <>
-      Free tools, in-depth tutorials, and production-ready guides for Flutter
-      <br /> and mobile developers. Start reading or explore the tools.
+      I build and ship production Flutter apps end to end, from architecture
+      <br /> to release. Here's a look at the work.
     </>
   ),
 };
@@ -280,20 +276,6 @@ const about = {
   },
 };
 
-const blog = {
-  path: "/blog",
-  label: "Blog",
-  title: "Blog – Flutter & Mobile Dev Articles",
-  description: "In-depth Flutter tutorials, mobile development guides, Firebase tips, and AI tools for developers. Written by Bilal Fali.",
-};
-
-const tools = {
-  path: "/tools",
-  label: "Tools",
-  title: "Free Developer Tools – bidev.dev",
-  description: "Free online tools for developers: QR Code Generator, JSON Formatter & Validator, Password Generator, and more.",
-};
-
 const work = {
   path: "/work",
   label: "Work",
@@ -301,55 +283,4 @@ const work = {
   description: `Flutter mobile app projects by ${person.name}`,
 };
 
-const gallery = {
-  path: "/gallery",
-  label: "Gallery",
-  title: `Photo gallery – ${person.name}`,
-  description: `A photo collection by ${person.name}`,
-  // Images by https://lorant.one
-  // These are placeholder images, replace with your own
-  images: [
-    {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/horizontal-2.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/horizontal-3.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/horizontal-4.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/vertical-1.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/vertical-2.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/vertical-3.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/vertical-4.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-  ],
-};
-
-export { person, social, newsletter, home, about, blog, work, gallery, tools };
+export { person, social, newsletter, home, about, work };

@@ -1,42 +1,58 @@
 import { getPosts } from "@/app/utils/utils";
-import { Column, Grid } from "@/once-ui/components";
-import { ProjectCard } from "@/components";
+import { PlatformGroup } from "@/components/work/PlatformGroup";
+import { StandaloneApp } from "@/components/work/StandaloneApp";
+import styles from "@/app/work/work.module.scss";
 
-interface ProjectsProps {
-  range?: [number, number?];
-}
+export function Projects() {
+  const allProjects = getPosts(["src", "app", "work", "projects"]).sort(
+    (a, b) => new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime(),
+  );
 
-export function Projects({ range }: ProjectsProps) {
-  let allProjects = getPosts(["src", "app", "work", "projects"]);
+  const platforms = new Map<string, typeof allProjects>();
+  const standalone: typeof allProjects = [];
 
-  const sortedProjects = allProjects.sort((a, b) => {
-    return (
-      new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime()
-    );
-  });
-
-  const displayedProjects = range
-    ? sortedProjects.slice(range[0] - 1, range[1] ?? sortedProjects.length)
-    : sortedProjects;
+  for (const project of allProjects) {
+    const platform = project.metadata.platform;
+    if (platform) {
+      const group = platforms.get(platform) ?? [];
+      group.push(project);
+      platforms.set(platform, group);
+    } else {
+      standalone.push(project);
+    }
+  }
 
   return (
-    <Grid columns="1" mobileColumns="1" fillWidth gap="xl" marginBottom="40">
-      {displayedProjects.map((post, index) => (
-        <ProjectCard
-          priority={index < 2}
-          key={post.slug}
-          href={`work/${post.slug}`}
-          images={post.metadata.images || []}
-          title={post.metadata.title}
-          description={post.metadata.summary}
-          content={post.content}
-          avatars={
-            post.metadata.team?.map((member) => ({ src: member.avatar })) || []
-          }
-          link={post.metadata.link || ""}
+    <>
+      {Array.from(platforms.entries()).map(([name, apps]) => (
+        <PlatformGroup
+          key={name}
+          name={name}
+          description={apps.find((a) => a.metadata.platformDescription)?.metadata.platformDescription || ""}
+          apps={apps.map((a) => ({
+            slug: a.slug,
+            title: a.metadata.title,
+            role: a.metadata.platformRole || "",
+            link: a.metadata.link,
+            image: a.metadata.images?.[0],
+          }))}
         />
       ))}
-    </Grid>
+
+      <div>
+        <p className={styles.standaloneHeading}>Independent apps</p>
+        {standalone.map((project, index) => (
+          <StandaloneApp
+            key={project.slug}
+            slug={project.slug}
+            title={project.metadata.title}
+            summary={project.metadata.summary}
+            images={project.metadata.images || []}
+            link={project.metadata.link}
+            reverse={index % 2 === 1}
+          />
+        ))}
+      </div>
+    </>
   );
 }

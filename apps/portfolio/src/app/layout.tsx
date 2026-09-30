@@ -3,7 +3,7 @@ import "@/once-ui/tokens/index.scss";
 
 import classNames from "classnames";
 
-import { Footer, Header, RouteGuard } from "@/components";
+import { Footer, Header } from "@/components";
 import { baseURL, effects, style, font, home } from "@/app/resources";
 
 import { Background, Column, Flex, ThemeProvider, ToastProvider } from "@/once-ui/components";
@@ -123,7 +123,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               flex={1}
             >
               <Flex horizontal="center" fillWidth minHeight="0">
-                <RouteGuard>{children}</RouteGuard>
+                {children}
               </Flex>
             </Flex>
             <Footer />

@@ -7,21 +7,16 @@ import {
   Button,
   RevealFx,
   Column,
-  Badge,
   Row,
   Icon,
   Card,
   Grid,
 } from "@/once-ui/components";
 
-import { baseURL, routes } from "@/app/resources";
+import { baseURL } from "@/app/resources";
 import { home, about, person, newsletter } from "@/app/resources/content";
 import { Mailchimp } from "@/components";
 import { Meta, Schema } from "@/once-ui/modules";
-import { getPosts } from "@/app/utils/utils";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -32,32 +27,7 @@ export async function generateMetadata() {
   });
 }
 
-const featuredTools = [
-  {
-    href: "/tools/qr-generator",
-    icon: "tools" as const,
-    title: "QR Code Generator",
-    description: "Generate QR codes for URLs, text, email instantly.",
-  },
-  {
-    href: "/tools/json-formatter",
-    icon: "document" as const,
-    title: "JSON Formatter",
-    description: "Format and validate JSON with real-time error detection.",
-  },
-  {
-    href: "/tools/password-generator",
-    icon: "eyeOff" as const,
-    title: "Password Generator",
-    description: "Cryptographically secure passwords with strength indicator.",
-  },
-];
-
 export default function Home() {
-  const posts = getPosts(["src", "app", "blog", "posts"])
-    .sort((a, b) => new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime())
-    .slice(0, 3);
-
   return (
     <Column maxWidth="m" gap="xl" horizontal="center">
       <Schema
@@ -77,25 +47,6 @@ export default function Home() {
       {/* Hero Section */}
       <Column fillWidth paddingY="40" gap="l">
         <Column maxWidth="s" gap="m">
-          {home.featured && (
-            <RevealFx fillWidth horizontal="start" paddingBottom="16">
-              <Badge
-                background="brand-alpha-weak"
-                paddingX="16"
-                paddingY="8"
-                onBackground="neutral-strong"
-                textVariant="label-default-m"
-                arrow={true}
-                href={home.featured.href}
-              >
-                <Row paddingY="4" gap="8">
-                  <Text variant="label-default-s">⚡</Text>
-                  {home.featured.title}
-                </Row>
-              </Badge>
-            </RevealFx>
-          )}
-
           <RevealFx translateY="4" fillWidth horizontal="start">
             <Heading wrap="balance" variant="display-strong-xl">
               {home.headline}
@@ -122,24 +73,14 @@ export default function Home() {
           <RevealFx paddingTop="32" delay={0.2} horizontal="start">
             <Flex gap="12" wrap>
               <Button
-                id="start-reading"
+                id="explore-work"
                 data-border="rounded"
-                href="/blog"
+                href="/work"
                 variant="primary"
                 size="l"
                 suffixIcon="chevronRight"
               >
-                Start Reading
-              </Button>
-              <Button
-                id="explore-tools"
-                data-border="rounded"
-                href="/tools"
-                variant="secondary"
-                size="l"
-                prefixIcon="tools"
-              >
-                Explore Tools
+                See My Work
               </Button>
               <Button
                 id="about"
@@ -164,157 +105,81 @@ export default function Home() {
                 <Heading variant="display-strong-s" onBackground="brand-strong">100K+</Heading>
                 <Text variant="body-default-s" onBackground="neutral-weak">App Users</Text>
               </Column>
-              <Column gap="4">
-                <Heading variant="display-strong-s" onBackground="brand-strong">3</Heading>
-                <Text variant="body-default-s" onBackground="neutral-weak">Free Tools</Text>
-              </Column>
             </Flex>
           </RevealFx>
         </Column>
       </Column>
 
-      {/* AdSense placeholder — top */}
-      <RevealFx translateY="8" delay={0.3} fillWidth>
-        <Row
-          fillWidth padding="16" radius="m" border="neutral-alpha-weak"
-          background="neutral-alpha-weak" horizontal="center" vertical="center"
-          style={{ minHeight: "90px" }}
-        >
-          <Text variant="label-default-s" onBackground="neutral-weak">[ Advertisement ]</Text>
-        </Row>
-      </RevealFx>
-
-      {/* Tools Section */}
-      {routes["/tools"] && (
-        <RevealFx translateY="16" delay={0.4} fillWidth>
-          <Column fillWidth gap="l">
-            <Flex fillWidth horizontal="space-between" vertical="center" wrap>
-              <Column gap="4">
-                <Heading as="h2" variant="display-strong-s" wrap="balance">
-                  Free Developer Tools
-                </Heading>
-                <Text variant="body-default-m" onBackground="neutral-weak">
-                  Client-side, fast, no account needed.
-                </Text>
-              </Column>
-              <Button
-                href="/tools"
-                variant="tertiary"
-                size="s"
-                suffixIcon="chevronRight"
-              >
-                All tools
-              </Button>
-            </Flex>
-
-            <Grid columns="3" mobileColumns="1" gap="m">
-              {featuredTools.map((tool) => (
-                <Card
-                  key={tool.href}
-                  href={tool.href}
-                  padding="m"
-                  radius="l"
-                  border="neutral-alpha-medium"
-                  background="surface"
-                >
-                  <Column gap="m">
-                    <Row
-                      padding="s"
-                      radius="m"
-                      background="brand-alpha-weak"
-                      horizontal="center"
-                      vertical="center"
-                      style={{ width: "fit-content" }}
-                    >
-                      <Icon name={tool.icon} size="m" onBackground="brand-strong" />
-                    </Row>
-                    <Column gap="4">
-                      <Text variant="heading-strong-s">{tool.title}</Text>
-                      <Text variant="body-default-s" onBackground="neutral-weak">
-                        {tool.description}
-                      </Text>
-                    </Column>
-                  </Column>
-                </Card>
-              ))}
-            </Grid>
+      {/* More from BiDev */}
+      <RevealFx translateY="16" delay={0.4} fillWidth>
+        <Column fillWidth gap="l">
+          <Column gap="4">
+            <Heading as="h2" variant="display-strong-s" wrap="balance">
+              More from BiDev
+            </Heading>
+            <Text variant="body-default-m" onBackground="neutral-weak">
+              My Flutter articles and free developer tools live on bidev.dev.
+            </Text>
           </Column>
-        </RevealFx>
-      )}
 
-      {/* Blog Section */}
-      {routes["/blog"] && posts.length > 0 && (
-        <RevealFx translateY="16" delay={0.5} fillWidth>
-          <Column fillWidth gap="l">
-            <Flex fillWidth horizontal="space-between" vertical="center" wrap>
-              <Column gap="4">
-                <Heading as="h2" variant="display-strong-s" wrap="balance">
-                  Latest Articles
-                </Heading>
-                <Text variant="body-default-m" onBackground="neutral-weak">
-                  Flutter, mobile dev, Firebase, and AI tools.
-                </Text>
-              </Column>
-              <Button href="/blog" variant="tertiary" size="s" suffixIcon="chevronRight">
-                All articles
-              </Button>
-            </Flex>
-
-            <Column gap="m" fillWidth>
-              {posts.map((post) => (
-                <Card
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  padding="m"
-                  radius="l"
-                  border="neutral-alpha-medium"
-                  background="surface"
+          <Grid columns="2" mobileColumns="1" gap="m">
+            <Card
+              href="https://bidev.dev/blog"
+              padding="m"
+              radius="l"
+              border="neutral-alpha-medium"
+              background="surface"
+            >
+              <Row gap="m" vertical="center">
+                <Row
+                  padding="s"
+                  radius="m"
+                  background="brand-alpha-weak"
+                  horizontal="center"
+                  vertical="center"
+                  style={{ width: "fit-content" }}
                 >
-                  <Row gap="m" vertical="start" wrap>
-                    <Column gap="s" style={{ flex: 1 }}>
-                      <Row gap="8" vertical="center">
-                        {post.metadata.tag && (
-                          <Badge
-                            background="brand-alpha-weak"
-                            paddingX="8"
-                            paddingY="4"
-                            textVariant="label-default-xs"
-                            onBackground="brand-strong"
-                          >
-                            {post.metadata.tag}
-                          </Badge>
-                        )}
-                        <Text variant="label-default-xs" onBackground="neutral-weak">
-                          {new Date(post.metadata.publishedAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </Text>
-                      </Row>
-                      <Text variant="heading-strong-m">{post.metadata.title}</Text>
-                      <Text variant="body-default-s" onBackground="neutral-weak">
-                        {post.metadata.summary}
-                      </Text>
-                    </Column>
-                    <Icon name="chevronRight" size="s" onBackground="neutral-weak" style={{ flexShrink: 0, marginTop: "4px" }} />
-                  </Row>
-                </Card>
-              ))}
-            </Column>
-          </Column>
-        </RevealFx>
-      )}
+                  <Icon name="book" size="m" onBackground="brand-strong" />
+                </Row>
+                <Column gap="4" style={{ flex: 1 }}>
+                  <Text variant="heading-strong-s">Blog</Text>
+                  <Text variant="body-default-s" onBackground="neutral-weak">
+                    Flutter tutorials, Firebase guides, and mobile dev articles.
+                  </Text>
+                </Column>
+                <Icon name="chevronRight" size="s" onBackground="neutral-weak" />
+              </Row>
+            </Card>
 
-      {/* AdSense placeholder — middle */}
-      <RevealFx translateY="8" delay={0.5} fillWidth>
-        <Row
-          fillWidth padding="16" radius="m" border="neutral-alpha-weak"
-          background="neutral-alpha-weak" horizontal="center" vertical="center"
-          style={{ minHeight: "90px" }}
-        >
-          <Text variant="label-default-s" onBackground="neutral-weak">[ Advertisement ]</Text>
-        </Row>
+            <Card
+              href="https://bidev.dev/tools"
+              padding="m"
+              radius="l"
+              border="neutral-alpha-medium"
+              background="surface"
+            >
+              <Row gap="m" vertical="center">
+                <Row
+                  padding="s"
+                  radius="m"
+                  background="brand-alpha-weak"
+                  horizontal="center"
+                  vertical="center"
+                  style={{ width: "fit-content" }}
+                >
+                  <Icon name="tools" size="m" onBackground="brand-strong" />
+                </Row>
+                <Column gap="4" style={{ flex: 1 }}>
+                  <Text variant="heading-strong-s">Developer Tools</Text>
+                  <Text variant="body-default-s" onBackground="neutral-weak">
+                    JSON formatter, QR generator, password generator, and more.
+                  </Text>
+                </Column>
+                <Icon name="chevronRight" size="s" onBackground="neutral-weak" />
+              </Row>
+            </Card>
+          </Grid>
+        </Column>
       </RevealFx>
 
       {/* Newsletter */}
