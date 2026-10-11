@@ -8,6 +8,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import Link from "next/link";
 import { getAllArticleSlugs, getArticleBySlug, getRelatedArticles } from "@/lib/articles";
+import { addHeadingIds, extractMarkdownHeadings } from "@/lib/toc";
 import { postMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 import { AdSlot } from "@bidev/ui";
@@ -67,6 +68,10 @@ export default async function BlogPostPage({
 
   const related   = await getRelatedArticles(post, 3);
   const postUrl   = `${SITE_URL}/blog/${post.slug}`;
+
+  const toc = post.source === "db"
+    ? addHeadingIds(post.content)
+    : { html: post.content, headings: extractMarkdownHeadings(post.content) };
 
   const wordCount = post.content
     ? Math.round(post.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length)
@@ -218,7 +223,7 @@ export default async function BlogPostPage({
             {/* Article body — ProseContent injects copy buttons on every <pre> */}
             <ProseContent>
               {post.source === "db" ? (
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                <div dangerouslySetInnerHTML={{ __html: toc.html }} />
               ) : (
                 <MDXRemote source={post.content} options={mdxOptions} />
               )}
@@ -268,7 +273,7 @@ export default async function BlogPostPage({
           {/* Sidebar */}
           <aside className="hidden xl:flex flex-col gap-6 w-64 flex-shrink-0">
             <div className="sticky top-24 flex flex-col gap-6">
-              <TableOfContents content={post.content} />
+              <TableOfContents headings={toc.headings} />
               <AdSlot type="sidebar" />
             </div>
           </aside>
