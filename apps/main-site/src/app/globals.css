@@ -12,43 +12,43 @@
   }
 
   body {
-    background-color: #101418;
-    color: #e0e2e9;
-    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+    background-color: #0f131d;
+    color: #dfe2f1;
+    font-family: var(--font-inter), system-ui, sans-serif;
   }
 
   ::selection {
-    background-color: rgba(1, 117, 194, 0.25);
-    color: #9ecaff;
+    background-color: rgba(77, 142, 255, 0.25);
+    color: #adc6ff;
   }
 
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: #0b0e13; }
-  ::-webkit-scrollbar-thumb { background: #404751; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #8a919c; }
+  ::-webkit-scrollbar-track { background: #0a0e18; }
+  ::-webkit-scrollbar-thumb { background: #424754; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #8c909f; }
 }
 
 @layer utilities {
   /* Glassmorphism — floating nav, dropdowns */
   .glass {
-    background: rgba(16, 20, 24, 0.85);
+    background: rgba(15, 19, 29, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 
   /* Tonal border for cards */
   .border-tonal {
-    border: 1px solid #404751;
+    border: 1px solid #424754;
   }
 
   /* ── Terminal window chrome — the hero device ─────────────────────
      A real dev tool surface (traffic-light dots + monospace body),
      not an abstract gradient card. Used once, for the hero. */
   .terminal-window {
-    background: #0b0e13;
-    border: 1px solid #2a323c;
+    background: #0a0e18;
+    border: 1px solid #2a3040;
     border-radius: 10px;
-    box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(64, 71, 81, 0.4);
+    box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(66, 71, 84, 0.4);
     overflow: hidden;
   }
 
@@ -57,8 +57,8 @@
     align-items: center;
     gap: 6px;
     padding: 10px 14px;
-    border-bottom: 1px solid #2a323c;
-    background: #0e1217;
+    border-bottom: 1px solid #2a3040;
+    background: #0c1019;
   }
 
   .terminal-dot {
@@ -73,8 +73,8 @@
      as a background watermark rather than a generic gradient wash. */
   .widget-tree-bg {
     background-image:
-      linear-gradient(rgba(1, 117, 194, 0.16) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(1, 117, 194, 0.16) 1px, transparent 1px);
+      linear-gradient(rgba(77, 142, 255, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(77, 142, 255, 0.16) 1px, transparent 1px);
     background-size: 28px 28px;
     mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 75%);
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 75%);
@@ -128,13 +128,13 @@
 
 /* Product description — HTML from TipTap */
 .product-description p          { margin-bottom: 0.75rem; }
-.product-description strong     { color: #e0e2e9; font-weight: 600; }
+.product-description strong     { color: #dfe2f1; font-weight: 600; }
 .product-description em         { font-style: italic; }
-.product-description a          { color: #0175c2; text-decoration: underline; text-underline-offset: 2px; }
-.product-description a:hover    { color: #9ecaff; }
+.product-description a          { color: #4d8eff; text-decoration: underline; text-underline-offset: 2px; }
+.product-description a:hover    { color: #adc6ff; }
 .product-description ul         { list-style: disc; padding-left: 1.4rem; margin-bottom: 0.75rem; }
 .product-description ol         { list-style: decimal; padding-left: 1.4rem; margin-bottom: 0.75rem; }
 .product-description li         { margin-bottom: 0.2rem; }
-.product-description h1,.product-description h2,.product-description h3 { color: #e0e2e9; font-weight: 600; margin: 1rem 0 0.4rem; }
-.product-description code       { background: rgba(1,117,194,0.1); color: #9ecaff; border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
-.product-description blockquote { border-left: 3px solid #0175c2; padding-left: 1rem; color: #8a919c; font-style: italic; margin: 0.75rem 0; }
+.product-description h1,.product-description h2,.product-description h3 { color: #dfe2f1; font-weight: 600; margin: 1rem 0 0.4rem; }
+.product-description code       { background: rgba(77,142,255,0.1); color: #adc6ff; border-radius: 4px; padding: 1px 5px; font-size: 0.85em; }
+.product-description blockquote { border-left: 3px solid #4d8eff; padding-left: 1rem; color: #8c909f; font-style: italic; margin: 0.75rem 0; }

@@ -55,7 +55,7 @@ export default async function TroubleshootingHub() {
             error string, so the search bar wears that literally instead of
             a generic pill input. */}
         <form action="/search" method="GET" className="max-w-xl mx-auto mb-4">
-          <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[#0b0e13] border border-border focus-within:border-accent transition-colors font-mono text-sm">
+          <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-bg-secondary border border-border focus-within:border-accent transition-colors font-mono text-sm">
             <span className="text-ink-faint shrink-0" aria-hidden="true">$ grep -r</span>
             <input
               name="q"

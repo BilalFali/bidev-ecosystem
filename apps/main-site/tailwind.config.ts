@@ -1,11 +1,11 @@
 import type { Config } from "tailwindcss";
+import { PALETTE } from "./src/lib/palette";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const base = require("@bidev/config/tailwind");
 
-// main-site-only additions layered on top of the shared dark/Flutter-blue base.
-// Kept local (not in packages/config) because this "hot reload" signal color
-// and terminal-glow shadow are specific to this app's editorial treatment,
-// not something tech-blog or admin should inherit.
+// main-site-only tokens layered on the shared base. Kept local so tech-blog
+// and admin keep their own look. Colors come from src/lib/palette.ts, the
+// single source that scripts/check-contrast.mjs also reads.
 const config: Config = {
   ...base,
   theme: {
@@ -14,10 +14,8 @@ const config: Config = {
       ...base.theme.extend,
       colors: {
         ...base.theme.extend.colors,
-        // Hot-reload amber — the actual color Flutter DevTools/IDE tooling
-        // uses for its hot-reload lightning bolt. Reserved for state/signal
-        // (new, updated, live, difficulty) — never for links or primary actions,
-        // which stay on the Flutter-blue accent.
+        ...PALETTE,
+        // Hot-reload amber: state and signal only (new, updated, live).
         signal: {
           DEFAULT: "#f5b400",
           muted: "rgba(245, 180, 0, 0.10)",
@@ -25,16 +23,32 @@ const config: Config = {
       },
       fontFamily: {
         ...base.theme.extend.fontFamily,
-        // Space Grotesk replaces the shared base's Geist mapping for this
-        // app only — Geist reads as the single most common "modern tech
-        // site" default in current AI-generated design; Space Grotesk's
-        // geometric, slightly technical letterforms fit this site's
-        // existing CLI/terminal identity instead.
-        sans: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       boxShadow: {
         ...base.theme.extend.boxShadow,
-        terminal: "0 20px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(64,71,81,0.6)",
+        terminal: "0 20px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(66,71,84,0.6)",
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            ...base.theme.extend.typography.DEFAULT.css,
+            color: PALETTE.ink.muted,
+            a: { color: PALETTE.accent.light, "&:hover": { color: PALETTE.accent.DEFAULT } },
+            "h1,h2,h3,h4": { color: PALETTE.ink.DEFAULT, fontWeight: "700" },
+            code: {
+              ...base.theme.extend.typography.DEFAULT.css.code,
+              color: PALETTE.accent.light,
+              background: PALETTE.accent.muted,
+            },
+            pre: { background: PALETTE.bg.code, border: `1px solid ${PALETTE.border.DEFAULT}` },
+            blockquote: { borderLeftColor: PALETTE.accent.DEFAULT, color: PALETTE.ink.faint },
+            hr: { borderColor: PALETTE.border.DEFAULT },
+            "ol li::marker": { color: PALETTE.accent.light },
+            "ul li::marker": { color: PALETTE.accent.light },
+            strong: { color: PALETTE.ink.DEFAULT },
+          },
+        },
       },
     },
   },
