@@ -169,7 +169,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         )}
       </head>
 
-      <body className="bg-bg text-ink min-h-screen flex flex-col antialiased">
+      <body className="bg-bg text-ink min-h-screen flex flex-col antialiased pb-16 md:pb-0">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
