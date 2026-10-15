@@ -5,7 +5,7 @@ const root = new URL("../.next/server/app/", import.meta.url).pathname.replace(/
 
 const FORBIDDEN = [
   "4,200", "Staff Mobile Architect", "Verified on Google Play", "Flutter 3.29",
-  "48 articles", "0ms latency", "LATENCY", "ALL SYSTEMS OPERATIONAL", "System Status",
+  "48 articles", "0ms latency", "Zero latency", "LATENCY", "REGION", "ALL SYSTEMS OPERATIONAL", "System Status",
   "SaaS Mobile Starter Kit", "Clean Architecture Template", "every Tuesday", "Bookmark",
 ];
 
