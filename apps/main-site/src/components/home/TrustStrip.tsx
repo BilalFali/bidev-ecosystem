@@ -7,7 +7,7 @@ const ITEMS = [
     icon: BadgeCheck,
     title: "Built by Bilal Fali",
     text: "A Flutter developer who ships real apps.",
-    href: "/about",
+    href: PORTFOLIO_URL,
   },
   {
     icon: Smartphone,
