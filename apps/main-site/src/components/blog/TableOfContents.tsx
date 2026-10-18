@@ -1,27 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { TocHeading } from "@/lib/toc";
 
-interface Heading { id: string; text: string; level: number }
-
-function extractHeadings(content: string): Heading[] {
-  const re = /^(#{2,3})\s+(.+)$/gm;
-  const out: Heading[] = [];
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(content)) !== null) {
-    const text = m[2].trim();
-    const id   = text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
-    out.push({ id, text, level: m[1].length });
-  }
-  return out;
-}
-
-export function TableOfContents({ content }: { content: string }) {
-  const headings = extractHeadings(content);
+export function TableOfContents({ headings }: { headings: TocHeading[] }) {
   const [active, setActive] = useState("");
 
   useEffect(() => {
-    const els = headings.map((h) => document.getElementById(h.id)).filter(Boolean);
+    const els = headings.map((h) => document.getElementById(h.id)).filter(Boolean) as HTMLElement[];
     if (!els.length) return;
 
     const obs = new IntersectionObserver(
@@ -29,27 +15,27 @@ export function TableOfContents({ content }: { content: string }) {
         const visible = entries.find((e) => e.isIntersecting);
         if (visible) setActive(visible.target.id);
       },
-      { rootMargin: "-80px 0px -60% 0px", threshold: 0 }
+      { rootMargin: "-80px 0px -60% 0px", threshold: 0 },
     );
-    els.forEach((el) => obs.observe(el!));
+    els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, [headings]);
 
-  if (!headings.length) return null;
+  if (headings.length < 3) return null;
 
   return (
-    <div className="p-4 rounded-lg border border-border bg-bg-card">
-      <p className="text-xs font-mono text-ink-faint mb-4">// contents</p>
-      <nav className="flex flex-col gap-1">
+    <div className="p-4 rounded-xl border border-border bg-bg-card">
+      <p className="text-xs font-mono text-ink-faint mb-3">// on this page</p>
+      <nav aria-label="On this page" className="flex flex-col gap-1">
         {headings.map((h) => (
           <a
             key={h.id}
             href={`#${h.id}`}
-            className={`text-xs py-1 leading-snug transition-colors border-l-2 pl-3 ${
-              h.level === 3 ? "pl-5" : ""
+            className={`text-sm py-1 leading-snug transition-colors border-l-2 ${
+              h.level === 3 ? "pl-5" : "pl-3"
             } ${
               active === h.id
-                ? "text-accent border-accent"
+                ? "text-accent-light border-accent bg-accent/5"
                 : "text-ink-muted border-transparent hover:text-ink hover:border-border-strong"
             }`}
           >
