@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { AdSlot } from "@bidev/ui";
 import { Button } from "@/components/ui/Button";
+import { ArticleCard } from "@/components/blog/ArticleCard";
+import { getArticlesByCategorySlug } from "@/lib/articles";
 
 export const metadata: Metadata = pageMetadata({
-  title: "AI Tools for Developers – Best AI Coding Tools 2026",
-  description: "The best AI tools for software developers in 2026. Claude Code, GitHub Copilot, Cursor, and more — reviewed and compared.",
+  title: "AI for Flutter Developers – Guides, MCP and Coding Tools",
+  description: "Practical guides to using AI coding assistants with Flutter: setting up Claude Code and the Dart MCP server, workflows, and a comparison of the main tools.",
   path: "/ai-tools",
 });
 
@@ -15,10 +17,13 @@ const AI_TOOLS = [
   { name: "Cursor", by: "Anysphere", href: "https://cursor.sh", tag: "IDE", desc: "VS Code fork with deep AI integration. Cmd+K to edit, Cmd+L to chat. AI-native editor.", badge: "" },
   { name: "Vercel v0", by: "Vercel", href: "https://v0.dev", tag: "UI Generator", desc: "Generate React + Tailwind UI components from text prompts. Excellent for rapid prototyping.", badge: "" },
   { name: "Tabnine", by: "Tabnine", href: "https://tabnine.com", tag: "IDE Plugin", desc: "Privacy-focused AI completions that can run entirely on-device. Good for enterprise.", badge: "" },
-  { name: "Codeium", by: "Exafunction", href: "https://codeium.com", tag: "Free", desc: "Free AI code completion with 70+ editor integrations. Great Copilot alternative.", badge: "Free" },
 ];
 
-export default function AIToolsPage() {
+export default async function AIToolsPage() {
+  const guides = (await getArticlesByCategorySlug("ai-tools")).sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  );
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
       <div className="mb-12 text-center">
@@ -26,16 +31,26 @@ export default function AIToolsPage() {
           AI-Powered Development
         </span>
         <h1 className="text-4xl sm:text-5xl font-bold text-ink mb-4">
-          Best AI tools for developers
+          AI for Flutter developers
         </h1>
         <p className="text-ink-muted max-w-2xl mx-auto">
-          The AI tools actually worth using in 2026 — reviewed by a developer who uses them daily.
-          Boost productivity by 2–5× without the hype.
+          How to get real work out of AI coding assistants on a Flutter project: setup, the
+          Dart MCP server, workflows, and an honest look at the tools.
         </p>
       </div>
 
-      <AdSlot type="banner" className="mb-12" />
+      {guides.length > 0 && (
+        <section className="mb-14">
+          <h2 className="text-2xl font-bold text-ink mb-6">Guides</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {guides.map((article, i) => (
+              <ArticleCard key={article.slug} article={article} priority={i < 3} />
+            ))}
+          </div>
+        </section>
+      )}
 
+      <h2 className="text-2xl font-bold text-ink mb-6">The main tools</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
         {AI_TOOLS.map(tool => (
           <a key={tool.name} href={tool.href} target="_blank" rel="noopener noreferrer"
