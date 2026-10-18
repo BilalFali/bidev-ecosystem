@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/troubleshooting`,              lastModified: now, changeFrequency: "daily",   priority: 0.9 },
     { url: `${BASE}/tools`,                       lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${BASE}/snippets`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
+    { url: `${BASE}/ui-examples`,                  lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/resources`,                   lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/flutter`,                     lastModified: now, changeFrequency: "weekly",  priority: 0.8 },
     { url: `${BASE}/ai-tools`,                    lastModified: now, changeFrequency: "weekly",  priority: 0.7 },

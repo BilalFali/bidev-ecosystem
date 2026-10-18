@@ -7,6 +7,7 @@ const LINKS = {
     { label: "Topics",         href: "/topics" },
     { label: "Snippets",       href: "/snippets" },
     { label: "Tools",          href: "/tools" },
+    { label: "UI Examples",    href: "/ui-examples" },
     { label: "AI Tools",       href: "/ai-tools" },
     { label: "Resources",      href: "/resources" },
     { label: "Interview Prep", href: "/flutter-interview-questions" },

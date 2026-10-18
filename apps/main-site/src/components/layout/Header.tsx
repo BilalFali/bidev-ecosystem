@@ -11,6 +11,8 @@ const NAV = [
   { label: "Learn", href: "/learn" },
   { label: "Troubleshooting", href: "/troubleshooting" },
   { label: "Tools", href: "/tools" },
+  { label: "UI Examples", href: "/ui-examples" },
+  { label: "AI", href: "/ai-tools" },
   { label: "Interview", href: "/flutter-interview-questions" },
 ];
 
