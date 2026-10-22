@@ -11,6 +11,7 @@ import {
   Palette,
   Boxes,
   FileCode2,
+  Languages,
 } from "lucide-react";
 
 export interface Tool {
@@ -134,6 +135,16 @@ export const TOOLS: Tool[] = [
     tags: ["TypeScript", "Generator"],
     popular: false,
     related: ["json-formatter", "json-to-dart"],
+  },
+  {
+    slug: "arb-validator",
+    href: "/tools/arb-validator",
+    icon: Languages,
+    title: "ARB Localization Validator",
+    description: "Compare .arb localization files against a base locale — find missing keys, extra keys, and mismatched ICU placeholders.",
+    tags: ["Flutter", "i18n"],
+    popular: false,
+    related: ["json-to-dart", "pubspec-validator"],
   },
 ];
 

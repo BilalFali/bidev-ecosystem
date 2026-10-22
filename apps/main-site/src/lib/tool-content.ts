@@ -481,4 +481,46 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
     ],
   },
+
+  "arb-validator": {
+    sections: [
+      {
+        heading: "Why use this tool",
+        blocks: [
+          { kind: "p", text: "Flutter's own build-time tooling checks that each .arb file is valid JSON, but it doesn't flag cross-locale drift clearly: a translator adds a new string to app_fr.arb and forgets to add the matching key to app_en.arb (or vice versa), or renames a placeholder in one locale's message without updating the others — {username} becomes {userName} in French but stays {username} in English. flutter gen-l10n will often still generate code successfully in these cases, and the mismatch only surfaces later as a raw, unreplaced placeholder token showing up on screen in production, or a runtime error when a localization call is missing an argument the generated code expects." },
+          { kind: "p", text: "This tool compares one or more translated .arb files against a base locale and reports exactly where they've drifted: keys missing from a locale, keys that exist only in a locale and not in the base, and — this is the part a quick visual diff tends to miss — placeholder names that don't match between locales, including inside ICU plural and select constructs." },
+        ],
+      },
+      {
+        heading: "How it works",
+        blocks: [
+          { kind: "steps", items: [
+            "Paste or upload your base locale's .arb file (the source of truth — typically your English strings).",
+            "Paste or upload one or more other locale files to compare against it, each with its own locale code.",
+            "Click Add another locale to check more than one translation at once.",
+            "Click Validate — results are grouped by locale, each issue labeled Missing key, Extra key, or Placeholder mismatch.",
+          ] },
+        ],
+      },
+      {
+        heading: "Example",
+        blocks: [
+          { kind: "code", lang: "json", label: "Base (app_en.arb)", code: `{\n  "@@locale": "en",\n  "greeting": "Hello {name}",\n  "itemCount": "{count, plural, one{1 item} other{{count} items}}"\n}` },
+          { kind: "code", lang: "json", label: "Translated (app_fr.arb) — with a renamed placeholder and an extra key", code: `{\n  "@@locale": "fr",\n  "greeting": "Bonjour {prenom}",\n  "itemCount": "{count, plural, one{un article} other{{count} articles}}",\n  "extraKey": "..."\n}` },
+          { kind: "code", lang: "text", label: "Reported issues", code: `fr — greeting: Placeholder mismatch (missing: name; extra: prenom)\nfr — extraKey: Extra key` },
+        ],
+      },
+      {
+        heading: "FAQ",
+        blocks: [
+          { kind: "faq", items: [
+            { q: "Does this replace Flutter's build-time ARB validation?", a: "No — flutter gen-l10n checks that each file parses and that it can generate code from it, but it doesn't clearly surface cross-locale drift like a renamed placeholder or a key missing in just one translation. This tool is a targeted check for exactly that gap, run before you commit a translation update, not a replacement for the build step." },
+            { q: "Does it support ICU plural and select syntax?", a: "Yes — this is the differentiator. It understands {count, plural, one{...} other{...}} and {value, select, ...} constructs structurally, so it extracts the actual placeholder variable (count, value) correctly instead of misreading a plural branch's literal text (like the French word un inside one{un}) as if it were a placeholder." },
+            { q: "Does my translation data leave the browser?", a: "No — parsing and comparison both run entirely client-side in JavaScript. Nothing you paste or upload is sent to a server." },
+            { q: "Can I validate more than two locales at once?", a: "Yes — click Add another locale to add as many comparison locales as you need; each gets its own textarea or file upload, and the results list groups issues by locale so you can see at a glance which translations have drifted." },
+          ] },
+        ],
+      },
+    ],
+  },
 };
