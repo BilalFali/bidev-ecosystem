@@ -12,6 +12,7 @@ import {
   Boxes,
   FileCode2,
   Languages,
+  FileCog,
 } from "lucide-react";
 
 export interface Tool {
@@ -145,6 +146,16 @@ export const TOOLS: Tool[] = [
     tags: ["Flutter", "i18n"],
     popular: false,
     related: ["json-to-dart", "pubspec-validator"],
+  },
+  {
+    slug: "pubspec-validator",
+    href: "/tools/pubspec-validator",
+    icon: FileCog,
+    title: "pubspec.yaml Validator",
+    description: "Validate pubspec.yaml syntax and catch malformed version constraints, missing flutter: sections, and duplicate dependencies.",
+    tags: ["Flutter", "Config"],
+    popular: false,
+    related: ["arb-validator", "dart-enum-generator"],
   },
 ];
 

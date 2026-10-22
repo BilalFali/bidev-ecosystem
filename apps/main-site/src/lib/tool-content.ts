@@ -523,4 +523,47 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
     ],
   },
+
+  "pubspec-validator": {
+    sections: [
+      {
+        heading: "Why use this tool",
+        blocks: [
+          { kind: "p", text: "A pubspec.yaml mistake — a typo'd version constraint, a bad indent, a dependency accidentally listed in both dependencies and dev_dependencies — often doesn't surface until flutter pub get fails with an error message that's harder to read than the mistake itself. Pasting the file here catches the same category of mistake instantly, with a plain-language message pointing at the actual dependency or field." },
+          { kind: "p", text: "This runs pure static analysis on the YAML and its structure: no network call to pub.dev, no shelling out to the Flutter SDK, nothing that requires your project to even be checked out." },
+        ],
+      },
+      {
+        heading: "How it works",
+        blocks: [
+          { kind: "steps", items: [
+            "Paste your pubspec.yaml content, or upload the file directly.",
+            "Click Validate.",
+            "Review the results — errors in red (YAML syntax, malformed version constraints, missing name), warnings in amber (duplicate dependencies).",
+            "Fix the flagged lines in your actual pubspec.yaml and re-run to confirm.",
+          ] },
+        ],
+      },
+      {
+        heading: "Example",
+        blocks: [
+          { kind: "code", lang: "yaml", label: "Malformed version constraint", code: `dependencies:\n  http: not-a-version` },
+          { kind: "code", lang: "text", label: "Reported issue", code: `Dependency "http" has a malformed version constraint: "not-a-version".` },
+        ],
+      },
+      {
+        heading: "FAQ",
+        blocks: [
+          { kind: "faq", items: [
+            { q: "Does this run flutter pub get or hit pub.dev?", a: "No — it's pure static analysis of the YAML you paste in. Nothing leaves your browser, and no network request is made to pub.dev or anywhere else." },
+            { q: "What counts as a malformed version constraint?", a: "A plain string value that isn't an exact version (1.2.3), a caret constraint (^1.2.3), a range like '>=1.0.0 <2.0.0', or the literal any is flagged as an error naming the dependency." },
+            { q: "Why doesn't it flag my git or path dependency?", a: "Git, path, and hosted-with-version dependencies are declared as YAML maps, not plain version strings — they're intentionally exempt from version-constraint checking, since a git: or path: map is a different, valid shape, not a malformed string." },
+            { q: "Does it catch every possible pubspec mistake?", a: "No — it's a fast first-pass check for YAML syntax errors, obviously malformed version strings, and duplicate dependency keys, not a replacement for flutter pub get's own full validation (which also resolves the actual dependency graph against pub.dev)." },
+            { q: "What happens with a literal duplicate key, like two 'http:' lines under dependencies?", a: "YAML itself rejects a literal duplicate key in the same mapping — most parsers throw rather than silently picking one. This tool catches that specific case and reports it as a named warning (which dependency, which section) instead of a generic syntax error, so you know exactly what to delete." },
+            { q: "Will it flag a dependency that's missing a version constraint entirely?", a: "Not currently — a dependency with no version field at all (just a bare key with a null value, which pub treats as 'any') is left alone, since that's valid pubspec syntax, not a malformed constraint." },
+          ] },
+        ],
+      },
+    ],
+  },
 };
