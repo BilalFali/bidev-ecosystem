@@ -14,6 +14,7 @@ import {
   Languages,
   FileCog,
   GitCompare,
+  ListOrdered,
 } from "lucide-react";
 
 export interface Tool {
@@ -24,6 +25,7 @@ export interface Tool {
   description: string;
   tags: string[];
   popular: boolean;
+  isNew?: boolean;
   related?: string[];
 }
 
@@ -36,7 +38,7 @@ export const TOOLS: Tool[] = [
     description: "Convert JSON to Dart model classes. Generates fromJson, toJson, copyWith with null safety. Supports Freezed & json_serializable.",
     tags: ["Flutter", "Dart"],
     popular: true,
-    related: ["dart-data-class-generator", "color-generator"],
+    related: ["dart-data-class-generator", "color-generator", "arb-validator"],
   },
   {
     slug: "qr-generator",
@@ -56,7 +58,7 @@ export const TOOLS: Tool[] = [
     description: "Format, validate, and minify JSON. Real-time error detection with line numbers.",
     tags: ["Formatter", "Validator"],
     popular: false,
-    related: ["json-to-dart", "regex-tester"],
+    related: ["json-to-dart", "regex-tester", "json-to-typescript", "api-diff-checker"],
   },
   {
     slug: "password-generator",
@@ -126,7 +128,7 @@ export const TOOLS: Tool[] = [
     description: "Paste JSON and generate an immutable Dart data class with copyWith, toString, and equality — no JSON (de)serialization boilerplate.",
     tags: ["Flutter", "Dart"],
     popular: true,
-    related: ["json-to-dart", "color-generator"],
+    related: ["json-to-dart", "color-generator", "pubspec-validator", "dart-enum-generator"],
   },
   {
     slug: "json-to-typescript",
@@ -146,6 +148,7 @@ export const TOOLS: Tool[] = [
     description: "Compare .arb localization files against a base locale — find missing keys, extra keys, and mismatched ICU placeholders.",
     tags: ["Flutter", "i18n"],
     popular: false,
+    isNew: true,
     related: ["json-to-dart", "pubspec-validator"],
   },
   {
@@ -167,6 +170,16 @@ export const TOOLS: Tool[] = [
     tags: ["API", "Utility"],
     popular: false,
     related: ["json-formatter", "json-to-typescript"],
+  },
+  {
+    slug: "dart-enum-generator",
+    href: "/tools/dart-enum-generator",
+    icon: ListOrdered,
+    title: "Dart Enum Generator",
+    description: "Generate a Dart 3 enhanced enum from a list of values, with optional fromString and toJson helpers.",
+    tags: ["Flutter", "Dart", "Generator"],
+    popular: false,
+    related: ["dart-data-class-generator", "pubspec-validator"],
   },
 ];
 

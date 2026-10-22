@@ -610,4 +610,46 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
     ],
   },
+
+  "dart-enum-generator": {
+    sections: [
+      {
+        heading: "Why use this tool",
+        blocks: [
+          { kind: "p", text: "A plain Dart enum (enum Status { active, inactive, pending }) only gives you member names — the moment you need to serialize a value to JSON, match it against a string from an API, or show a human-readable label, you're writing a switch statement or a separate lookup map by hand, and keeping it in sync as members get added or renamed. Dart 3's enhanced enums let a member carry data and methods directly, which removes that separate mapping entirely." },
+          { kind: "p", text: "Paste a list of values and this generates a Dart 3 enhanced enum where each member carries its original label, plus optional fromString (parse a label back into the matching member) and toJson (serialize a member back to its label) helpers." },
+        ],
+      },
+      {
+        heading: "How it works",
+        blocks: [
+          { kind: "steps", items: [
+            "Paste your values, one per line, comma-separated, or as a JSON array of strings.",
+            "Set the enum name.",
+            "Toggle fromString and toJson depending on whether you need to parse from, or serialize back to, the original label.",
+            "Click Generate, then copy the result into your Dart project.",
+          ] },
+        ],
+      },
+      {
+        heading: "Example",
+        blocks: [
+          { kind: "code", lang: "text", label: "Input", code: `Active\nInactive\nPending` },
+          { kind: "code", lang: "dart", label: "Generated enum (excerpt)", code: `enum Status {\n  active('Active'),\n  inactive('Inactive'),\n  pending('Pending'),\n  ;\n\n  const Status(this.label);\n  final String label;\n}` },
+        ],
+      },
+      {
+        heading: "FAQ",
+        blocks: [
+          { kind: "faq", items: [
+            { q: "Why enhanced enums instead of a plain enum {a, b, c}?", a: "A plain enum member has no payload — matching it back to the original text label, or serializing it to JSON, needs a separate switch or map kept in sync by hand. An enhanced enum member carries its label directly, and this tool optionally generates fromString and toJson so that round-trip is built in from the start." },
+            { q: "What happens with duplicate or messy input values?", a: "Exact duplicate entries (the same value typed twice) are dropped. Values that aren't valid Dart identifiers — spaces, punctuation, a leading digit — are sanitized into camelCase identifiers; if two different values sanitize to the same identifier (e.g. \"2nd Place\" and \"2nd-place\"), the second one gets a numeric suffix so both still appear as distinct, compilable members rather than silently colliding." },
+            { q: "Can I paste a JSON array directly?", a: "Yes — paste a JSON array of strings like [\"Active\", \"Inactive\"] and it's parsed the same as a newline or comma-separated list." },
+            { q: "Does this handle values with special characters?", a: "Yes for the generated identifier (non-alphanumeric characters are stripped during sanitization), and the original label — special characters included — is preserved as the member's string value, with any single quotes escaped so the generated Dart code stays valid." },
+            { q: "What's the difference from the JSON to Dart Converter or the Dart Data Class Generator?", a: "Those two generate a class for a JSON object's shape; this one generates an enum for a closed set of string values — use it for a status field, a category list, or any fixed set of options rather than a full data model." },
+          ] },
+        ],
+      },
+    ],
+  },
 };
