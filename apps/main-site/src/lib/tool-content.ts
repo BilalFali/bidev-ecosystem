@@ -566,4 +566,48 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
     ],
   },
+
+  "api-diff-checker": {
+    sections: [
+      {
+        heading: "Why use this tool",
+        blocks: [
+          { kind: "p", text: "Comparing a staging API response against production, or last week's response against today's, is how you catch an unexpected field rename or a type change before it breaks a Dart model's fromJson in production. Eyeballing two large JSON payloads side by side misses exactly the kind of change that matters most — a field that quietly switched from a string to a number, or a key that got renamed instead of removed." },
+          { kind: "p", text: "Paste the before and after payloads and this reports every path that actually changed: keys added, keys removed, and values that changed — including a type change like \"1\" (string) becoming 1 (number), which a naive diff can miss if it only compares values loosely." },
+        ],
+      },
+      {
+        heading: "How it works",
+        blocks: [
+          { kind: "steps", items: [
+            "Paste or upload the Before JSON payload on the left.",
+            "Paste or upload the After JSON payload on the right.",
+            "Click Compare.",
+            "Review the results — green for added, red for removed, amber for changed, each with the full path and, for a change, both the before and after value.",
+          ] },
+        ],
+      },
+      {
+        heading: "Example",
+        blocks: [
+          { kind: "code", lang: "json", label: "Before", code: `{ "status": "active", "roles": ["admin"] }` },
+          { kind: "code", lang: "json", label: "After", code: `{ "status": "ACTIVE", "roles": ["admin", "editor"] }` },
+          { kind: "code", lang: "text", label: "Reported diff", code: `status — Changed\n- active\n+ ACTIVE\n\nroles[1] — Added\n+ "editor"` },
+        ],
+      },
+      {
+        heading: "FAQ",
+        blocks: [
+          { kind: "faq", items: [
+            { q: "Does key order matter?", a: "No — this is intentional. Reordering an object's keys between the two payloads never produces a diff entry; only an actual addition, removal, or value change does." },
+            { q: "How are changed array items reported?", a: "Each changed array index gets its own entry with a bracketed path like roles[1], showing the before and after value (or a nested change, if the array holds objects)." },
+            { q: "Does it diff arrays by index or by some identity/key match?", a: "By index — position 0 is compared against position 0, position 1 against position 1, and so on. It doesn't try to detect that an item was reordered or matched by an id field, so inserting an item in the middle of an array will show every item after it as changed, even though they didn't really change." },
+            { q: "Is there a size limit?", a: "No hard limit is enforced, but very large payloads will be slower to parse and diff in the browser than a dedicated desktop tool." },
+            { q: "What happens if one side isn't valid JSON?", a: "The Compare button reports the JSON parser's error instead of attempting a diff — fix the invalid payload first, since a diff against malformed JSON isn't meaningful." },
+            { q: "Can I use this to check an API contract didn't change between a mock and the real response?", a: "Yes — that's a common use: diff a hand-written mock fixture against a real captured response to see exactly which fields your mock is missing or has wrong before you trust tests that depend on it." },
+          ] },
+        ],
+      },
+    ],
+  },
 };

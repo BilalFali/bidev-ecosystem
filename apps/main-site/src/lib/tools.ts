@@ -13,6 +13,7 @@ import {
   FileCode2,
   Languages,
   FileCog,
+  GitCompare,
 } from "lucide-react";
 
 export interface Tool {
@@ -156,6 +157,16 @@ export const TOOLS: Tool[] = [
     tags: ["Flutter", "Config"],
     popular: false,
     related: ["arb-validator", "dart-enum-generator"],
+  },
+  {
+    slug: "api-diff-checker",
+    href: "/tools/api-diff-checker",
+    icon: GitCompare,
+    title: "API Response Diff Checker",
+    description: "Compare two JSON payloads and see exactly what was added, removed, or changed — ignores key order, handles nested objects and arrays.",
+    tags: ["API", "Utility"],
+    popular: false,
+    related: ["json-formatter", "json-to-typescript"],
   },
 ];
 
