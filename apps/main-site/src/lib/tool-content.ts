@@ -438,4 +438,47 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
       },
     ],
   },
+
+  "json-to-typescript": {
+    sections: [
+      {
+        heading: "Why use this tool",
+        blocks: [
+          { kind: "p", text: "Hand-writing a TypeScript interface for an API response has the same failure mode as writing one for Dart: it's slow for a payload with a dozen fields, and a typo in a key name or a wrong primitive type doesn't get caught until something downstream breaks. This tool parses the JSON you paste in, infers a TypeScript type for each field, and generates interface or type declarations with optional fields detected automatically." },
+          { kind: "p", text: "A nested object in your sample becomes its own named type, and a typed array becomes T[] rather than any[], so the output is as close to what you'd write by hand as the sample data allows." },
+        ],
+      },
+      {
+        heading: "How it works",
+        blocks: [
+          { kind: "steps", items: [
+            "Paste a sample JSON response into the input panel — with every field populated, since a null sample can't reveal its real type.",
+            "Set the root type name.",
+            "Choose interface or type from the Output dropdown.",
+            "Click Convert, then copy the generated declarations.",
+          ] },
+        ],
+      },
+      {
+        heading: "Example",
+        blocks: [
+          { kind: "code", lang: "json", label: "Input", code: `{ "id": 1, "name": "Bilal", "middleName": null }` },
+          { kind: "code", lang: "typescript", label: "Generated interface", code: `interface User {\n  id: number;\n  name: string;\n  middleName?: null;\n}` },
+        ],
+      },
+      {
+        heading: "FAQ",
+        blocks: [
+          { kind: "faq", items: [
+            { q: "Does my JSON leave the browser?", a: "No — parsing and generation both run client-side in JavaScript, exactly like every other tool on this site." },
+            { q: "Does this generate readonly fields?", a: "No, that's out of scope for this tool — every field is generated as a normal mutable property. Add readonly yourself afterward if your project's conventions require it." },
+            { q: "interface vs. type — which should I pick?", a: "Both describe the same shape for a plain object and are interchangeable for this use case; pick whichever your codebase already uses. interface supports declaration merging and is the more common choice for object shapes representing API data; type is required if you ever need unions or mapped types layered on top." },
+            { q: "How are optional and nullable fields distinguished?", a: "A field that's null in your sample gets a ? (optional) and a null member in its type, since a single sample can't tell you whether the field is sometimes absent, sometimes null, or both — marking it both covers either case safely." },
+            { q: "Does it dedupe identical nested shapes into one type?", a: "No — each nested object gets its own type named after its key, even if two different keys happen to produce identically-shaped objects. Rename or merge types by hand afterward if you want to share one type across fields." },
+            { q: "What happens with an array that mixes types, like numbers and strings?", a: "A mixed-type array falls back to unknown[] rather than guessing from only the first element, since picking one element's type would silently produce a type that's wrong for the rest of the array's contents." },
+          ] },
+        ],
+      },
+    ],
+  },
 };

@@ -10,6 +10,7 @@ import {
   Regex,
   Palette,
   Boxes,
+  FileCode2,
 } from "lucide-react";
 
 export interface Tool {
@@ -123,6 +124,16 @@ export const TOOLS: Tool[] = [
     tags: ["Flutter", "Dart"],
     popular: true,
     related: ["json-to-dart", "color-generator"],
+  },
+  {
+    slug: "json-to-typescript",
+    href: "/tools/json-to-typescript",
+    icon: FileCode2,
+    title: "JSON to TypeScript Converter",
+    description: "Convert JSON to TypeScript interfaces or type aliases, with optional-field detection from null values.",
+    tags: ["TypeScript", "Generator"],
+    popular: false,
+    related: ["json-formatter", "json-to-dart"],
   },
 ];
 
