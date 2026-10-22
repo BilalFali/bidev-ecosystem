@@ -35,6 +35,19 @@ function parseValues(input: string): string[] {
   return deduped;
 }
 
+// Dart reserved words can never be identifiers, plus "values"/"index" (the
+// enum's built-in static list / instance index getter) and "label" (the
+// field this generator always adds) — a sanitized value colliding with any
+// of these must be disambiguated like any other collision, not emitted
+// as-is, or the generated code won't compile.
+const RESERVED_NAMES = new Set([
+  "assert", "break", "case", "catch", "class", "const", "continue", "default",
+  "do", "else", "enum", "extends", "false", "final", "finally", "for", "if",
+  "in", "is", "new", "null", "rethrow", "return", "super", "switch", "this",
+  "throw", "true", "try", "var", "void", "while", "with",
+  "values", "index", "label",
+]);
+
 function sanitizeIdentifier(raw: string): string {
   const words = raw.match(/[A-Za-z0-9]+/g) ?? ["value"];
   const first = words[0].toLowerCase();
@@ -52,12 +65,17 @@ function disambiguateIdentifier(base: string, used: Set<string>): string {
 }
 
 function escapeDartString(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/\$/g, "\\$")
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, "\\r")
+    .replace(/\n/g, "\\n");
 }
 
 export function generateDartEnum(input: string, opts: DartEnumOptions): string {
   const values = parseValues(input);
-  const used = new Set<string>();
+  const used = new Set<string>(RESERVED_NAMES);
   const members = values.map((label) => {
     const id = disambiguateIdentifier(sanitizeIdentifier(label), used);
     used.add(id);

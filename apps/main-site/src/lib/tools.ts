@@ -156,7 +156,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/pubspec-validator",
     icon: FileCog,
     title: "pubspec.yaml Validator",
-    description: "Validate pubspec.yaml syntax and catch malformed version constraints, missing flutter: sections, and duplicate dependencies.",
+    description: "Validate pubspec.yaml syntax and catch malformed version constraints and duplicate dependencies.",
     tags: ["Flutter", "Config"],
     popular: false,
     related: ["arb-validator", "dart-enum-generator"],

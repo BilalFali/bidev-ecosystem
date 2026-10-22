@@ -1,4 +1,4 @@
-import { parse } from "yaml";
+import { parseDocument } from "yaml";
 
 export interface PubspecIssue {
   severity: "error" | "warning";
@@ -43,34 +43,54 @@ function checkDependencySection(
 }
 
 // A literal duplicate key within one YAML mapping (e.g. two "flutter_test:"
-// entries under dependencies) is a common copy-paste mistake, not a reason
-// to reject the whole file — the yaml package's default parser throws on it,
-// so we re-parse permissively and report it as a named warning instead.
-function duplicateKeyWarning(yamlStr: string, error: unknown): PubspecIssue | null {
-  const e = error as { code?: string; linePos?: { line: number; col: number }[] };
-  if (e.code !== "DUPLICATE_KEY" || !e.linePos?.[0]) return null;
-  const line = yamlStr.split("\n")[e.linePos[0].line - 1] ?? "";
+// entries under dependencies, or two top-level "dependencies:" blocks) is a
+// common copy-paste mistake, not a reason to reject the whole file. The line
+// above a DUPLICATE_KEY error's position is always the duplicated key itself
+// (confirmed against the yaml package's error format), so we read the key
+// name from there and the enclosing section from the nearest preceding
+// less-indented line.
+function findEnclosingSection(lines: string[], duplicateLineIndex: number): string {
+  const dupLine = lines[duplicateLineIndex] ?? "";
+  const dupIndent = dupLine.match(/^(\s*)/)?.[1].length ?? 0;
+  if (dupIndent === 0) return "the top level of the file";
+  for (let i = duplicateLineIndex - 1; i >= 0; i--) {
+    const line = lines[i];
+    if (!line.trim()) continue;
+    const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
+    if (indent < dupIndent) {
+      const match = line.match(/^\s*([\w.-]+):/);
+      return match ? `the "${match[1]}:" section` : "the top level of the file";
+    }
+  }
+  return "the top level of the file";
+}
+
+function duplicateKeyWarning(lines: string[], error: { linePos?: { line: number; col: number }[] }): PubspecIssue | null {
+  const lineIndex = (error.linePos?.[0]?.line ?? 0) - 1;
+  if (lineIndex < 0) return null;
+  const line = lines[lineIndex] ?? "";
   const match = line.match(/^\s*([\w.-]+):/);
   const name = match ? match[1] : "a key";
-  return { severity: "warning", message: `Dependency "${name}" is declared more than once in the same section.` };
+  const section = findEnclosingSection(lines, lineIndex);
+  return { severity: "warning", message: `Key "${name}" is declared more than once in ${section}.` };
 }
 
 export function validatePubspec(yamlStr: string): PubspecIssue[] {
-  let doc: unknown;
-  try {
-    doc = parse(yamlStr);
-  } catch (e) {
-    const dupWarning = duplicateKeyWarning(yamlStr, e);
-    if (dupWarning) {
-      doc = parse(yamlStr, { uniqueKeys: false });
-      const issues = validateParsedDoc(doc);
-      issues.unshift(dupWarning);
-      return issues;
-    }
-    return [{ severity: "error", message: `Invalid YAML: ${(e as Error).message}` }];
+  const doc = parseDocument(yamlStr);
+  const duplicateKeyErrors = doc.errors.filter((e) => e.code === "DUPLICATE_KEY");
+  const otherErrors = doc.errors.filter((e) => e.code !== "DUPLICATE_KEY");
+
+  if (otherErrors.length > 0) {
+    return [{ severity: "error", message: `Invalid YAML: ${otherErrors[0].message}` }];
   }
 
-  return validateParsedDoc(doc);
+  const lines = yamlStr.split("\n");
+  const issues = validateParsedDoc(doc.toJS());
+  for (const e of duplicateKeyErrors) {
+    const warning = duplicateKeyWarning(lines, e);
+    if (warning) issues.unshift(warning);
+  }
+  return issues;
 }
 
 function validateParsedDoc(doc: unknown): PubspecIssue[] {

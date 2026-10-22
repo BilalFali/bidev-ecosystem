@@ -4,15 +4,7 @@ import { useState, useCallback } from "react";
 import { KeyRound, Check } from "lucide-react";
 import { AdSlot } from "@bidev/ui";
 import { Button } from "@/components/ui/Button";
-
-const CHARS = {
-  upper:   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  lower:   "abcdefghijklmnopqrstuvwxyz",
-  digits:  "0123456789",
-  symbols: "!@#$%^&*()_+-=[]{}|;:,.<>?",
-};
-
-type Key = keyof typeof CHARS;
+import { generatePassword, CHARS, type CharType as Key } from "@/lib/password-generator";
 
 function score(pw: string) {
   let s = 0;
@@ -26,21 +18,6 @@ function score(pw: string) {
   return { n, label: ["Very Weak","Weak","Fair","Strong","Very Strong"][n], color: ["#ef4444","#f97316","#eab308","#22c55e","#16a34a"][n] };
 }
 
-function gen(len: number, opts: Record<Key, boolean>) {
-  let pool = ""; const req: string[] = [];
-  (Object.keys(opts) as Key[]).forEach(k => {
-    if (!opts[k]) return;
-    pool += CHARS[k];
-    req.push(CHARS[k][Math.floor(Math.random() * CHARS[k].length)]);
-  });
-  if (!pool) return "";
-  const arr = new Uint32Array(len);
-  crypto.getRandomValues(arr);
-  const chars = Array.from(arr, n => pool[n % pool.length]);
-  req.forEach(c => { chars[Math.floor(Math.random() * len)] = c; });
-  return chars.join("");
-}
-
 export function PasswordGenerator() {
   const [len,      setLen]      = useState(16);
   const [opts,     setOpts]     = useState<Record<Key,boolean>>({ upper:true, lower:true, digits:true, symbols:false });
@@ -49,7 +26,7 @@ export function PasswordGenerator() {
   const active = Object.values(opts).filter(Boolean).length;
 
   const generate = useCallback(() => {
-    setPws(Array.from({length:5}, () => gen(len, opts)));
+    setPws(Array.from({length:5}, () => generatePassword(len, opts)));
   }, [len, opts]);
 
   const toggle = (k: Key, v: boolean) => {
