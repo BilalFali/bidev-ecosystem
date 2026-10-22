@@ -10,11 +10,44 @@ export function ToolContent({ slug }: { slug: string }) {
       {content.sections.map((section) => (
         <section key={section.heading} className="mb-10 last:mb-0">
           <h2 className="text-xl font-bold text-ink mb-3">{section.heading}</h2>
-          {section.body.map((paragraph, i) => (
-            <p key={i} className="text-ink-muted leading-relaxed mb-3 last:mb-0">
-              {paragraph}
-            </p>
-          ))}
+          {section.blocks.map((block, i) => {
+            if (block.kind === "p") {
+              return (
+                <p key={i} className="text-ink-muted leading-relaxed mb-3 last:mb-0">
+                  {block.text}
+                </p>
+              );
+            }
+            if (block.kind === "steps") {
+              return (
+                <ol key={i} className="list-decimal list-inside space-y-1.5 text-ink-muted mb-3 last:mb-0">
+                  {block.items.map((item, j) => (
+                    <li key={j}>{item}</li>
+                  ))}
+                </ol>
+              );
+            }
+            if (block.kind === "code") {
+              return (
+                <div key={i} className="mb-3 last:mb-0">
+                  {block.label && <p className="text-xs text-ink-faint mb-1.5">{block.label}</p>}
+                  <pre className="p-4 rounded-xl border border-border bg-bg-card text-sm font-mono text-ink overflow-auto">
+                    <code>{block.code}</code>
+                  </pre>
+                </div>
+              );
+            }
+            return (
+              <div key={i} className="mb-3 last:mb-0">
+                {block.items.map((item, j) => (
+                  <div key={j}>
+                    <h3 className="text-base font-semibold text-ink mt-4 mb-1.5">{item.q}</h3>
+                    <p className="text-ink-muted leading-relaxed mb-3">{item.a}</p>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </section>
       ))}
     </div>
