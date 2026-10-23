@@ -8,7 +8,9 @@ import { LEARN_CATEGORIES } from "@/lib/learn";
 import { getFeaturedTroubleshooting } from "@/lib/troubleshooting";
 import { getAllInterviewQuestions, INTERVIEW_CATEGORIES, DIFFICULTIES } from "@/lib/interview-questions";
 import { getAllProducts, formatPrice } from "@/lib/products";
+import { PACKAGES } from "@/lib/packages";
 import { topTags } from "@/lib/topics";
+import { Package as PackageIcon, ExternalLink } from "lucide-react";
 import { ToolCard } from "@/components/tools/ToolCard";
 import { ArticleCard } from "@/components/blog/ArticleCard";
 import { TroubleshootingCard } from "@/components/blog/TroubleshootingCard";
@@ -150,6 +152,56 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* PACKAGES */}
+      {PACKAGES.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
+          <SectionHeading
+            eyebrow="open source"
+            tone="teal"
+            title="Flutter packages"
+            subtitle="Published on pub.dev, free to use in any project."
+            href="/packages"
+            linkLabel={`All ${PACKAGES.length} package${PACKAGES.length !== 1 ? "s" : ""}`}
+          />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {PACKAGES.map((pkg) => (
+              <div
+                key={pkg.name}
+                className="relative flex flex-col gap-4 p-6 rounded-xl border border-border bg-bg-card hover:border-accent/40 transition-colors"
+              >
+                {pkg.featured && (
+                  <span className="absolute top-4 right-4 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">
+                    Featured
+                  </span>
+                )}
+                <div className="flex items-center gap-3">
+                  <pkg.icon className="w-6 h-6 text-accent shrink-0" strokeWidth={1.75} />
+                  <h3 className="font-semibold text-ink font-mono text-sm">{pkg.name}</h3>
+                </div>
+                <p className="text-sm text-ink-muted leading-relaxed flex-1">{pkg.description}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {pkg.tags.map((t) => (
+                    <span key={t} className="text-[11px] px-2 py-0.5 rounded border border-border bg-bg-elevated text-ink-faint">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <a
+                  href={`https://pub.dev/packages/${pkg.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto flex items-center gap-1.5 text-sm text-accent-light hover:underline"
+                >
+                  <PackageIcon className="w-3.5 h-3.5" />
+                  View on pub.dev
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* INTERVIEW PREP */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-10">
