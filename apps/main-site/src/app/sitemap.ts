@@ -6,7 +6,6 @@ import { TOOLS } from "@/lib/tools";
 import { getAllInterviewQuestions, getAllFilterKeys } from "@/lib/interview-questions";
 import { getAllJobs } from "@/lib/jobs";
 import { getAllProducts } from "@/lib/products";
-import { PACKAGES } from "@/lib/packages";
 import { LEARN_CATEGORIES } from "@/lib/learn";
 import { TROUBLESHOOTING_CATEGORIES } from "@/lib/troubleshooting";
 
@@ -61,16 +60,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.8,
   }));
 
-  // Only submit category filter URLs for categories that actually have a
-  // published product — a category with zero real products behind it is
-  // exactly the kind of thin/empty page a review shouldn't find.
-  const productCategories = [...new Set(products.map((p) => p.category))];
-  const productCategoryPages: MetadataRoute.Sitemap = productCategories.map((c) => ({
-    url:             `${BASE}/products?category=${c}`,
-    lastModified:    now,
-    changeFrequency: "weekly" as const,
-    priority:        0.8,
-  }));
+  // No separate sitemap entries for /products?category=X: ProductsClient
+  // filters client-side only, so the server-rendered HTML and <link rel=
+  // "canonical"> are identical to plain /products for every category value.
+  // Submitting them would tell Google to crawl a URL it's also told, via
+  // the canonical tag, to treat as a duplicate of /products.
 
   const jobPages: MetadataRoute.Sitemap = jobs.map((j) => ({
     url:             `${BASE}/jobs/${j.slug}`,
@@ -142,20 +136,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }));
 
-  const packagePages: MetadataRoute.Sitemap = PACKAGES.map((p) => ({
-    url:             `${BASE}/packages#${p.name}`,
-    lastModified:    now,
-    changeFrequency: "monthly" as const,
-    priority:        0.7,
-  }));
+  // No per-package sitemap entries: /packages#name is a URL fragment, not a
+  // distinct page (search engines ignore everything after #), and the cards
+  // don't even have a matching id to scroll to. /packages itself already
+  // covers this in staticPages.
 
   return [
     ...staticPages,
     ...learnPages,
     ...troubleshootingPages,
     ...productPages,
-    ...productCategoryPages,
-    ...packagePages,
     ...toolPages,
     ...interviewFilterPages,
     ...interviewQuestionPages,
