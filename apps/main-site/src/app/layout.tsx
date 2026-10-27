@@ -200,6 +200,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
 
+        {/* Adsterra */}
+        {ADS_ENABLED && (
+          <>
+            <Script
+              src="https://bauval.org/14/2bfc0994ec55078b15e6e117a04e6053"
+              data-cfasync="false"
+              strategy="lazyOnload"
+            />
+            <Script
+              src="https://abscloud.org/1/a4c9371588356c480d6b13daaa631431"
+              data-cfasync="false"
+              strategy="lazyOnload"
+            />
+          </>
+        )}
+
         {/* Microsoft Clarity */}
         <Script id="clarity-init" strategy="lazyOnload">
           {`
