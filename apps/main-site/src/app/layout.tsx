@@ -14,10 +14,6 @@ import { websiteJsonLd, personJsonLd, organizationJsonLd } from "@bidev/shared";
 const ADS_ENABLED = process.env.NEXT_PUBLIC_ADS_ENABLED !== "false";
 const ADSENSE_ID  = ADS_ENABLED ? process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID : undefined;
 
-// Independent of ADS_ENABLED/AdSense — set NEXT_PUBLIC_ADSTERRA_ENABLED=false
-// to disable Adsterra sitewide without touching the AdSense gate above.
-const ADSTERRA_ENABLED = process.env.NEXT_PUBLIC_ADSTERRA_ENABLED !== "false";
-
 const GA_ID       = "G-C04YP7HRR0";
 const CLARITY_ID  = "xi6mxc4uzo";
 
@@ -204,15 +200,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', '${GA_ID}', { send_page_view: true });
           `}
         </Script>
-
-        {/* Adsterra */}
-        {ADSTERRA_ENABLED && (
-          <Script
-            src="https://bauval.org/14/2bfc0994ec55078b15e6e117a04e6053"
-            data-cfasync="false"
-            strategy="lazyOnload"
-          />
-        )}
 
         {/* Microsoft Clarity */}
         <Script id="clarity-init" strategy="lazyOnload">
