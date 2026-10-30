@@ -26,6 +26,25 @@ const nextConfig: NextConfig = {
 
   transpilePackages: ["@bidev/ui", "@bidev/shared"],
 
+  redirects: async () => [
+    {
+      // Consolidated into the more comprehensive Provider/Riverpod/Bloc
+      // comparison — was a redundant, narrower subset (fewer views, far
+      // shorter) covering the same Riverpod-vs-Bloc ground.
+      source: "/blog/riverpod-vs-bloc-2026",
+      destination: "/blog/flutter-state-management-provider-vs-riverpod-vs-bloc",
+      permanent: true,
+    },
+    {
+      // Consolidated into the troubleshooting RenderFlex article — near-
+      // duplicate content (same Expanded/Flexible/Wrap fixes, same framing),
+      // and the troubleshooting format/structured fields serve the query better.
+      source: "/blog/flutter-renderflex-overflow-every-real-cause",
+      destination: "/blog/flutter-renderflex-overflowed-by-pixels",
+      permanent: true,
+    },
+  ],
+
   headers: async () => [
     {
       source: "/(.*)",
