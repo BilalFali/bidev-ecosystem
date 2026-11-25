@@ -1,0 +1,43 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bidev-main-site",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-11",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    {
+      "pattern": "bidev.dev",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.bidev.dev",
+      "custom_domain": true
+    }
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "bidev-main-site-cache"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bidev-main-db",
+      "database_id": "93cd4bfb-81b4-465e-bc4a-77b13ef67e48"
+    }
+  ],
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "bidev-main-site"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

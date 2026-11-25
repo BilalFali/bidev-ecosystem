@@ -198,7 +198,7 @@ export async function getAllArticleSlugs(): Promise<string[]> {
     .select("slug")
     .eq("status", "published");
 
-  const dbSlugs = (data ?? []).map((r: { slug: string }) => r.slug);
+  const dbSlugs = (data ?? []).map((r) => String(r.slug));
 
   return [...new Set([...mdxSlugs, ...dbSlugs])];
 }
