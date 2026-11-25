@@ -8,7 +8,7 @@ interface D1Statement {
 }
 interface D1Database { prepare(query: string): D1Statement; }
 declare global {
-  interface CloudflareEnv { DB?: D1Database; TECHBLOG_DB?: D1Database; }
+  interface CloudflareEnv { DB?: D1Database; }
 }
 type Row = Record<string, unknown>;
 type QueryError = { message: string };
@@ -23,12 +23,12 @@ function serializeJson(value: unknown): string | null {
   if (typeof value === "string") return value;
   return JSON.stringify(value);
 }
-function getDb(binding: "DB" | "TECHBLOG_DB" = "DB"): D1Database | null {
+function getDb(_binding: "DB" = "DB"): D1Database | null {
   try {
     const env = getCloudflareContext({ async: false }).env;
-    return (binding === "TECHBLOG_DB" ? env.TECHBLOG_DB : env.DB) ?? null;
+    return env.DB ?? null;
   } catch {
-    return (globalThis as unknown as Record<string, D1Database | undefined>)[binding] ?? null;
+    return (globalThis as unknown as Record<string, D1Database | undefined>).DB ?? null;
   }
 }
 
@@ -100,15 +100,13 @@ export class D1Query {
   }
   private physicalTable() {
     if (this.tableName === "articles_with_relations") return "articles";
-    if (this.tableName === "techblog_articles_with_relations") return "techblog_articles";
     return this.tableName;
   }
   private async enrich(rows: Row[]): Promise<Row[]> {
-    if (!["articles_with_relations", "techblog_articles_with_relations"].includes(this.tableName)) return rows;
-    const tech = this.tableName === "techblog_articles_with_relations";
-    const categoryTable = tech ? "techblog_categories" : "categories";
-    const tagsTable = tech ? "techblog_tags" : "tags";
-    const joinTable = tech ? "techblog_article_tags" : "article_tags";
+    if (this.tableName !== "articles_with_relations") return rows;
+    const categoryTable = "categories";
+    const tagsTable = "tags";
+    const joinTable = "article_tags";
     const output: Row[] = [];
     for (const row of rows) {
       const category = row.category_id
@@ -117,19 +115,13 @@ export class D1Query {
       const tags = await this.db.prepare(
         `SELECT t.id, t.name, t.slug FROM "${tagsTable}" t JOIN "${joinTable}" at ON at.tag_id = t.id WHERE at.article_id = ?`
       ).bind(row.id).all<Row>();
-      const section = tech && row.section_id
-        ? await this.db.prepare("SELECT id, name, slug FROM techblog_sections WHERE id = ?").bind(row.section_id).first<Row>()
-        : null;
       const enriched: Row = {
         ...row,
         category_name: category?.name ?? null,
         category_slug: category?.slug ?? null,
         tags: (tags.results ?? []).map((tag) => ({ id: tag.id, name: tag.name, slug: tag.slug })),
       };
-      if (tech) {
-        enriched.section_name = section?.name ?? null;
-        enriched.section_slug = section?.slug ?? null;
-      } else if (row.troubleshooting_category_id) {
+      if (row.troubleshooting_category_id) {
         const tc = await this.db.prepare("SELECT id, name, slug FROM troubleshooting_categories WHERE id = ?").bind(row.troubleshooting_category_id).first<Row>();
         enriched.troubleshooting_category_name = tc?.name ?? null;
         enriched.troubleshooting_category_slug = tc?.slug ?? null;
@@ -200,7 +192,7 @@ export class D1Query {
   }
 }
 
-export function getD1(binding: "DB" | "TECHBLOG_DB" = "DB") {
+export function getD1(binding: "DB" = "DB") {
   const db = getDb(binding);
   return db ? { from(table: string) { return new D1Query(db, table); } } : null;
 }

@@ -29,11 +29,6 @@
       "binding": "DB",
       "database_name": "bidev-main-db",
       "database_id": "93cd4bfb-81b4-465e-bc4a-77b13ef67e48"
-    },
-    {
-      "binding": "TECHBLOG_DB",
-      "database_name": "bidev-techblog-db",
-      "database_id": "af2f3b6c-4d80-4e3a-a3aa-a6c0e4b3d90b"
     }
   ],
   "services": [
