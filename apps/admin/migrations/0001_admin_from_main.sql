@@ -1,0 +1,1 @@
+-- Admin uses the existing bidev-main-db. This file mirrors the main-site schema.

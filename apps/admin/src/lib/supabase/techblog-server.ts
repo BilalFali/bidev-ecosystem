@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { getD1 } from "@/lib/d1";
 
 // BiDev Tech (tech.bidev.dev) lives in a SEPARATE Supabase project from the
 // rest of this admin app. An admin user's session cookie is a JWT scoped to
@@ -14,6 +15,8 @@ function requireEnv(name: string): string {
 }
 
 export function createTechBlogClient() {
+  const d1 = getD1("TECHBLOG_DB");
+  if (d1) return d1;
   return createSupabaseClient(
     requireEnv("TECHBLOG_SUPABASE_URL"),
     requireEnv("TECHBLOG_SUPABASE_SERVICE_ROLE_KEY"),

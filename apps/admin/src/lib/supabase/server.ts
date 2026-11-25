@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { getD1 } from "@/lib/d1";
 
 function requireEnv(name: string): string {
   const val = process.env[name];
@@ -10,7 +11,7 @@ function requireEnv(name: string): string {
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  const supabase = createServerClient(
     requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
     requireEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
     {
@@ -30,6 +31,9 @@ export async function createClient() {
       },
     }
   );
+  const d1 = getD1("DB");
+  if (d1) Object.assign(supabase, d1);
+  return supabase;
 }
 
 export function createServiceClient() {
