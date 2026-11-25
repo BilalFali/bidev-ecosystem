@@ -28,7 +28,19 @@ function getDb(_binding: "DB" = "DB"): D1Database | null {
     const env = getCloudflareContext({ async: false }).env;
     return env.DB ?? null;
   } catch {
-    return (globalThis as unknown as Record<string, D1Database | undefined>).DB ?? null;
+    const globalDb = (globalThis as unknown as Record<string, D1Database | undefined>).DB;
+    if (globalDb) return globalDb;
+    return {
+      prepare() {
+        const statement = {
+          bind() { return statement; },
+          async all() { return { results: [] }; },
+          async first() { return null; },
+          async run() { return {}; },
+        };
+        return statement;
+      },
+    };
   }
 }
 

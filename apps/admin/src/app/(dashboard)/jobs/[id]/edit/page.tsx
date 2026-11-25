@@ -19,11 +19,12 @@ export default async function EditJobPage({ params }: Props) {
 
   const { data: job } = await supabase.from("jobs").select("*").eq("id", id).single();
   if (!job) notFound();
+  const editedJob = job as unknown as Job;
 
   return (
     <div className="max-w-5xl mx-auto animate-fade-in">
-      <DashboardHeader title="Edit Job" description={job.title} />
-      <JobForm job={job as Job} />
+      <DashboardHeader title="Edit Job" description={editedJob.title} />
+      <JobForm job={editedJob} />
     </div>
   );
 }

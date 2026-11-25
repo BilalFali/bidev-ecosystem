@@ -24,7 +24,7 @@ export default function MediaPage() {
     setLoading(true);
     const response = await fetch("/api/media");
     const body = await response.json().catch(() => ({ files: [] }));
-    setFiles((body.files ?? []) as MediaFile[]);
+    setFiles((body.files ?? []) as unknown as MediaFile[]);
     setLoading(false);
   }
 

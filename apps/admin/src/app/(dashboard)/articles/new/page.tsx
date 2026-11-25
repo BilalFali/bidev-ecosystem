@@ -21,9 +21,9 @@ export default async function NewArticlePage({
   return (
     <div className="-m-6 h-[calc(100vh-0px)] flex flex-col">
       <ArticleEditor
-        categories={(categories ?? []) as Category[]}
-        tags={(tags ?? []) as Tag[]}
-        troubleshootingCategories={(troubleshootingCategories ?? []) as TroubleshootingCategory[]}
+        categories={(categories ?? []) as unknown as Category[]}
+        tags={(tags ?? []) as unknown as Tag[]}
+        troubleshootingCategories={(troubleshootingCategories ?? []) as unknown as TroubleshootingCategory[]}
         defaultTroubleshooting={troubleshooting === "1"}
       />
     </div>

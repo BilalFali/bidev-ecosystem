@@ -14,7 +14,8 @@ export async function GET() {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // Join product titles
-  const productIds = [...new Set((orders ?? []).map((o) => o.product_id))];
+  const orderRows = (orders ?? []) as unknown as Array<{ product_id: string; [key: string]: unknown }>;
+  const productIds = [...new Set(orderRows.map((o) => o.product_id))];
   let productMap: Record<string, { title: string; category: string }> = {};
 
   if (productIds.length > 0) {
@@ -23,12 +24,13 @@ export async function GET() {
       .select("id, title, category")
       .in("id", productIds);
 
+    const productRows = (products ?? []) as unknown as Array<{ id: string; title: string; category: string }>;
     productMap = Object.fromEntries(
-      (products ?? []).map((p) => [p.id, { title: p.title, category: p.category }])
+      productRows.map((p) => [p.id, { title: p.title, category: p.category }])
     );
   }
 
-  const enriched = (orders ?? []).map((o) => ({
+  const enriched = orderRows.map((o) => ({
     ...o,
     product_title:    productMap[o.product_id]?.title,
     product_category: productMap[o.product_id]?.category,

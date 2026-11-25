@@ -50,7 +50,7 @@ async function getAnalytics() {
       .select("*")
       .order("views", { ascending: false });
 
-    const rows = (pageViews ?? []) as PageView[];
+    const rows = (pageViews ?? []) as unknown as PageView[];
     const totalViews = rows.reduce((s, r) => s + r.views, 0);
     const uniquePages = rows.length;
 

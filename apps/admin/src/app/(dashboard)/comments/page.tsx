@@ -25,7 +25,7 @@ async function getComments() {
       .from("comments")
       .select("*")
       .order("created_at", { ascending: false });
-    return (data ?? []) as Comment[];
+    return (data ?? []) as unknown as Comment[];
   } catch {
     return [] as Comment[];
   }

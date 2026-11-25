@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, FileText, Image as ImageIcon,
   Tag, FolderOpen, Settings, LogOut, ChevronRight, BarChart2, MessageSquare, Briefcase,
   Package, ShoppingBag, Github, HelpCircle, Wrench,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
 
 const NAV = [
   { label: "Overview",   href: "/",            icon: LayoutDashboard },
@@ -31,7 +30,6 @@ interface SidebarProps { email?: string | null }
 
 export function Sidebar({ email }: SidebarProps) {
   const pathname = usePathname();
-  const router   = useRouter();
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
@@ -39,10 +37,7 @@ export function Sidebar({ email }: SidebarProps) {
   }
 
   async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    window.location.assign("/cdn-cgi/access/logout");
   }
 
   return (

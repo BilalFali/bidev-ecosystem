@@ -32,7 +32,7 @@ async function getStats() {
       published: published ?? 0,
       draft: draft ?? 0,
       media: mediaCount ?? 0,
-      recentArticles: (recentArticles ?? []) as ArticleWithRelations[],
+      recentArticles: (recentArticles ?? []) as unknown as ArticleWithRelations[],
     };
   } catch {
     return { total: 0, published: 0, draft: 0, media: 0, recentArticles: [] as ArticleWithRelations[] };

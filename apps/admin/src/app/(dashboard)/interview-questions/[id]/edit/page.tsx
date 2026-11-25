@@ -19,11 +19,12 @@ export default async function EditInterviewQuestionPage({ params }: Props) {
 
   const { data: question } = await supabase.from("interview_questions").select("*").eq("id", id).single();
   if (!question) notFound();
+  const interviewQuestion = question as unknown as InterviewQuestion;
 
   return (
     <div className="max-w-5xl mx-auto animate-fade-in">
-      <DashboardHeader title="Edit Interview Question" description={question.question} />
-      <InterviewQuestionForm question={question as InterviewQuestion} />
+      <DashboardHeader title="Edit Interview Question" description={interviewQuestion.question} />
+      <InterviewQuestionForm question={interviewQuestion} />
     </div>
   );
 }

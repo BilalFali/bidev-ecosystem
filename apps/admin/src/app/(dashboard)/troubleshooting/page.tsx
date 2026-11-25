@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/Badge";
 import { formatDate, truncate } from "@/lib/utils";
 import type { ArticleWithRelations } from "@/lib/types/database";
+import type { TroubleshootingCategory } from "@/lib/types/database";
 
 export const metadata = { title: "Troubleshooting" };
 
@@ -43,7 +44,8 @@ export default async function TroubleshootingPage({ searchParams }: { searchPara
     supabase.from("troubleshooting_categories").select("id,name,slug").order("sort_order"),
   ]);
 
-  let list = (articles ?? []) as ArticleWithRelations[];
+  let list = (articles ?? []) as unknown as ArticleWithRelations[];
+  const troubleshootingCategories = (categories ?? []) as unknown as TroubleshootingCategory[];
   if (params.category && params.category !== "all") {
     list = list.filter((a) => a.troubleshooting_category_slug === params.category);
   }
@@ -99,7 +101,7 @@ export default async function TroubleshootingPage({ searchParams }: { searchPara
           >
             All categories
           </Link>
-          {(categories ?? []).map((c) => (
+          {troubleshootingCategories.map((c) => (
             <Link
               key={c.slug}
               href={`/troubleshooting?category=${c.slug}`}

@@ -28,7 +28,7 @@ export default async function ArticlesPage({ searchParams }: { searchParams: Pro
   }
 
   const { data: articles } = await query;
-  const list = (articles ?? []) as ArticleWithRelations[];
+  const list = (articles ?? []) as unknown as ArticleWithRelations[];
 
   return (
     <div className="max-w-5xl mx-auto animate-fade-in">

@@ -33,10 +33,10 @@ export default async function EditArticlePage({ params }: Props) {
   return (
     <div className="-m-6 h-[calc(100vh-0px)] flex flex-col">
       <ArticleEditor
-        article={article as ArticleWithRelations}
-        categories={(categories ?? []) as Category[]}
-        tags={(tags ?? []) as Tag[]}
-        troubleshootingCategories={(troubleshootingCategories ?? []) as TroubleshootingCategory[]}
+        article={article as unknown as ArticleWithRelations}
+        categories={(categories ?? []) as unknown as Category[]}
+        tags={(tags ?? []) as unknown as Tag[]}
+        troubleshootingCategories={(troubleshootingCategories ?? []) as unknown as TroubleshootingCategory[]}
       />
     </div>
   );
