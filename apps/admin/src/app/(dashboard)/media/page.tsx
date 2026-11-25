@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/Button";
 import { Spinner } from "@/components/ui/Spinner";
 import { formatBytes, formatDate } from "@/lib/utils";
 import { uploadFile, validateImageFile } from "@/lib/upload";
-import { createClient } from "@/lib/supabase/client";
 import type { MediaFile } from "@/lib/types/database";
 
 export default function MediaPage() {
@@ -23,12 +22,9 @@ export default function MediaPage() {
 
   async function fetchMedia() {
     setLoading(true);
-    const supabase = createClient();
-    const { data } = await supabase
-      .from("media")
-      .select("*")
-      .order("created_at", { ascending: false });
-    setFiles((data ?? []) as MediaFile[]);
+    const response = await fetch("/api/media");
+    const body = await response.json().catch(() => ({ files: [] }));
+    setFiles((body.files ?? []) as MediaFile[]);
     setLoading(false);
   }
 
@@ -46,8 +42,12 @@ export default function MediaPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this file?")) return;
-    const supabase = createClient();
-    await supabase.from("media").delete().eq("id", id);
+    const response = await fetch(`/api/media/${id}`, { method: "DELETE" });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({ error: "Delete failed" }));
+      alert(body.error ?? "Delete failed");
+      return;
+    }
     setFiles(prev => prev.filter(f => f.id !== id));
   }
 

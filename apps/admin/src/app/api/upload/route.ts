@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+
+interface MediaR2Bucket {
+  put(key: string, value: ArrayBuffer | Uint8Array, options?: { httpMetadata?: { contentType?: string } }): Promise<unknown>;
+  delete(key: string): Promise<void>;
+}
+
+declare global {
+  interface CloudflareEnv {
+    MEDIA?: MediaR2Bucket;
+  }
+}
+
+const R2_PUBLIC_BASE_URL = "https://pub-eace516bff534771a23c8153d5db32e0.r2.dev";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];
 const MAX_SIZE = 8 * 1024 * 1024; // 8 MB
@@ -49,32 +63,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "File too large (max 8 MB)" }, { status: 400 });
     }
 
-    // ── 3. Upload to Supabase Storage ─────────────────────────
+    // ── 3. Upload to Cloudflare R2 ────────────────────────────
     const ext      = MIME_TO_EXT[mimeType] ?? "jpg";
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const filename = `${bucket}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
     const bytes    = new Uint8Array(await file.arrayBuffer());
-
-    const service = createServiceClient();
-
-    const { error: uploadError } = await service.storage
-      .from(bucket)
-      .upload(filename, bytes, { contentType: mimeType, upsert: false });
-
-    if (uploadError) {
-      console.error("[upload] storage error:", uploadError.message);
-
-      const msg = uploadError.message.toLowerCase();
-      if (msg.includes("bucket not found") || msg.includes("not found")) {
-        return NextResponse.json(
-          { error: `Bucket "${bucket}" not found — create it in Supabase → Storage.` },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+    let mediaBucket: MediaR2Bucket;
+    try {
+      mediaBucket = getCloudflareContext({ async: false }).env.MEDIA!;
+    } catch {
+      return NextResponse.json({ error: "R2 media storage is unavailable." }, { status: 503 });
     }
-
-    const { data: { publicUrl } } = service.storage.from(bucket).getPublicUrl(filename);
+    if (!mediaBucket) {
+      return NextResponse.json({ error: "R2 media storage is unavailable." }, { status: 503 });
+    }
+    await mediaBucket.put(filename, bytes, { httpMetadata: { contentType: mimeType } });
+    const publicUrl = `${R2_PUBLIC_BASE_URL}/${filename}`;
 
     // ── 4. Record in media table (non-fatal) ──────────────────
     try {

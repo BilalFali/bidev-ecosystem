@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+initOpenNextCloudflareForDev();
 
 const nextConfig: NextConfig = {
   output:          "standalone",
@@ -18,6 +21,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "raw.githubusercontent.com" },
       { protocol: "https", hostname: "github.com" },
       { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "*.r2.dev" },
     ],
   },
 
@@ -27,6 +31,13 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@bidev/ui", "@bidev/shared"],
 
   redirects: async () => [
+    {
+      // GSC reports this exact path submitted with 1 error, never read —
+      // the real file is /sitemap.xml.
+      source: "/sitemap",
+      destination: "/sitemap.xml",
+      permanent: true,
+    },
     {
       // Consolidated into the more comprehensive Provider/Riverpod/Bloc
       // comparison — was a redundant, narrower subset (fewer views, far

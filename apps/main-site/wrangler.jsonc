@@ -22,6 +22,10 @@
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "bidev-main-site-cache"
+    },
+    {
+      "binding": "MEDIA",
+      "bucket_name": "bidev-media"
     }
   ],
   "d1_databases": [
