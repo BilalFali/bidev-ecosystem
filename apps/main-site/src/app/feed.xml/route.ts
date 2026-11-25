@@ -6,7 +6,7 @@ const SITE = "bidev.dev";
 export const revalidate = 3600;
 
 export async function GET() {
-  // getAllArticles merges MDX + Supabase DB, DB wins on slug conflict
+  // getAllArticles merges MDX + D1, D1 wins on slug conflict
   const articles = (await getAllArticles()).slice(0, 30);
 
   const items = articles.map((p) => {

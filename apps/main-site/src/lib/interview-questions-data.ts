@@ -53,7 +53,7 @@ export const INTERVIEW_CATEGORIES: InterviewCategory[] = [
 
 export const DIFFICULTIES: Difficulty[] = ["Beginner", "Intermediate", "Advanced"];
 
-// Dev-without-Supabase fallback — the DB (interview_questions table) is the
+// Dev-without-D1 fallback — the DB (interview_questions table) is the
 // source of truth once seeded; this array is only used when getSupabaseClient()
 // returns null (no env vars configured) or a query fails.
 export const FALLBACK_QUESTIONS: InterviewQuestion[] = [

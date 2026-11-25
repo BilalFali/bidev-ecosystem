@@ -20,13 +20,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
       { protocol: "https", hostname: "raw.githubusercontent.com" },
       { protocol: "https", hostname: "github.com" },
-      { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "*.r2.dev" },
     ],
   },
-
-  // Keep Supabase + heavy libs out of the client bundle
-  serverExternalPackages: ["@supabase/supabase-js"],
 
   transpilePackages: ["@bidev/ui", "@bidev/shared"],
 

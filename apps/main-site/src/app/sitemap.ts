@@ -3,7 +3,7 @@ import { getAllPosts } from "@/lib/mdx";
 import { getSupabaseClient } from "@/lib/supabase";
 import { SNIPPETS } from "@/lib/snippets";
 import { TOOLS } from "@/lib/tools";
-import { getAllInterviewQuestions, getAllFilterKeys } from "@/lib/interview-questions";
+import { getAllInterviewQuestions } from "@/lib/interview-questions";
 import { getAllJobs } from "@/lib/jobs";
 import { getAllProducts } from "@/lib/products";
 import { LEARN_CATEGORIES } from "@/lib/learn";
@@ -11,7 +11,7 @@ import { TROUBLESHOOTING_CATEGORIES } from "@/lib/troubleshooting";
 
 export const revalidate = 3600;
 
-const BASE = "https://bidev.dev";
+const BASE = "https://www.bidev.dev";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date().toISOString();
@@ -80,15 +80,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        t.popular ? 0.9 : 0.7,
   }));
 
-  const [filterKeys, interviewQuestions] = await Promise.all([getAllFilterKeys(), getAllInterviewQuestions()]);
+  const interviewQuestions = await getAllInterviewQuestions();
 
-  const interviewFilterPages: MetadataRoute.Sitemap = filterKeys.map((key) => ({
-    url:             `${BASE}/flutter-interview-questions/${key}`,
-    lastModified:    now,
-    changeFrequency: "weekly" as const,
-    priority:        0.7,
-  }));
-
+  // Category/difficulty/tag filter views at /flutter-interview-questions/[key]
+  // all set `robots: noindex` in generateMetadata (they're a re-sliced view
+  // of the same question pool as the hub) — so they never belong in the
+  // sitemap. Submitting them was the single largest source of "page with
+  // no page row" URLs Search Console was reporting for this site.
   const interviewQuestionPages: MetadataRoute.Sitemap = interviewQuestions.map((q) => ({
     url:             `${BASE}/flutter-interview-questions/${q.slug}`,
     lastModified:    now,
@@ -104,7 +102,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority:        0.7,
   }));
 
-  // Supabase articles
+  // D1 articles
   const supabase = getSupabaseClient();
   let dbPosts: MetadataRoute.Sitemap = [];
 
@@ -147,7 +145,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...troubleshootingPages,
     ...productPages,
     ...toolPages,
-    ...interviewFilterPages,
     ...interviewQuestionPages,
     ...jobPages,
     ...snippetPages,

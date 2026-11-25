@@ -1,14 +1,39 @@
-import { createClient } from "@supabase/supabase-js";
 import type { GeneratedArticle } from "./types.js";
 
-function getSupabase() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env var is missing");
-  return createClient(url, key, { auth: { persistSession: false } });
+const D1_DATABASE_ID = "93cd4bfb-81b4-465e-bc4a-77b13ef67e48";
+
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} env var is missing`);
+  return value;
 }
 
-async function resolveTagIds(supabase: ReturnType<typeof createClient>, tagNames: string[]): Promise<string[]> {
+async function d1Query<T = Record<string, unknown>>(sql: string, params: unknown[] = []): Promise<T[]> {
+  const accountId = requireEnv("CLOUDFLARE_ACCOUNT_ID");
+  const apiToken = requireEnv("CLOUDFLARE_API_TOKEN");
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${D1_DATABASE_ID}/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sql, params }),
+    }
+  );
+  const body = await response.json() as {
+    success: boolean;
+    errors?: Array<{ message?: string }>;
+    result?: Array<{ results?: T[] }>;
+  };
+  if (!response.ok || !body.success) {
+    throw new Error(body.errors?.[0]?.message ?? `D1 query failed (${response.status})`);
+  }
+  return body.result?.[0]?.results ?? [];
+}
+
+async function resolveTagIds(tagNames: string[]): Promise<string[]> {
   const ids: string[] = [];
 
   for (const name of tagNames) {
@@ -16,59 +41,54 @@ async function resolveTagIds(supabase: ReturnType<typeof createClient>, tagNames
     if (!slug) continue;
 
     // upsert so duplicate runs are idempotent
-    const { data, error } = await (supabase as any)
-      .from("tags")
-      .upsert({ name, slug }, { onConflict: "slug", ignoreDuplicates: false })
-      .select("id")
-      .single();
-
-    if (!error && data?.id) ids.push(data.id as string);
+    const id = crypto.randomUUID();
+    await d1Query(
+      `INSERT INTO tags (id, name, slug) VALUES (?, ?, ?)
+       ON CONFLICT(slug) DO UPDATE SET name = excluded.name`,
+      [id, name, slug]
+    );
+    const rows = await d1Query<{ id: string }>("SELECT id FROM tags WHERE slug = ?", [slug]);
+    if (rows[0]?.id) ids.push(rows[0].id);
   }
 
   return ids;
 }
 
 export async function slugExists(slug: string): Promise<boolean> {
-  const supabase = getSupabase();
-  const { count } = await supabase
-    .from("articles")
-    .select("id", { count: "exact", head: true })
-    .eq("slug", slug);
-  return (count ?? 0) > 0;
+  const rows = await d1Query<{ count: number }>("SELECT COUNT(*) AS count FROM articles WHERE slug = ?", [slug]);
+  return (rows[0]?.count ?? 0) > 0;
 }
 
 export async function saveDraft(article: GeneratedArticle): Promise<string> {
-  const supabase   = getSupabase();
-  const authorId   = process.env.ADMIN_USER_ID;
-  if (!authorId) throw new Error("ADMIN_USER_ID env var is missing");
+  const articleId = crypto.randomUUID();
+  const tagIds = await resolveTagIds(article.suggested_tags);
 
-  const tagIds = await resolveTagIds(supabase, article.suggested_tags);
-
-  const { data: saved, error } = await supabase
-    .from("articles")
-    .insert({
-      title:           article.title,
-      slug:            article.slug,
-      content:         article.content,
-      excerpt:         article.excerpt,
-      status:          "draft",
-      author_id:       authorId,
-      seo_title:       article.seo_title,
-      seo_description: article.seo_description,
-      seo_keywords:    article.seo_keywords,
-      reading_time:    article.reading_time,
-      featured:        false,
-    })
-    .select("id")
-    .single();
-
-  if (error || !saved) throw new Error(`DB insert failed: ${error?.message ?? "no data returned"}`);
+  await d1Query(
+    `INSERT INTO articles (
+      id, title, slug, content, excerpt, status, seo_title,
+      seo_description, seo_keywords, reading_time, featured
+    ) VALUES (?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?, 0)`,
+    [
+      articleId,
+      article.title,
+      article.slug,
+      article.content,
+      article.excerpt ?? null,
+      article.seo_title ?? null,
+      article.seo_description ?? null,
+      JSON.stringify(article.seo_keywords ?? []),
+      article.reading_time ?? null,
+    ]
+  );
 
   if (tagIds.length) {
-    await supabase.from("article_tags").insert(
-      tagIds.map((tag_id) => ({ article_id: saved.id, tag_id })),
-    );
+    for (const tagId of tagIds) {
+      await d1Query(
+        "INSERT OR IGNORE INTO article_tags (article_id, tag_id) VALUES (?, ?)",
+        [articleId, tagId]
+      );
+    }
   }
 
-  return saved.id as string;
+  return articleId;
 }
